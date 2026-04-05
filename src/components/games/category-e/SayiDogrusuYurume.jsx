@@ -59,7 +59,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
   const dirClass = p?.op === '+' ? 'char-right' : 'char-left';
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Yürüyüşü" colors={colors}/>
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center w-full max-w-sm">
         <div className="text-2xl font-bold text-purple-700 mb-1">{p?.a} {p?.op} {p?.b} = ?</div>

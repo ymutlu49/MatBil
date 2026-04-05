@@ -21,7 +21,7 @@ const GruplamaUstasi = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='ready') return <ReadyScreen title="Gruplama Ustası" emoji="" level={lv} instruction="Beşlik veya onluk çerçeveler gösterilecek. Dolu kutuları sayarak toplamın kaç olduğunu bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Gruplama Ustası" colors={colors} hideRound={rahatMod}/>
       <div className="flex gap-3 mb-3 flex-wrap justify-center">{cards.map((c,i)=>(<Frame key={i} count={c.count} max={c.type==='five'?5:10} color={c.color}/>))}</div>
       <div className="text-base text-gray-600 mb-3 bg-white px-4 py-2 rounded-xl shadow">Toplam kaç tane?</div>

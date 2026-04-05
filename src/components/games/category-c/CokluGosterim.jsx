@@ -86,7 +86,7 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(p?.type==='oddOneOut'){
     return (
-      <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+      <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
         <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Çoklu Gösterim" colors={colors}/>
         <div className="bg-white p-4 rounded-xl shadow-xl mb-2 min-w-[160px] min-h-[90px] flex items-center justify-center">
           {renderRep(p?.target, p?.qRep, true)}
@@ -100,7 +100,7 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
   }
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Çoklu Gösterim" colors={colors}/>
       <div className="bg-white p-4 rounded-xl shadow-xl mb-2 min-w-[160px] min-h-[90px] flex items-center justify-center">{renderRep(p?.target,p?.qRep,true)}</div>
       <div className="text-gray-600 mb-2 text-sm">{p?.question}</div>

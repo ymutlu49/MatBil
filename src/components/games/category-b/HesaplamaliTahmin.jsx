@@ -100,7 +100,7 @@ const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='ready') return <ReadyScreen title="Hesaplamalı Tahmin" emoji="🧮" level={lv} instruction="Bir işlem gösterilecek. Tam hesaplamadan, yuvarlayarak en yakın sonucu tahmin et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Hesaplamalı Tahmin" colors={colors}/>
       <div className="bg-white px-5 py-3 rounded-xl shadow-xl mb-3 text-center">
         <div className="text-3xl font-bold text-purple-700">{p?.a} {p?.opSymbol} {p?.b}</div>

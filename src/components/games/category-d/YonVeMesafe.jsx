@@ -35,10 +35,10 @@ const YonVeMesafe = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const dirs=lvCfg[lv].dirs;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Yön ve Mesafe" colors={colors}/>
       <div className="bg-white px-3 py-1 rounded-lg shadow mb-2 text-xs text-gray-500">{lvCfg[lv].label}</div>
-      <div className="grid grid-cols-3 gap-1 bg-white p-3 rounded-2xl shadow-xl mb-3">{p?.grid.map((c,i)=>(<div key={i} className={`w-20 h-20 rounded-xl flex flex-col items-center justify-center ${i===4?'bg-blue-50 border-2 border-blue-200':'bg-gray-100'}`}>{c&&<><span className="text-3xl">{c.e}</span><span className="text-xs text-gray-500">({c.n})</span></>}</div>))}</div>
+      <div className="grid grid-cols-3 gap-1 bg-white p-3 rounded-2xl shadow-xl mb-3">{p?.grid.map((c,i)=>(<div key={i} className={`w-20 h-20 rounded-xl flex flex-col items-center ${i===4?'bg-blue-50 border-2 border-blue-200':'bg-gray-100'}`}>{c&&<><span className="text-3xl">{c.e}</span><span className="text-xs text-gray-500">({c.n})</span></>}</div>))}</div>
       <div className="bg-white px-4 py-3 rounded-xl shadow mb-3 text-center"><span className="text-lg text-gray-700"><span className="font-bold">{p?.obj2?.e} ({p?.obj2?.n})</span>, {p?.obj1?.e} ({p?.obj1?.n})'ın neresinde?</span></div>
       {ua!==null?(<Feedback isCorrect={ua===p?.position} answer={p?.position} hint={ua===p?.position ? `Doğru! ${p?.obj2?.n}, ${p?.obj1?.n}'ın ${p?.position}.` : `${p?.obj2?.n}, ${p?.obj1?.n}'ın ${p?.position}. Izgarada konumlara dikkat et!`}/>):(<div className={`grid ${dirs.length<=2?'grid-cols-2':'grid-cols-2'} gap-3`}>{dirs.map((pos,i)=>(<button key={i} onClick={()=>handle(pos)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-lg shadow-lg hover:scale-105 transition-transform`}>{pos}</button>))}</div>)}
     </div>

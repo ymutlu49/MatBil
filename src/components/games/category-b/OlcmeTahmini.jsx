@@ -95,7 +95,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='ready') return <ReadyScreen title="Ölçme Tahmini" emoji="📐" level={lv} instruction="Bir referans nesne ve onun ölçüsü gösterilecek. Hedef nesnenin ölçüsünü karşılaştırarak tahmin et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Ölçme Tahmini" colors={colors}/>
       <div className="bg-green-100 p-4 rounded-2xl shadow-lg mb-3 border-2 border-green-300 text-center"><span className="text-4xl">{p?.ref?.emoji}</span><div className="font-bold text-green-700">{p?.ref?.name}</div><div className="text-2xl font-bold text-green-600">{p?.ref?.value} {p?.ref?.unit}</div></div>
       <div className="bg-white p-3 rounded-xl shadow-xl mb-3 border-2 border-amber-300 text-center"><span className="text-4xl">{p?.target?.emoji}</span><div className="font-bold text-gray-700 text-lg mt-2">{p?.target?.name}</div><div className="text-amber-600 font-medium">Yaklaşık kaç {p?.target?.unit}?</div></div>

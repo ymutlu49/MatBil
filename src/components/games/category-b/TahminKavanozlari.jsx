@@ -103,7 +103,7 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
   const diff=Math.abs(guess-tc);
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Tahmin Kavanozları" colors={colors}/>
 
       {/* Kavanoz */}

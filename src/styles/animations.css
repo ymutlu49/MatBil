@@ -74,6 +74,16 @@ button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
   button { border: 2px solid currentColor !important; }
 }
 
+/* Oyun içeriğini dikeyde ortala (GameHeader hariç) */
+.game-center-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
 /* Konfeti animasyonu */
 @keyframes confettiFall {
   0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }

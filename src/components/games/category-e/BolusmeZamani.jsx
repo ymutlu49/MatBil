@@ -58,7 +58,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   const isGroupQ = p?.type==='groupCount'||p?.type==='groupSize';
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Bölüşme Zamanı" colors={colors}/>
 
       <div className="bg-white p-3 rounded-2xl shadow-xl mb-2 text-center w-full max-w-sm">

@@ -25,7 +25,10 @@
       "Bash(node -e \"const fs=require\\(''fs''\\);const path=require\\(''path''\\);function w\\(d\\){for\\(const f of fs.readdirSync\\(d\\)\\){const p=path.join\\(d,f\\);if\\(fs.statSync\\(p\\).isDirectory\\(\\)\\){if\\(![''node_modules'',''dist'',''.git''].includes\\(f\\)\\)w\\(p\\)}else if\\(/\\\\.\\(jsx|js\\)$/.test\\(f\\)\\){const c=fs.readFileSync\\(p,''utf8''\\);if\\(c.includes\\(''\\\\uFFFD''\\)\\)console.log\\(''STILL:'',p\\)}}}w\\(''src''\\);console.log\\(''Check complete''\\)\")",
       "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s/{''📋''}/{''💡''}/g\" {} +)",
       "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/h-screen.*flex flex-col items-center p-3 overflow-hidden/h-screen flex flex-col items-center justify-center p-3 overflow-hidden/g' {} +)",
-      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/h-screen.*flex flex-col items-center p-4 overflow-hidden/h-screen flex flex-col items-center justify-center p-4 overflow-hidden/g' {} +)"
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/h-screen.*flex flex-col items-center p-4 overflow-hidden/h-screen flex flex-col items-center justify-center p-4 overflow-hidden/g' {} +)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/flex flex-col items-center justify-center/flex flex-col items-center/g' {} +)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden/h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden pt-0/g' {} +)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i 's/p-3 overflow-hidden pt-0/p-3 overflow-hidden/g' {} +)"
     ]
   }
 }

@@ -22,7 +22,7 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
   const ref1Pct=p?((p?.ref1-fullMin)/(fullMax-fullMin))*100:0;
   const ref2Pct=p?((p?.ref2-fullMin)/(fullMax-fullMin))*100:100;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Yakınlık Tahmini" colors={colors}/>
       <p className={`${colors?.text} mb-2 font-bold text-lg`}>Bu sayı hangisine daha yakın?</p>
       <div className="bg-white px-10 py-4 rounded-2xl shadow-xl mb-3 border-4 border-amber-300"><span className="text-4xl font-bold text-amber-600">{p?.number}</span></div>

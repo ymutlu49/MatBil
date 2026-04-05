@@ -9,7 +9,7 @@ const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, h
   const helpKey = Object.keys(HELP_MAP).find(k => title?.includes(k));
   const help = helpKey ? HELP_MAP[helpKey] : null;
   return (
-    <div className={`w-full ${colors?.light || 'bg-gray-100'} rounded-xl p-2.5 mb-2 shadow-md border ${colors?.border || 'border-gray-200'} relative`}>
+    <div className={`w-full shrink-0 ${colors?.light || 'bg-gray-100'} rounded-xl p-2.5 mb-2 shadow-md border ${colors?.border || 'border-gray-200'} relative`}>
       {showHelp && help && (
         <div className="absolute top-full left-0 right-0 z-50 mt-1 mx-1 bg-white rounded-xl shadow-2xl border-2 border-indigo-200 p-4 anim-fade">
           <div className="flex justify-between items-start mb-2">

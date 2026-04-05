@@ -146,7 +146,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   let dotIndex = 0;
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Nokta Avcısı" colors={colors} hideRound={rahatMod}/>
       <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border} ${correctFlash ? 'anim-correct-pulse' : ''}`}>
         {(show || fading) && dots?.groups?.map((grp,gi)=>(
@@ -167,7 +167,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
           })
         ))}
         {!show && !fading && ua===null && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <div className="absolute inset-0 flex flex-col items-center">
             <span className="text-4xl mb-1">{'🤔'}</span>
             <span className={`text-lg font-bold ${colors?.text} animate-bounce`}>Kaç taneydi?</span>
           </div>
