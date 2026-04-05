@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+* { box-sizing: border-box; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.anim-pop { animation: popIn 0.4s ease-out; }
+.anim-shake { animation: shakeX 0.4s ease-out; }
+.anim-float { animation: floatUp 0.8s ease-out forwards; }
+.anim-fade { animation: fadeIn 0.3s ease-out; }
+.anim-slide-up { animation: slideUp 0.3s ease-out; }
+.anim-slide-in { animation: slideIn 0.3s ease-out; }
+
+.scroll-area {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+*::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none !important; }
+* { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-pop, .anim-shake, .anim-float, .anim-fade, .anim-slide-up, .anim-slide-in {
+    animation: none !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  button { border: 2px solid currentColor !important; }
+}

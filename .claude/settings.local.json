@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/yilma/Desktop/Jimaro/Diskalkuli_Platform/**)",
+      "Read(//c/Users/yilma/Desktop/Jimaro/**)",
+      "Bash(find /c/Users/yilma/Desktop/Jimaro/Diskalkuli_Platform -maxdepth 2 -type f \\\\\\(-name README* -o -name package.json -o -name *.config.js -o -name *.json -o -name Dockerfile -o -name docker-compose* \\\\\\))",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)",
+      "Bash(grep -rl \"from ''''../../utils''''\" src/components/games/)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../../utils''|from ''../../../utils''|g\" {} +)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../../constants/|from ''../../../constants/|g\" {} +)",
+      "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../ui/|from ''../../ui/|g\" {} +)",
+      "Bash(gh auth:*)"
+    ]
+  }
+}
