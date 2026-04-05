@@ -32,15 +32,38 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Doğrusu" colors={colors}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-3 text-center font-bold text-lg`}>Ok hangi sayıyı gösteriyor?</p>
-      <div className="w-full max-w-sm mb-3 px-3">
-        <div className="relative h-8 mb-1"><div className="absolute flex flex-col items-center" style={{left:`${pct}%`,transform:'translateX(-50%)'}}><div className="text-2xl">{'⬇️'}</div></div></div>
-        <div className="relative">
-          <div className="h-2 bg-amber-400 border border-amber-600" style={{borderRadius:0}}/>
-          <div className="absolute top-0 w-1 h-4 bg-red-600" style={{left:`${pct}%`,transform:'translate(-50%,-25%)'}}/>
-          <div className="absolute bg-amber-700 h-5 w-0.5" style={{left:'0%',top:-2,transform:'translateX(-50%)'}}/>
-          <div className="absolute bg-amber-700 h-5 w-0.5" style={{left:'100%',top:-2,transform:'translateX(-50%)'}}/>
+      <div className="w-full max-w-lg mb-4 px-6">
+        {/* Ok işareti */}
+        <div className="relative h-10 mb-1">
+          <div className="absolute flex flex-col items-center -translate-x-1/2" style={{left:`${pct}%`}}>
+            <div className="text-3xl">⬇️</div>
+          </div>
         </div>
-        <div className="flex justify-between text-lg font-bold text-gray-600 mt-2"><span>0</span><span>{mx}</span></div>
+        {/* Sayı doğrusu */}
+        <div className="relative" style={{height: 40}}>
+          <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-700 rounded-full" style={{transform:'translateY(-50%)'}}/>
+          {/* Oklar */}
+          <div className="absolute top-1/2 -translate-y-1/2 w-0 h-0" style={{left:-2, borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderRight:'8px solid #374151'}}/>
+          <div className="absolute top-1/2 -translate-y-1/2 w-0 h-0" style={{right:-2, borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderLeft:'8px solid #374151'}}/>
+          {/* Ok pozisyon işareti */}
+          <div className="absolute top-1/2 w-1 h-6 bg-red-500 rounded-full" style={{left:`${pct}%`,transform:'translate(-50%,-50%)'}}/>
+          {/* Tick'ler ve etiketler */}
+          {[0, mx].map((val,i)=>{
+            const tp = (val/mx)*100;
+            return (
+              <div key={i} className="absolute -translate-x-1/2" style={{left:`${tp}%`, top:'50%', transform:'translateX(-50%) translateY(-50%)'}}>
+                <div className="w-0.5 h-6 bg-gray-700 rounded-full mx-auto"/>
+                <div className="text-center mt-1"><span className="text-sm font-bold text-gray-600">{val}</span></div>
+              </div>
+            );
+          })}
+          {/* Orta tick (varsa) */}
+          {mx >= 10 && <div className="absolute -translate-x-1/2" style={{left:'50%', top:'50%', transform:'translateX(-50%) translateY(-50%)'}}>
+            <div className="w-0.5 h-4 bg-gray-400 rounded-full mx-auto"/>
+            <div className="text-center mt-1"><span className="text-xs text-gray-400">{Math.floor(mx/2)}</span></div>
+          </div>}
+        </div>
+        <div style={{height: 24}}/>
       </div>
       {ua!==null?(()=>{const fb=getFeedback(ua,target,cfg[lv].tol);return(<div className="text-center"><div className={`text-2xl font-bold mb-1 ${fb.cls}`}>{fb.msg}</div><div className="bg-amber-50 px-3 py-2 rounded-xl text-sm text-amber-700 mt-1">{'💡'} Ok, 0‑{mx} arasında <strong>{target}</strong> sayısını gösteriyor.</div></div>);})():(<div className="grid grid-cols-2 gap-3 w-full max-w-sm">{opts.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{o}</button>))}</div>)}
 

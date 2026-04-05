@@ -27,26 +27,31 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-2 font-bold text-lg`}>Bu sayı hangisine daha yakın?</p>
       <div className="bg-white px-10 py-4 rounded-2xl shadow-xl mb-3 border-4 border-amber-300"><span className="text-4xl font-bold text-amber-600">{p?.number}</span></div>
-      <div className="w-full max-w-sm mb-4 px-4">
+      <div className="w-full max-w-lg mb-4 px-6">
         <div className="relative" style={{height:50}}>
           {/* Ana çizgi */}
           <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-700 rounded-full" style={{transform:'translateY(-50%)'}}/>
           {/* Oklar */}
           <div className="absolute top-1/2 -translate-y-1/2 w-0 h-0" style={{left:-2, borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderRight:'8px solid #374151'}}/>
           <div className="absolute top-1/2 -translate-y-1/2 w-0 h-0" style={{right:-2, borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderLeft:'8px solid #374151'}}/>
-          {/* Uç nokta tick'leri */}
-          <div className="absolute top-1/2 w-0.5 h-6 bg-gray-700 rounded-full" style={{left:'0%',transform:'translate(-50%,-50%)'}}/>
-          <div className="absolute top-1/2 w-0.5 h-6 bg-gray-700 rounded-full" style={{left:'100%',transform:'translate(-50%,-50%)'}}/>
-          {/* Orta referans tick */}
-          {cfg[lv].refs.slice(1,-1).map((r,i)=>{const rp=((r-fullMin)/(fullMax-fullMin))*100;return <div key={i} className="absolute top-1/2 w-0.5 h-5 bg-gray-500" style={{left:`${rp}%`,transform:'translate(-50%,-50%)'}}/>;}) }
+          {/* Tüm referans tick'leri ve etiketleri */}
+          {cfg[lv].refs.map((r,i)=>{
+            const rp=((r-fullMin)/(fullMax-fullMin))*100;
+            return (
+              <div key={i} className="absolute -translate-x-1/2" style={{left:`${rp}%`, top: '50%', transform: `translateX(-50%) translateY(-50%)`}}>
+                <div className="w-0.5 h-6 bg-gray-700 rounded-full mx-auto"/>
+                <div className="text-center mt-1">
+                  <span className="bg-amber-50 px-2 py-0.5 rounded text-sm font-bold text-gray-600 border border-amber-200">{r}</span>
+                </div>
+              </div>
+            );
+          })}
           {/* Sayı topu */}
-          <div className="absolute top-1/2 w-8 h-8 bg-amber-500 rounded-full border-3 border-white shadow-lg flex items-center justify-center" style={{left:`${ballPct}%`,transform:'translate(-50%,-50%)',zIndex:2}}>
+          <div className="absolute top-1/2 w-9 h-9 bg-amber-500 rounded-full border-3 border-white shadow-lg flex items-center justify-center" style={{left:`${ballPct}%`,transform:'translate(-50%,-50%)',zIndex:2}}>
             <span className="text-white text-sm font-bold">{p?.number}</span>
           </div>
         </div>
-        <div className="flex justify-between text-base font-bold text-gray-600 mt-2">
-          {cfg[lv].refs.map((r,i)=><span key={i} className="bg-amber-50 px-2.5 py-1 rounded-lg text-sm border border-amber-200">{r}</span>)}
-        </div>
+        <div style={{height:32}}/>
       </div>
       {ua!==null?(<div className="text-center anim-fade"><Feedback isCorrect={ua===p?.answer} answer={p?.answer} hint={`${p?.number}: ${p?.ref1}'e ${Math.abs(p?.number-p?.ref1)} uzaklıkta, ${p?.ref2}'ye ${Math.abs(p?.number-p?.ref2)} uzaklıkta → ${p?.answer}`}/></div>):(<div className="flex gap-4"><button onClick={()=>handle(p?.ref1)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref1}</button><button onClick={()=>handle(p?.ref2)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref2}</button></div>)}
 
