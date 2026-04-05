@@ -59,6 +59,6 @@ export const GAMES = {
   E1: { comp: KomsuSayilar, name: 'Komşu Sayılar', emoji: '🔢', cat: 'E', levels: ['Seviye 1 (1-10, temel)','Seviye 2 (1-20, iki boşluk)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)'], instr: 'Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve ritmik sayma.' },
   E2: { comp: ParcaButun, name: 'Parça-Bütün', emoji: '🧩', cat: 'E', levels: ['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)'], instr: 'Üçgenin köşelerindeki sayılar arasındaki ilişkiyi bul. İki parçanın toplamı bütüne eşittir.' },
   E3: { comp: ToplamaStratejileri, name: 'Toplama Stratejileri', emoji: '➕', cat: 'E', levels: ['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)'], instr: 'Toplama işleminin sonucunu bul! İleri seviyelerde eksik olan sayıyı tamamla.' },
-  E5: { comp: SayiDogrusuYurume, name: 'Sayı Yürüyüşü', emoji: '🚶', cat: 'E', levels: ['Toplama (0-10)','Toplama (0-10)','Karışık (0-15)','Karışık (0-20)'], instr: 'Sayı doğrusu üzerinde yürüyerek toplama/çıkarma yap!' },
   E4: { comp: BolusmeZamani, name: 'Bölüşme Zamanı', emoji: '🍎', cat: 'E', levels: ['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)'], instr: 'Nesneleri eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!' },
+  E5: { comp: SayiDogrusuYurume, name: 'Sayı Yürüyüşü', emoji: '🚶', cat: 'E', levels: ['Toplama (0-10)','Toplama (0-10)','Karışık (0-15)','Karışık (0-20)'], instr: 'Sayı doğrusu üzerinde yürüyerek toplama/çıkarma yap!' },
 };
