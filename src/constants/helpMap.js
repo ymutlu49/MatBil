@@ -25,4 +25,5 @@ export const HELP_MAP = {
   'Sayı Yürüyüşü': { goal: 'Bedenleşmiş Aritmetik (Embodied Arithmetic)', tip: 'Sayı doğrusunda fiziksel olarak yürü! Toplama = ileri, çıkarma = geri. Link ve ark. (2013) bu yöntemin toplama performansını artırdığını gösterdi.' },
   'Bölüşme Zamanı': { goal: 'Bölme Kavramı (Eşit Paylaştırma)', tip: 'Toplam miktarı eşit gruplara ayırmayı düşün.' },
   'Sayı Bağları': { goal: 'Sayı Ayrıştırma (Number Bonds)', tip: 'Bir sayıyı iki parçaya ayır. Parçaların toplamı bütüne eşit olmalı. Örn: 7 = 3+4 = 2+5 = 1+6. Butterworth ve ark. (2011) bu becerinin diskalkuli müdahalesinde temel olduğunu gösterdi.' },
+  'Çıkarma Stratejileri': { goal: 'Esnek Çıkarma Stratejileri', tip: 'Farklı stratejiler dene: geriye sayma, onluğa tamamlama veya toplama ile kontrol. Bir strateji zorsa başkasını dene!' },
 };
