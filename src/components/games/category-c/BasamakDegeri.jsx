@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage ,useAdaptive} from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
-const useAdaptive = () => ({ record: () => {} });
+
 
 const numColor = (val, max = 99) => {
   const ratio = Math.min(val / max, 1);
