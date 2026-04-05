@@ -28,40 +28,47 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isMissing=(t)=>p?.missingType===t;
+  const isCorrect = ua!==null && ua===p?.answer;
+
   const nodeVal=(val,type)=>{
     const missing = isMissing(type);
     if(missing && ua===null) return <span className="text-2xl font-bold text-purple-400 animate-pulse">?</span>;
-    if(missing && ua!==null) return <span className="text-2xl font-bold text-green-600">{val}</span>;
+    if(missing && ua!==null) return <span className={`text-2xl font-bold ${isCorrect?'text-green-600':'text-orange-500'}`}>{val}</span>;
     return <span className="text-2xl font-bold text-gray-800">{val}</span>;
   };
+
+  const lineColor = isCorrect ? '#22C55E' : '#C4B5FD';
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parça-Bütün" colors={colors}/>
 
-      <div className="bg-white rounded-2xl shadow-xl p-4 mb-2 w-full max-w-xs">
-        <div className="relative" style={{height:190}}>
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 240 190">
-            <line x1="120" y1="38" x2="40" y2="148" stroke="#C4B5FD" strokeWidth="3" strokeDasharray="6,4"/>
-            <line x1="120" y1="38" x2="200" y2="148" stroke="#C4B5FD" strokeWidth="3" strokeDasharray="6,4"/>
+      <div className="bg-white rounded-2xl shadow-xl p-5 mb-2 w-full max-w-sm">
+        <div className="relative" style={{height:220}}>
+          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 280 220">
+            <line x1="140" y1="44" x2="46" y2="172" stroke={lineColor} strokeWidth="3" strokeDasharray="6,4" strokeDashoffset="0" className="anim-dash-flow"/>
+            <line x1="140" y1="44" x2="234" y2="172" stroke={lineColor} strokeWidth="3" strokeDasharray="6,4" strokeDashoffset="0" className="anim-dash-flow"/>
           </svg>
 
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('whole')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-indigo-100 border-indigo-400'}`}>
+          {/* Top node - BÜTÜN */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 flex flex-col items-center anim-number-pop" style={{animationDelay:'0ms'}}>
+            <div className={`w-18 h-18 rounded-full flex items-center justify-center shadow-lg border-3 transition-all duration-300 ${isMissing('whole')?'bg-gradient-to-r from-purple-200 to-indigo-200 border-purple-400 ring-2 ring-purple-300 animate-pulse':'bg-indigo-100 border-indigo-400'} ${isCorrect?'anim-bounce-in':''}`}>
               {nodeVal(p?.whole,'whole')}
             </div>
             <span className="text-xs font-bold text-indigo-500 mt-0.5">BÜTÜN</span>
           </div>
 
-          <div className="absolute left-0 bottom-0 flex flex-col items-center" style={{left:4}}>
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part1')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-rose-100 border-rose-400'}`}>
+          {/* Bottom-left node - PARÇA 1 */}
+          <div className="absolute left-0 bottom-0 flex flex-col items-center anim-number-pop" style={{left:4,animationDelay:'200ms'}}>
+            <div className={`w-18 h-18 rounded-full flex items-center justify-center shadow-lg border-3 transition-all duration-300 ${isMissing('part1')?'bg-gradient-to-r from-purple-200 to-indigo-200 border-purple-400 ring-2 ring-purple-300 animate-pulse':'bg-rose-100 border-rose-400'} ${isCorrect?'anim-bounce-in':''}`}>
               {nodeVal(p?.part1,'part1')}
             </div>
             <span className="text-xs font-bold text-rose-500 mt-0.5">PARÇA</span>
           </div>
 
-          <div className="absolute right-0 bottom-0 flex flex-col items-center" style={{right:4}}>
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part2')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-sky-100 border-sky-400'}`}>
+          {/* Bottom-right node - PARÇA 2 */}
+          <div className="absolute right-0 bottom-0 flex flex-col items-center anim-number-pop" style={{right:4,animationDelay:'400ms'}}>
+            <div className={`w-18 h-18 rounded-full flex items-center justify-center shadow-lg border-3 transition-all duration-300 ${isMissing('part2')?'bg-gradient-to-r from-purple-200 to-indigo-200 border-purple-400 ring-2 ring-purple-300 animate-pulse':'bg-sky-100 border-sky-400'} ${isCorrect?'anim-bounce-in':''}`}>
               {nodeVal(p?.part2,'part2')}
             </div>
             <span className="text-xs font-bold text-sky-500 mt-0.5">PARÇA</span>

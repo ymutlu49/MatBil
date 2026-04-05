@@ -18,6 +18,8 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   const [dc, setDc] = useState(0);
   const [dots, setDots] = useState([]);
   const [show, setShow] = useState(false);
+  const [fading, setFading] = useState(false);
+  const [correctFlash, setCorrectFlash] = useState(false);
   const [ua, setUa] = useState(null);
   const last = useRef([]);
   const cfg = { 1: { min: 1, max: 4, t: 2000 }, 2: { min: 2, max: 5, t: 1500 }, 3: { min: 3, max: 7, t: 1200 }, 4: { min: 4, max: 9, t: 1000 } };
@@ -109,26 +111,70 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   };
 
   const getC = (cf) => { let c,a=0; do{c=Math.floor(Math.random()*(cf.max-cf.min+1))+cf.min;a++;}while(last.current.includes(c)&&a<10); last.current.push(c); if(last.current.length>3)last.current.shift(); return c; };
-  const startR = useCallback((l,r) => { const cf=cfg[l]; const c=getC(cf); setDc(c); setDots(genDots(c)); setShow(true); setUa(null); setRd(r); setTimeout(()=>setShow(false), Math.round((rahatMod ? cf.t * 1.5 : cf.t) / adaptive.diff)); },[rahatMod]);
+
+  const startR = useCallback((l,r) => {
+    const cf=cfg[l]; const c=getC(cf);
+    setDc(c); setDots(genDots(c)); setShow(true); setFading(false); setCorrectFlash(false); setUa(null); setRd(r);
+    const hideTime = Math.round((rahatMod ? cf.t * 1.5 : cf.t) / adaptive.diff);
+    setTimeout(()=>{
+      setFading(true);
+      setTimeout(()=>{
+        setShow(false);
+        setFading(false);
+      }, 500);
+    }, hideTime);
+  },[rahatMod]);
+
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG = (l) => { setLv(l); setSc(0); last.current=[]; adaptive.reset(); setGs('playing'); startR(l,1); };
-  const handle = (a) => { setUa(a); adaptive.record(a===dc); if(a===dc){setSc(s=>s+10*lv);speakNumber(dc);} setTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200); };
+
+  const handle = (a) => {
+    setUa(a); adaptive.record(a===dc);
+    if(a===dc){
+      setSc(s=>s+10*lv); speakNumber(dc);
+      setCorrectFlash(true);
+      setTimeout(()=>setCorrectFlash(false), 800);
+    }
+    setTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200);
+  };
+
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktalar kısa süre gösterilecek. Saymadan, bakarak kaç tane olduğunu bul!" levels={['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction="Ekranda noktalar kısa süreliğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+
+  // Compute a flat index for staggered animation delays
+  let dotIndex = 0;
+
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Nokta Avcısı" colors={colors} hideRound={rahatMod}/>
-      <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border}`}>
-        {show && dots?.groups?.map((grp,gi)=>(
-          grp.dots.map((d,di)=>(
-            <div key={`${gi}-${di}`} className="absolute w-9 h-9 rounded-full shadow-lg" style={{left:`${d.x}%`,top:`${d.y}%`,backgroundColor:d.c,transform:'translate(-50%,-50%)'}}/>
-          ))
+      <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border} ${correctFlash ? 'anim-correct-pulse' : ''}`}>
+        {(show || fading) && dots?.groups?.map((grp,gi)=>(
+          grp.dots.map((d,di)=>{
+            const idx = dotIndex++;
+            return (
+              <div
+                key={`${gi}-${di}`}
+                className={`absolute w-10 h-10 rounded-full shadow-lg ${fading ? 'anim-dot-out' : 'anim-dot-in'}`}
+                style={{
+                  left:`${d.x}%`,
+                  top:`${d.y}%`,
+                  backgroundColor:d.c,
+                  animationDelay: fading ? '0ms' : `${idx * 50}ms`,
+                }}
+              />
+            );
+          })
         ))}
-        {!show && ua===null && <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-4xl mb-1">{'🤔'}</span><span className={`text-lg font-bold ${colors?.text}`}>Kaç taneydi?</span></div>}
+        {!show && !fading && ua===null && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-4xl mb-1">{'🤔'}</span>
+            <span className={`text-lg font-bold ${colors?.text} animate-bounce`}>Kaç taneydi?</span>
+          </div>
+        )}
         {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
       </div>
-      {!show && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}
+      {!show && !fading && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}
     </div>
   );
 };

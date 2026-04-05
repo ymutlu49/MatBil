@@ -33,25 +33,41 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     return {left, sz, half, opts:shuffle(opts), axis:l>=3?'yatay':'dikey'};
   };
 
-  const renderGrid = (left, right, sz, half, small=false) => {
+  const renderGrid = (left, right, sz, half, small=false, optionIndex=null) => {
     const cs = small ? 28 : 40;
     const full = left.map((row,r) => [...row, ...(right ? right[r] : Array(half).fill(-1))]);
+    const isSelectedOption = optionIndex !== null && ua === optionIndex;
+    const isCorrectSelected = isSelectedOption && p?.opts[optionIndex]?.correct;
+    const isWrongSelected = isSelectedOption && !p?.opts[optionIndex]?.correct;
     return (
       <div className="relative inline-block">
         <div className="inline-grid gap-1" style={{gridTemplateColumns:`repeat(${sz}, ${cs}px)`}}>
           {full.flat().map((cell,i) => {
             const col = i % sz;
             const isLeft = col < half;
+            const isRight = !isLeft;
+            // Mirror flip animation for correct answer right-side cells
+            const mirrorStyle = isCorrectSelected && isRight ? {
+              transform: 'scaleX(1)',
+              transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            } : isRight && ua === null ? {
+              transform: 'scaleX(1)',
+              transition: 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            } : {};
             return (<div key={i} className={`rounded ${
-              cell===1 ? (isLeft?'bg-indigo-500 border-2 border-indigo-600 shadow-sm':'bg-emerald-500 border-2 border-emerald-600 shadow-sm') :
-              cell===0 ? 'bg-gray-100 border-2 border-gray-300' :
+              cell===1 ? (isLeft
+                ? 'bg-indigo-500 border-2 border-indigo-600 shadow-md'
+                : 'bg-emerald-500 border-2 border-emerald-600 shadow-md')
+              : cell===0 ? 'bg-gray-100 border-2 border-gray-300' :
               'bg-gray-200 border-2 border-gray-400 border-dashed'
-            }`} style={{width:cs,height:cs}}/>);
+            }${isSelectedOption ? ' anim-cell-glow' : ''}`}
+              style={{width:cs, height:cs, ...mirrorStyle}}
+            />);
           })}
         </div>
         {/* Simetri ekseni - dikey kesikli çizgi */}
         <div
-          className="absolute top-0 bottom-0 pointer-events-none"
+          className="absolute top-0 bottom-0 pointer-events-none anim-axis-pulse"
           style={{
             left: `calc(${half * (cs + 4)}px - 1px)`,
             width: '3px',
@@ -94,11 +110,11 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
         {p?.opts?.map((o,i)=>(
           <button key={i} onClick={()=>ua===null&&handle(i)}
             className={`bg-white border-2 rounded-2xl flex items-center justify-center shadow-md transition-all ${
-              ua!==null ? (o.correct ? 'border-green-400 bg-green-50 ring-2 ring-green-300' : i===ua ? 'border-orange-400 bg-orange-50 ring-2 ring-orange-300' : 'border-gray-200 opacity-60') : 'border-gray-200 hover:border-indigo-400 hover:shadow-lg active:scale-95'
+              ua!==null ? (o.correct ? 'border-green-400 bg-green-50 ring-2 ring-green-300' : i===ua ? 'border-orange-400 bg-orange-50 ring-2 ring-orange-300 anim-mismatch' : 'border-gray-200 opacity-60') : 'border-gray-200 hover:border-indigo-400 hover:shadow-lg active:scale-95'
             }`}
             style={{minWidth:'130px', minHeight:'130px', padding:'12px'}}
           >
-            {renderGrid(p.left, o.right, p.sz, p.half, true)}
+            {renderGrid(p.left, o.right, p.sz, p.half, true, i)}
           </button>
         ))}
       </div>
