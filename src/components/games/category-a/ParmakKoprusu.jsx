@@ -37,8 +37,8 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     },1500);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak Köprüsü" emoji="��️" description="Ekrana doğru sayıda parmakla aynı anda dokun! Parmakların sayılarla bağlantısını güçlendir." levels={['Sv1 (1-5)','Sv2 (2-7)','Sv3 (3-9)','Sv4 (1-10)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Parmak Köprüsü" emoji="��️" level={lv} instruction="Bir sayı gösterilecek. Ekrana o kadar parmağınla aynı anda dokun! Parmaklarını kaldırdığında cevabın kontrol edilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak Köprüsü" emoji="" description="Ekrana doğru sayıda parmakla aynı anda dokun! Parmakların sayılarla bağlantısını güçlendir." levels={['Sv1 (1-5)','Sv2 (2-7)','Sv3 (3-9)','Sv4 (1-10)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Parmak Köprüsü" emoji="" level={lv} instruction="Bir sayı gösterilecek. Ekrana o kadar parmağınla aynı anda dokun! Parmaklarını kaldırdığında cevabın kontrol edilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
@@ -67,7 +67,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
           </div>
         ) : (
           <div className="text-center text-gray-400">
-            <div className="text-4xl mb-2">{'��️'}</div>
+            <div className="text-4xl mb-2">{''}</div>
             <div className="text-sm">Buraya {target} parmakla dokun</div>
           </div>
         )}

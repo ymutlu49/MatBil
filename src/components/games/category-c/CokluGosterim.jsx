@@ -27,12 +27,12 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
       </div>;
     }
     if(type==='fingers'){
-      const fEmoji=(c)=>['','☝️','✌️','��','��','��️'][c]||'';
+      const fEmoji=(c)=>['','☝️','✌️','','',''][c]||'';
       const h1=Math.min(val,5),h2=val>5?Math.min(val-5,5):0;
       return <div className="flex gap-1">{h1>0&&<span className={lg?'text-4xl':'text-3xl'}>{fEmoji(h1)}</span>}{h2>0&&<span className={lg?'text-4xl':'text-3xl'}>{fEmoji(h2)}</span>}</div>;
     }
     if(type==='objects'){
-      const emojis=['⭐','��','��','��','��'];
+      const emojis=['⭐','','','',''];
       const e=emojis[val%emojis.length];
       return <div className="flex flex-wrap justify-center gap-0.5" style={{maxWidth:lg?120:100}}>{Array.from({length:Math.min(val,20)},(_,i)=><span key={i} className={lg?'text-xl':'text-base'}>{e}</span>)}</div>;
     }
@@ -80,8 +80,8 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
     setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);
   };
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çoklu Gösterim" emoji="��" description="Aynı sayının farklı yüzlerini keşfet: rakam, sözcük, parmak, çetele, onluk çerçeve!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Çoklu Gösterim" emoji="��" level={lv} instruction="Bir sayı çeşitli biçimlerde gösterilecek. Aynı değerin farklı temsilini bul veya farklı olanı ayırt et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çoklu Gösterim" emoji="" description="Aynı sayının farklı yüzlerini keşfet: rakam, sözcük, parmak, çetele, onluk çerçeve!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Çoklu Gösterim" emoji="" level={lv} instruction="Bir sayı çeşitli biçimlerde gösterilecek. Aynı değerin farklı temsilini bul veya farklı olanı ayırt et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   if(p?.type==='oddOneOut'){

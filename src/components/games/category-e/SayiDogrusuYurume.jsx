@@ -46,8 +46,8 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
     },1800);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Yürüyüşü" emoji="��" description="Sayı doğrusu üzerinde yürüyerek toplama ve çıkarma yap! İleri git veya geri gel." levels={['Sv1: Toplama (0-10)','Sv2: Toplama (0-10)','Sv3: Karışık (0-15)','Sv4: Karışık (0-20)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Sayı Yürüyüşü" emoji="��" level={lv} instruction="Sayı doğrusu üzerinde başlangıç noktasındasın. Ok butonlarıyla doğru sayıda adım atarak sonuca ulaş!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Yürüyüşü" emoji="" description="Sayı doğrusu üzerinde yürüyerek toplama ve çıkarma yap! İleri git veya geri gel." levels={['Sv1: Toplama (0-10)','Sv2: Toplama (0-10)','Sv3: Karışık (0-15)','Sv4: Karışık (0-20)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Sayı Yürüyüşü" emoji="" level={lv} instruction="Sayı doğrusu üzerinde başlangıç noktasındasın. Ok butonlarıyla doğru sayıda adım atarak sonuca ulaş!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const pct=p?(pos/p.max)*100:0;
@@ -68,7 +68,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
           <div className="absolute top-5 h-7 w-0.5 bg-blue-400" style={{left:`${startPct}%`}}/>
           {submitted && <div className="absolute top-5 h-7 w-0.5 bg-green-500" style={{left:`${ansPct}%`}}/>}
           <div className="absolute top-0 transition-all duration-300 -translate-x-1/2 text-center" style={{left:`${pct}%`}}>
-            <div className="text-2xl">{'��'}</div>
+            <div className="text-2xl">{'📋'}</div>
             <div className="text-xs font-bold bg-white px-1 rounded shadow" style={{color:numColor(pos,p?.max||20)}}>{pos}</div>
           </div>
         </div>
@@ -97,7 +97,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
             {pos===p?.answer?'✓ Doğru yere yürüdün!':encourage()}
           </div>
           <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">
-            {'��'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
+            {'📋'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
           </div>
         </div>
       )}

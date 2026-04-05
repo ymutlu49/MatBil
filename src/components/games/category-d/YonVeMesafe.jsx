@@ -8,7 +8,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
 
 const YonVeMesafe = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
-  const objs=[{e:'��',n:'ev'},{e:'��',n:'ağaç'},{e:'��',n:'araba'},{e:'⭐',n:'yıldız'},{e:'��',n:'balon'},{e:'��',n:'köpek'},{e:'��',n:'çiçek'},{e:'��',n:'kitap'},{e:'��',n:'kedi'},{e:'��',n:'elma'}];
+  const objs=[{e:'🏠',n:'ev'},{e:'🏠',n:'ağaç'},{e:'🏠',n:'araba'},{e:'⭐',n:'yıldız'},{e:'🏠',n:'balon'},{e:'🏠',n:'köpek'},{e:'🏠',n:'çiçek'},{e:'🏠',n:'kitap'},{e:'🏠',n:'kedi'},{e:'🏠',n:'elma'}];
   const lvCfg={1:{dirs:['solunda','sağında'],label:'Yatay (Sol/Sağ)'},2:{dirs:['üstünde','altında'],label:'Dikey (Üst/Alt)'},3:{dirs:['solunda','sağında','üstünde','altında'],label:'Dört Yön Karışık'},4:{dirs:['solunda','sağında','üstünde','altında'],label:'Çoklu Nesne'}};
   const posMap={solunda:3,sağında:5,'üstünde':1,altında:7};
   const gen=(l)=>{
@@ -30,8 +30,8 @@ const YonVeMesafe = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.position)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Yön ve Mesafe" emoji="��" description="Nesnelerin birbirine göre konumunu bul! Sol, sağ, üst, alt yönlerini öğren." levels={['Seviye 1 (Sol/Sağ)','Seviye 2 (Üst/Alt)','Seviye 3 (4 Yön Karışık)','Seviye 4 (Çoklu Nesne)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Yön ve Mesafe" emoji="��" level={lv} instruction="Izgarada iki nesne gösterilecek. Birinin diğerine göre konumunu (sol, sağ, üst, alt) bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Yön ve Mesafe" emoji="" description="Nesnelerin birbirine göre konumunu bul! Sol, sağ, üst, alt yönlerini öğren." levels={['Seviye 1 (Sol/Sağ)','Seviye 2 (Üst/Alt)','Seviye 3 (4 Yön Karışık)','Seviye 4 (Çoklu Nesne)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Yön ve Mesafe" emoji="" level={lv} instruction="Izgarada iki nesne gösterilecek. Birinin diğerine göre konumunu (sol, sağ, üst, alt) bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const dirs=lvCfg[lv].dirs;
   return (

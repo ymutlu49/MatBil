@@ -23,8 +23,8 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parça-Bütün" emoji="��" description="Üçgenin köşelerindeki sayılar arasındaki ilişkiyi keşfet! Parçaların toplamı bütünü verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Parça-Bütün" emoji="��" level={lv} instruction="Üçgenin tepesinde bütün, alt köşelerinde parçalar var. İki parçanın toplamı bütüne eşittir. Eksik sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parça-Bütün" emoji="" description="Üçgenin köşelerindeki sayılar arasındaki ilişkiyi keşfet! Parçaların toplamı bütünü verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Parça-Bütün" emoji="" level={lv} instruction="Üçgenin tepesinde bütün, alt köşelerinde parçalar var. İki parçanın toplamı bütüne eşittir. Eksik sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isMissing=(t)=>p?.missingType===t;
@@ -75,7 +75,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
         </div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'��'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'📋'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

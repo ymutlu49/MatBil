@@ -13,16 +13,16 @@ const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, h
       {showHelp && help && (
         <div className="absolute top-full left-0 right-0 z-50 mt-1 mx-1 bg-white rounded-xl shadow-2xl border-2 border-indigo-200 p-3 anim-fade">
           <div className="flex justify-between items-start mb-2">
-            <div className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">�� {help.goal}</div>
+            <div className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">🧠 {help.goal}</div>
             <button onClick={() => setShowHelp(false)} className="text-gray-400 text-lg leading-none hover:text-gray-600">x</button>
           </div>
-          <p className="text-sm text-gray-600 leading-relaxed">�� {help.tip}</p>
+          <p className="text-sm text-gray-600 leading-relaxed">💡 {help.tip}</p>
         </div>
       )}
       <div className="flex items-center justify-between gap-1">
         <div className="flex items-center gap-1">
           {onLevelMenu && <button onClick={onLevelMenu} className="px-2 py-1.5 bg-white text-gray-600 rounded-lg font-bold text-xs border border-gray-300 hover:bg-gray-50">← Düzey</button>}
-          <button onClick={onBack} className="px-2 py-1.5 bg-gray-200 text-gray-600 rounded-lg font-bold text-xs hover:bg-gray-300">��</button>
+          <button onClick={onBack} className="px-2 py-1.5 bg-gray-200 text-gray-600 rounded-lg font-bold text-xs hover:bg-gray-300">🏠</button>
         </div>
         <div className={`${colors?.text || 'text-gray-700'} font-bold text-sm truncate max-w-[140px]`}>{title}</div>
         <div className="flex items-center gap-1">

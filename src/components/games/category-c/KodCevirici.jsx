@@ -48,8 +48,8 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   const handle=(a)=>{setUa(a);adaptive.record(a===p?.val);if(a===p?.val){setSc(s=>s+15*lv);speakNumber(p.val);}setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
 
   const codeLabel={dots:'Nokta',digit:'Rakam',word:'Sözcük',tally:'Çetele'};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kod Çevirici" emoji="��" description="Aynı sayıyı farklı biçimlerde tanı! Nokta↔Rakam↔Sözcük arasında çeviri yap." levels={['Sv1: Nokta↔Rakam (1-5)','Sv2: Rakam↔Sözcük (1-10)','Sv3: Üçlü Kod (1-10)','Sv4: Dörtlü Kod (1-20)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Kod Çevirici" emoji="��" level={lv} instruction="Bir sayı gösterilecek (nokta, rakam veya sözcük olarak). Aynı sayının farklı gösterimini seçeneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kod Çevirici" emoji="" description="Aynı sayıyı farklı biçimlerde tanı! Nokta↔Rakam↔Sözcük arasında çeviri yap." levels={['Sv1: Nokta↔Rakam (1-5)','Sv2: Rakam↔Sözcük (1-10)','Sv3: Üçlü Kod (1-10)','Sv4: Dörtlü Kod (1-20)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Kod Çevirici" emoji="" level={lv} instruction="Bir sayı gösterilecek (nokta, rakam veya sözcük olarak). Aynı sayının farklı gösterimini seçeneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

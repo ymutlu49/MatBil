@@ -18,7 +18,11 @@
       "Bash(grep -rn '\\\\\\\\u[0-9A-Fa-f]\\\\{4\\\\}' src/ --include=\"*.jsx\" --include=\"*.js\")",
       "Bash(node fix-chars.js)",
       "Bash(mv fix-chars.js fix-chars.cjs)",
-      "Bash(node fix-chars.cjs)"
+      "Bash(node fix-chars.cjs)",
+      "Bash(grep -c '\\\\\\\\u0' src/App.jsx)",
+      "Bash(grep -rn '\\\\\\\\u00\\\\|\\\\\\\\u01\\\\|\\\\\\\\u02' src/ --include=\"*.jsx\" --include=\"*.js\")",
+      "Bash(node fix-emoji.cjs)",
+      "Bash(node -e \"const fs=require\\(''fs''\\);const path=require\\(''path''\\);function w\\(d\\){for\\(const f of fs.readdirSync\\(d\\)\\){const p=path.join\\(d,f\\);if\\(fs.statSync\\(p\\).isDirectory\\(\\)\\){if\\(![''node_modules'',''dist'',''.git''].includes\\(f\\)\\)w\\(p\\)}else if\\(/\\\\.\\(jsx|js\\)$/.test\\(f\\)\\){const c=fs.readFileSync\\(p,''utf8''\\);if\\(c.includes\\(''\\\\uFFFD''\\)\\)console.log\\(''STILL:'',p\\)}}}w\\(''src''\\);console.log\\(''Check complete''\\)\")"
     ]
   }
 }

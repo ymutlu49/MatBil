@@ -53,8 +53,8 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(genPattern(l));setUa(null);setGs('playing');};
   const handle=(i)=>{setUa(i);if(p?.opts[i]?.correct)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(genPattern(lv));setUa(null);}else setGs('results');},1200);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Simetri Aynası" emoji="��" description="Deseni simetri eksenine göre tamamla! Ayna görüntüsünü bul." levels={['Sv1: 3x3 Kolay','Sv2: 3x3 Orta','Sv3: 4x4 Zor','Sv4: 4x4 Uzman']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Simetri Aynası" emoji="��" level={lv} instruction="Sol tarafta bir desen gösterilecek. Sağ taraftaki simetrik (ayna) tamamlamayı seçeneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Simetri Aynası" emoji="" description="Deseni simetri eksenine göre tamamla! Ayna görüntüsünü bul." levels={['Sv1: 3x3 Kolay','Sv2: 3x3 Orta','Sv3: 4x4 Zor','Sv4: 4x4 Uzman']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Simetri Aynası" emoji="" level={lv} instruction="Sol tarafta bir desen gösterilecek. Sağ taraftaki simetrik (ayna) tamamlamayı seçeneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
@@ -62,7 +62,7 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
         <div className="text-xs text-gray-400 mb-2">Deseni simetrik tamamla (| simetri ekseni):</div>
         {p && renderGrid(p.left, null, p.sz, p.half)}
-        <div className="text-[10px] text-indigo-500 mt-1">{'��'} Sol yarı | {'❓'} Sağ yarı = ?</div>
+        <div className="text-[10px] text-indigo-500 mt-1">{'📋'} Sol yarı | {'❓'} Sağ yarı = ?</div>
       </div>
       <div className="text-sm text-gray-600 mb-2 font-medium">Doğru ayna görüntüsünü seç:</div>
       <div className="grid grid-cols-2 gap-2">

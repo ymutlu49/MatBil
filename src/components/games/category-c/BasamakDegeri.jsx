@@ -137,8 +137,8 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak Değeri" emoji="��️" description="Onluk çubukları ve birlik küpleri kullanarak basamak değerlerini keşfet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birleştir)','Seviye 4 (Yüzlükler)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Basamak Değeri" emoji="��️" level={lv} instruction="Onluk çubuklar ve birlik küpler gösterilecek. Görselden sayarak veya sayıyı ayrıştırarak doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak Değeri" emoji="" description="Onluk çubukları ve birlik küpleri kullanarak basamak değerlerini keşfet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birleştir)','Seviye 4 (Yüzlükler)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Basamak Değeri" emoji="" level={lv} instruction="Onluk çubuklar ve birlik küpler gösterilecek. Görselden sayarak veya sayıyı ayrıştırarak doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const hl = p?.askHL;
   return (
@@ -165,7 +165,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       {/* Soru */}
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><div className="text-sm text-gray-700 font-medium">{p?.question}</div></div>
       {/* Cevap / Seçenekler */}
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'��'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'📋'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

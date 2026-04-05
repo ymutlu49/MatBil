@@ -14,8 +14,8 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Yakınlık Tahmini" emoji="��" description="Sayı hangi referans noktasına daha yakın? Mesafe tahmini yap!" levels={['Seviye 1 (0-5-10)','Seviye 2 (0-10-20)','Seviye 3 (0-25-50)','Seviye 4 (0-50-100)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Yakınlık Tahmini" emoji="��" level={lv} instruction="Bir sayı gösterilecek. Bu sayı, verilen iki referans noktasından hangisine daha yakın? Doğru olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Yakınlık Tahmini" emoji="" description="Sayı hangi referans noktasına daha yakın? Mesafe tahmini yap!" levels={['Seviye 1 (0-5-10)','Seviye 2 (0-10-20)','Seviye 3 (0-25-50)','Seviye 4 (0-50-100)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Yakınlık Tahmini" emoji="" level={lv} instruction="Bir sayı gösterilecek. Bu sayı, verilen iki referans noktasından hangisine daha yakın? Doğru olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const fullMin=cfg[lv].refs[0], fullMax=cfg[lv].refs[cfg[lv].refs.length-1];
   const ballPct=p?((p?.number-fullMin)/(fullMax-fullMin))*100:50;

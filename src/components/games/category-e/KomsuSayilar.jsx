@@ -89,8 +89,8 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="��" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve atlayarak say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, iki boşluk)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, atlayarak)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Komşu Sayılar" emoji="��" level={lv} instruction="Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve atlayarak sayma sorularını çöz." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve atlayarak say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, iki boşluk)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, atlayarak)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Komşu Sayılar" emoji="" level={lv} instruction="Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve atlayarak sayma sorularını çöz." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   return (
@@ -127,7 +127,7 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="text-sm text-gray-700 font-medium">{p?.question}</div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'��'} {p?.hint}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'📋'} {p?.hint}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

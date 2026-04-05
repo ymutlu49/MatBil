@@ -46,8 +46,8 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(i)=>{const correct=p?.opts[i]?.correct;setUa(i);if(correct)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Zihinsel Döndürme" emoji="��" description="Şekli zihninde döndür! Hedef şeklin döndürülmüş halini bul, aynalı olanları ayırt et." levels={['Sv1: Kolay (90° adım)','Sv2: Orta (aynalı var)','Sv3: Zor (45° adım)','Sv4: Uzman']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="��" level={lv} instruction="Üstteki şekli zihninde döndür. Alttaki seçeneklerden aynı şeklin döndürülmüş halini bul! Aynalı olanlar YANLIŞ." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Zihinsel Döndürme" emoji="" description="Şekli zihninde döndür! Hedef şeklin döndürülmüş halini bul, aynalı olanları ayırt et." levels={['Sv1: Kolay (90° adım)','Sv2: Orta (aynalı var)','Sv3: Zor (45° adım)','Sv4: Uzman']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="" level={lv} instruction="Üstteki şekli zihninde döndür. Alttaki seçeneklerden aynı şeklin döndürülmüş halini bul! Aynalı olanlar YANLIŞ." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
@@ -69,7 +69,7 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
       </div>
       {ua!==null && <div className="mt-2 text-sm text-center">
         <div className={`font-bold ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>{p?.opts[ua]?.correct?'✓ Doğru! Şekli zihninde döndürebildin.':encourage()}</div>
-        {!p?.opts[ua]?.correct && <div className="text-xs text-gray-500 mt-1">{'��'} Aynalı şekiller farklıdır. Şeklin köşelerine ve kenarlarına odaklan!</div>}
+        {!p?.opts[ua]?.correct && <div className="text-xs text-gray-500 mt-1">{'📋'} Aynalı şekiller farklıdır. Şeklin köşelerine ve kenarlarına odaklan!</div>}
       </div>}
     </div>
   );

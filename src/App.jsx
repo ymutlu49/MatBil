@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, recommendNext, downloadEtkinlikPDF } from './utils';
+import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, downloadEtkinlikPDF } from './utils';
 import { GAMES } from './constants/games';
 import { CATEGORIES } from './constants/categories';
 import { COLORS } from './constants/colors';
@@ -100,7 +100,7 @@ const App = () => {
     const GameComp = game.comp;
     const prevBest = progress[currentGame]?.bestScore || 0;
     return (
-      <Suspense fallback={<div className="h-screen flex items-center justify-center bg-gray-50"><div className="text-2xl animate-pulse">{'��'} Yükleniyor...</div></div>}>
+      <Suspense fallback={<div className="h-screen flex items-center justify-center bg-gray-50"><div className="text-2xl animate-pulse">{"🧠"} Yükleniyor...</div></div>}>
         <GameComp onBack={() => setCurrentGame(null)} colors={COLORS[game.cat]}
           rahatMod={rahatMod} sesAcik={sesAcik} prevBest={prevBest}
           onGameComplete={(score, level) => handleGameComplete(currentGame, score, level)} />
@@ -125,19 +125,19 @@ const App = () => {
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <button onClick={() => setView('report')} className="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors">{'��'} Rapor</button>
+            <button onClick={() => setView('report')} className="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors">{"📊"} Rapor</button>
             <button onClick={toggleYazi} aria-label={buyukYazi?'Büyük yazı aktif':'Normal yazı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${buyukYazi ? 'bg-orange-100 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>{buyukYazi ? 'A+' : 'A'}</button>
-            <button onClick={toggleSes} aria-label={sesAcik?'Ses açık':'Ses kapalı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${sesAcik ? 'bg-blue-100 text-blue-600' : 'bg-gray-50 text-gray-400'}`}>{sesAcik ? '��' : '��'}</button>
-            <button onClick={toggleRahat} aria-label={rahatMod?'Rahat mod aktif':'Normal mod'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${rahatMod ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400'}`}>{'��'}</button>
-            <button onClick={() => setView('admin')} className="px-2 py-1.5 bg-slate-50 text-slate-500 rounded-lg font-bold text-xs hover:bg-slate-100 transition-colors">{'��'}</button>
-            <button onClick={handleLogout} className="px-2 py-1.5 bg-gray-100 text-gray-500 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">{'��'}</button>
+            <button onClick={toggleSes} aria-label={sesAcik?'Ses açık':'Ses kapalı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${sesAcik ? 'bg-blue-100 text-blue-600' : 'bg-gray-50 text-gray-400'}`}>{sesAcik ? '🔊' : '🔇'}</button>
+            <button onClick={toggleRahat} aria-label={rahatMod?'Rahat mod aktif':'Normal mod'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${rahatMod ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400'}`}>{"🐢"}</button>
+            <button onClick={() => setView('admin')} className="px-2 py-1.5 bg-slate-50 text-slate-500 rounded-lg font-bold text-xs hover:bg-slate-100 transition-colors">{"🔐"}</button>
+            <button onClick={handleLogout} className="px-2 py-1.5 bg-gray-100 text-gray-500 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">{"🚪"}</button>
           </div>
         </div>
 
         {/* Başlık + İlerleme */}
         <div className="shrink-0">
           <div className="text-center mb-2">
-            <h1 className="text-lg font-bold text-gray-800">{'��'} Matematiksel Bilişin Temelleri</h1>
+            <h1 className="text-lg font-bold text-gray-800">{"🧠"} Matematiksel Bilişin Temelleri</h1>
             <p className="text-indigo-700 font-semibold text-xs italic">Sayı Hissinden Şekil Algısına</p>
           </div>
           <div className="flex gap-2 mb-2">
@@ -166,7 +166,7 @@ const App = () => {
         {/* Rozetler */}
         {(() => { const earned = checkBadges(progress, GAMES); return earned.length > 0 ? (
           <div className="shrink-0 mb-2 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 rounded-xl border border-amber-200 p-2">
-            <div className="text-xs font-bold text-amber-700 mb-1">{'��'} Rozetlerin ({earned.length}/{BADGES.length})</div>
+            <div className="text-xs font-bold text-amber-700 mb-1">{"🏆"} Rozetlerin ({earned.length}/{BADGES.length})</div>
             <div className="flex gap-1.5 flex-wrap">{earned.map(b => (
               <div key={b.id} className="bg-white rounded-lg px-2 py-1 shadow-sm border border-amber-100 flex items-center gap-1" title={b.desc}>
                 <span className="text-base">{b.emoji}</span>
@@ -179,7 +179,7 @@ const App = () => {
         {/* Streak */}
         {streak.count > 0 && (
           <div className="shrink-0 mb-2 bg-gradient-to-r from-orange-50 via-red-50 to-amber-50 rounded-xl border border-orange-200 p-2.5 flex items-center gap-3">
-            <div className="text-3xl">{'��'}</div>
+            <div className="text-3xl">{"🔥"}</div>
             <div className="flex-1">
               <div className="font-bold text-orange-700 text-sm">{streak.count} gün seri!</div>
               <div className="text-[10px] text-gray-500">{streak.best > streak.count ? `En iyi: ${streak.best} gün` : streak.count >= 7 ? 'Harika devam et!' : 'Her gün oyna, serini uzat!'}</div>
@@ -188,51 +188,22 @@ const App = () => {
           </div>
         )}
 
-        {/* Önerilen Oyun */}
-        {(() => {
-          const unplayed = Object.entries(GAMES).filter(([id]) => !progress[id]);
-          const weak = Object.entries(progress).filter(([,d]) => d.stars <= 1 && d.attempts >= 1).sort(([,a],[,b]) => a.stars - b.stars);
-          const now = Date.now();
-          const stale = Object.entries(progress).filter(([,d]) => {
-            if(!d.lastPlayed) return false;
-            const daysSince = (now - new Date(d.lastPlayed).getTime()) / (1000*60*60*24);
-            return daysSince >= 3 && d.stars < 3;
-          }).sort(([,a],[,b]) => new Date(a.lastPlayed) - new Date(b.lastPlayed));
-          const graphRec = recommendNext(progress, GAMES);
-          const rec = weak.length > 0 ? weak[0] : (stale.length > 0 ? stale[0] : (graphRec ? [graphRec, progress[graphRec]] : (unplayed.length > 0 ? unplayed[Math.floor(Math.random()*unplayed.length)] : null)));
-          if(!rec) return null;
-          const [recId] = rec;
-          const game = GAMES[recId];
-          if(!game) return null;
-          const isWeak = weak.length > 0 && rec === weak[0];
-          return (
-            <button onClick={() => setCurrentGame(recId)} className="shrink-0 mb-2 w-full bg-gradient-to-r from-indigo-50 via-blue-50 to-cyan-50 border-2 border-indigo-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-indigo-300 transition-all group">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{game.emoji}</div>
-              <div className="flex-1 text-left">
-                <div className="font-bold text-gray-800 text-sm">{'��'} Sana Önerilen: {game.name}</div>
-                <div className="text-[10px] text-gray-500">{isWeak ? 'Bu oyunda gelişim fırsatın var!' : (stale.length > 0 && rec === stale[0] ? 'Tekrar zamanı geldi! ��' : 'Henüz denemediğin bir oyun!')}</div>
-              </div>
-              <div className="px-2.5 py-1 bg-indigo-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-indigo-600 transition-colors">{'▶'} Oyna</div>
-            </button>
-          );
-        })()}
-
         {/* Etkinlik Kitapçığı */}
         <div className="shrink-0 mb-2">
           <button onClick={handleDownloadPDF}
             className="w-full bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all group">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{'��'}</div>
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{"📝"}</div>
             <div className="flex-1 text-left">
               <div className="font-bold text-gray-800 text-sm">Kâğıt-Kalem Etkinlik Kitapçığı</div>
               <div className="text-[10px] text-gray-500">14 etkinlik · 5 kategori · Yazdır & çöz</div>
             </div>
-            <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{'��'} İndir</div>
+            <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{"📥"} İndir</div>
           </button>
         </div>
 
         {/* Accordion Kategoriler */}
         <div className="flex-1 min-h-0 overflow-y-auto scroll-area">
-          <div className="space-y-1.5 pb-10">
+          <div className="space-y-1.5 pb-32">
             {CATEGORIES.map(cat => {
               const isOpen = expandedCat === cat.id;
               const catGames = Object.entries(GAMES).filter(([, g]) => g.cat === cat.id);
@@ -257,12 +228,12 @@ const App = () => {
 
                   {isOpen && (
                     <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-xl`}>
-                      {cat.id === 'D' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'��'} Küçük Uzay (Nesne)</div>}
+                      {cat.id === 'D' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{"📦"} Küçük Uzay (Nesne)</div>}
                       {catGames.map(([id, g]) => {
                         const gp = progress[id];
                         return (
                           <React.Fragment key={id}>
-                            {cat.id === 'D' && id === 'D4' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'��'} Büyük Uzay (Mekân)</div>}
+                            {cat.id === 'D' && id === 'D4' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{"🌍"} Büyük Uzay (Mekân)</div>}
                             <div className="mx-1.5 mb-0.5">
                               <button onClick={() => setCurrentGame(id)}
                                 className="w-full py-2 px-3 bg-white/80 hover:bg-white hover:shadow-md rounded-lg flex items-center gap-2 transition-all">

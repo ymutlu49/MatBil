@@ -207,8 +207,8 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
     setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setSelected([]);setSub(false);}else setGs('results');},3000);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="İlişkiler ve Çıkarım" emoji="��" description="Şekiller arasındaki ilişkileri keşfet! Doğru olan tüm seçenekleri işaretle." levels={['Düzey 3a (Temel)','Düzey 3b (Orta)','Düzey 3c (İleri)','Düzey 3d (Uzman)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="İlişkiler ve Çıkarım" emoji="��" level={lv} instruction="Şekiller hakkında ifadeler gösterilecek. Doğru olan tüm ifadeleri seç! Dikkat: birden fazla doğru olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="İlişkiler ve Çıkarım" emoji="" description="Şekiller arasındaki ilişkileri keşfet! Doğru olan tüm seçenekleri işaretle." levels={['Düzey 3a (Temel)','Düzey 3b (Orta)','Düzey 3c (İleri)','Düzey 3d (Uzman)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="İlişkiler ve Çıkarım" emoji="" level={lv} instruction="Şekiller hakkında ifadeler gösterilecek. Doğru olan tüm ifadeleri seç! Dikkat: birden fazla doğru olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const correctIndices = p?.opts?.map((o,i)=>o.correct?i:-1).filter(i=>i>=0) || [];
@@ -248,7 +248,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
 
       {sub && (
         <div className="bg-blue-50 p-4 rounded-xl text-blue-800 text-sm max-w-sm text-center">
-          {'��'} {p?.explain}
+          {'📋'} {p?.explain}
         </div>
       )}
     </div>

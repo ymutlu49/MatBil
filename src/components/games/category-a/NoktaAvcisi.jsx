@@ -113,8 +113,8 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG = (l) => { setLv(l); setSc(0); last.current=[]; adaptive.reset(); setGs('playing'); startR(l,1); };
   const handle = (a) => { setUa(a); adaptive.record(a===dc); if(a===dc){setSc(s=>s+10*lv);speakNumber(dc);} setTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200); };
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="��" description="Noktalar kısa süre gösterilecek. Saymadan, bakarak kaç tane olduğunu bul!" levels={['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="��" level={lv} instruction="Ekranda noktalar kısa süreliğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktalar kısa süre gösterilecek. Saymadan, bakarak kaç tane olduğunu bul!" levels={['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction="Ekranda noktalar kısa süreliğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
@@ -125,7 +125,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
             <div key={`${gi}-${di}`} className="absolute w-9 h-9 rounded-full shadow-lg" style={{left:`${d.x}%`,top:`${d.y}%`,backgroundColor:d.c,transform:'translate(-50%,-50%)'}}/>
           ))
         ))}
-        {!show && ua===null && <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-4xl mb-1">{'��'}</span><span className={`text-lg font-bold ${colors?.text}`}>Kaç taneydi?</span></div>}
+        {!show && ua===null && <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-4xl mb-1">{'📋'}</span><span className={`text-lg font-bold ${colors?.text}`}>Kaç taneydi?</span></div>}
         {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
       </div>
       {!show && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}

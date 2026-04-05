@@ -8,17 +8,17 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const STRATEGIES = {
-  quantity: ['Grupla düşündüm ��', 'Referans noktası kullandım ��', 'Sezgisel tahmin yaptım ��', 'Yaklaşık saydım ��'],
-  numberLine: ['Yarıyı referans aldım ½', 'Oranlayarak buldum ��', 'Bildiğim sayılardan yola çıktım ��'],
-  measurement: ['Referans nesneyi kullandım ��', 'Karşılaştırarak tahmin ettim ⚖️', 'Günlük deneyimimden yararlandım ��'],
-  computation: ['Sayıları yuvarladım ��', 'Kolay parçalara ayırdım ✂️', 'Aşina sayıları kullandım ��'],
+  quantity: ['Grupla düşündüm ', 'Referans noktası kullandım ', 'Sezgisel tahmin yaptım ', 'Yaklaşık saydım '],
+  numberLine: ['Yarıyı referans aldım ½', 'Oranlayarak buldum ', 'Bildiğim sayılardan yola çıktım '],
+  measurement: ['Referans nesneyi kullandım ', 'Karşılaştırarak tahmin ettim ⚖️', 'Günlük deneyimimden yararlandım '],
+  computation: ['Sayıları yuvarladım ', 'Kolay parçalara ayırdım ✂️', 'Aşina sayıları kullandım '],
 };
 
 const ExplainStep = ({ type, onDone }) => {
   const strats = STRATEGIES[type] || STRATEGIES.quantity;
   return (
     <div className="mt-2 anim-fade">
-      <div className="text-xs font-bold text-indigo-600 mb-1.5 text-center">{'��'} Hangi stratejiyi kullandın?</div>
+      <div className="text-xs font-bold text-indigo-600 mb-1.5 text-center">{'📋'} Hangi stratejiyi kullandın?</div>
       <div className="flex flex-wrap gap-1.5 justify-center">
         {strats.map((s,i) => (
           <button key={i} onClick={() => onDone(s)}
@@ -95,8 +95,8 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     },800);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Tahmin Kavanozları" emoji="��" description="Kavanozda kaç bilye var? Tam isabet en yüksek puanı kazandırır. Yakın tahminler de puan verir!" levels={['Seviye 1 (5-15)','Seviye 2 (10-25)','Seviye 3 (15-35)','Seviye 4 (20-50)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Tahmin Kavanozları" emoji="��" level={lv} instruction="Kavanozdaki bilyelere bak ve kaç tane olduğunu tahmin et. Artı/eksi butonlarıyla sayını ayarla ve gönder!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Tahmin Kavanozları" emoji="" description="Kavanozda kaç bilye var? Tam isabet en yüksek puanı kazandırır. Yakın tahminler de puan verir!" levels={['Seviye 1 (5-15)','Seviye 2 (10-25)','Seviye 3 (15-35)','Seviye 4 (20-50)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Tahmin Kavanozları" emoji="" level={lv} instruction="Kavanozdaki bilyelere bak ve kaç tane olduğunu tahmin et. Artı/eksi butonlarıyla sayını ayarla ve gönder!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const guess = parseInt(ug) || 0;
@@ -124,7 +124,7 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
       {/* Tekrar goster butonu */}
       {!visible && !sub && (
         <button onClick={handlePeek} className="mb-3 px-4 py-2 bg-amber-100 text-amber-700 rounded-xl text-sm font-bold hover:bg-amber-200 transition-colors">
-          {'��️'} Tekrar Göster {peekCount > 0 && `(${peekCount}. kullanım)`}
+          {''} Tekrar Göster {peekCount > 0 && `(${peekCount}. kullanım)`}
         </button>
       )}
 
@@ -149,10 +149,10 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className={`text-center ${diff===0?'anim-pop':'anim-fade'}`}>
           <div className="text-2xl font-bold text-gray-700 mb-2">Doğru cevap: {tc}</div>
           <div className={`text-xl font-bold ${diff===0?'text-green-500':diff<=2?'text-green-400':diff<=5?'text-amber-500':'text-orange-500'}`}>
-            {diff===0?'�� Tam isabet!':diff<=2?'�� Çok yaklaştın!':diff<=5?`�� Yakın tahmin! (Fark: ${diff})`:`Fark: ${diff}`}
+            {diff===0?' Tam isabet!':diff<=2?' Çok yaklaştın!':diff<=5?` Yakın tahmin! (Fark: ${diff})`:`Fark: ${diff}`}
           </div>
           <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">
-            {'��'} Kavanozda {tc} bilye vardı. Senin tahminin: {guess}
+            {'📋'} Kavanozda {tc} bilye vardı. Senin tahminin: {guess}
           </div>
           {!explained && <ExplainStep type="quantity" onDone={handleExplain}/>}
           {explained && <div className="text-xs text-green-600 mt-2 font-medium anim-fade">{'✓'} Harika düşünce!</div>}

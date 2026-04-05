@@ -80,8 +80,8 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
     setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setUa(null);}else setGs('results');},2000);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Eleman ve Özellikler" emoji="��" description="Şekillerin kenar, köşe ve açılarını incele! Her şeklin özelliklerini öğren." levels={['Düzey 2a (Temel)','Düzey 2b (Orta)','Düzey 2c (Tanımlama)','Düzey 2d (Özellik)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Eleman ve Özellikler" emoji="��" level={lv} instruction="Bir şekil gösterilecek ve kenar, köşe veya açı sayısı sorulacak. Doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Eleman ve Özellikler" emoji="" description="Şekillerin kenar, köşe ve açılarını incele! Her şeklin özelliklerini öğren." levels={['Düzey 2a (Temel)','Düzey 2b (Orta)','Düzey 2c (Tanımlama)','Düzey 2d (Özellik)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Eleman ve Özellikler" emoji="" level={lv} instruction="Bir şekil gösterilecek ve kenar, köşe veya açı sayısı sorulacak. Doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const sd = p?.shape ? shapeData[p?.shape] : null;
@@ -97,7 +97,7 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="text-lg text-gray-700 font-medium">{p?.q}</div>
       </div>
 
-      {ua!==null?(<div className="text-center max-w-sm"><div className={`text-2xl font-bold mb-2 ${ua===p?.a?'text-green-500':'text-orange-500'}`}>{ua===p?.a?'✓ Doğru!':`${encourage()} Cevap: ${p?.a}`}</div><div className="bg-amber-50 p-3 rounded-xl text-amber-700 text-sm">{'��'} {p?.explain}</div></div>):(<div className={`grid ${p?.options?.length<=2?'grid-cols-2':'grid-cols-2'} gap-3`}>{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-6 py-4 ${colors?.button} text-white rounded-xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center max-w-sm"><div className={`text-2xl font-bold mb-2 ${ua===p?.a?'text-green-500':'text-orange-500'}`}>{ua===p?.a?'✓ Doğru!':`${encourage()} Cevap: ${p?.a}`}</div><div className="bg-amber-50 p-3 rounded-xl text-amber-700 text-sm">{'📋'} {p?.explain}</div></div>):(<div className={`grid ${p?.options?.length<=2?'grid-cols-2':'grid-cols-2'} gap-3`}>{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-6 py-4 ${colors?.button} text-white rounded-xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{o}</button>))}</div>)}
     </div>
   );
 };

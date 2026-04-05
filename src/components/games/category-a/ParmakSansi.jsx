@@ -74,8 +74,8 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setFc(Math.floor(Math.random()*cfg[l].max)+1);setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===fc)setSc(s=>s+10*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setFc(Math.floor(Math.random()*cfg[lv].max)+1);setUa(null);}else setGs('results');},1200);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kaç Parmak?" emoji="��️" description="Parmak sayısını hızlica say! Ellerdeki açık parmakları saymadan tanımaya çalış." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="��️" level={lv} instruction="Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kaç Parmak?" emoji="" description="Parmak sayısını hızlica say! Ellerdeki açık parmakları saymadan tanımaya çalış." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="" level={lv} instruction="Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
