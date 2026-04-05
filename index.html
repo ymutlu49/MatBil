@@ -9,10 +9,19 @@
   <meta name="theme-color" content="#6366F1" />
   <meta name="application-name" content="MatBilis" />
   <meta name="apple-mobile-web-app-title" content="MatBilis" />
-  <title>Matematiksel Bilisin Temelleri</title>
+  <link rel="manifest" href="/MatBil/manifest.json" />
+  <meta name="description" content="Sayı hissinden şekil algısına - diskalkuli için eğitsel matematik oyunları" />
+  <title>Matematiksel Bilişin Temelleri</title>
 </head>
 <body>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/MatBil/sw.js').catch(() => {});
+      });
+    }
+  </script>
 </body>
 </html>

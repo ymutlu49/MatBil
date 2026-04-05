@@ -1,0 +1,23 @@
+{
+  "name": "MatBiliş - Matematiksel Bilişin Temelleri",
+  "short_name": "MatBiliş",
+  "description": "Sayı hissinden şekil algısına - eğitsel matematik oyunları",
+  "start_url": "/MatBil/",
+  "scope": "/MatBil/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EEF2FF",
+  "theme_color": "#6366F1",
+  "icons": [
+    {
+      "src": "icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icon-192.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
