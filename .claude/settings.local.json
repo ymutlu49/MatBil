@@ -53,7 +53,9 @@
       "Bash(pandoc \"C:/Users/yilma/Desktop/Jimaro/Diskalkuli_Platform/MatBil/Bölüm 2_ÜÇLÜ KODLAMA MODELİ VE ÇAĞDAŞ ÖĞRETIM YAKLAŞIMLARI-SO.docx\" -t plain)",
       "Bash(unzip -l \"Bölüm 2_ÜÇLÜ KODLAMA MODELİ VE ÇAĞDAŞ ÖĞRETIM YAKLAŞIMLARI-SO.docx\")",
       "WebSearch",
-      "WebFetch(domain:measuringstuff.com)"
+      "WebFetch(domain:measuringstuff.com)",
+      "Bash(grep -n \"prevBest,onGameComplete\\\\|prevBest, onGameComplete\\\\|onGameComplete, onGameComplete\\\\|prevBest, prevBest\" src/components/games/category-*/*.jsx)",
+      "Bash(grep -n \"const ParmakKoprusu\\\\|const HesaplamaliTahmin\\\\|const OlcmeTahmini\\\\|const TahminKavanozlari\\\\|const SayiSembolEslestirme\" src/components/games/category-*/*.jsx)"
     ]
   }
 }

@@ -6,7 +6,7 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 /* SVG tally mark: 4 vertical lines + 1 diagonal cross */
-const TallyGroup = ({ size = 28, prevBest }) => (
+const TallyGroup = ({ size = 28 }) => (
   <svg width={size} height={size} viewBox="0 0 28 28" className="inline-block">
     <line x1="4" y1="4" x2="4" y2="24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
     <line x1="10" y1="4" x2="10" y2="24" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
