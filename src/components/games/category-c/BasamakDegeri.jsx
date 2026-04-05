@@ -150,6 +150,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Basamak Değeri" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       {/* Görsel temsil */}
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 w-full max-w-sm">
         {p?.showNumber && <div className="text-center text-4xl font-bold mb-3" style={{color:numColor(p?.number,p?.number>99?999:99)}}>{p?.number}</div>}
@@ -172,7 +173,8 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       <div className="bg-white px-5 py-3 rounded-xl shadow mb-3 text-center"><div className="text-base text-gray-700 font-semibold">{p?.question}</div></div>
       {/* Cevap / Seçenekler */}
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'💡'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 min-h-[56px] ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

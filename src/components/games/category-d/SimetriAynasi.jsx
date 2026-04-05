@@ -89,6 +89,7 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Simetri Aynası" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
 
       {/* Soru deseni - büyük ve ortada */}
       <div className="bg-white rounded-2xl shadow-xl px-6 py-4 mb-3 text-center">
@@ -122,7 +123,8 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
       {ua!==null && <div className={`mt-3 text-center font-bold text-base ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>
         {p?.opts[ua]?.correct?'✓ Harika! Simetriyi doğru gördün!':encourage()+' Ayna ekseni boyunca her hücreyi kontrol et!'}
       </div>}
-    </div>
+
+      </div>    </div>
   );
 };
 

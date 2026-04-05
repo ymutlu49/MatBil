@@ -33,7 +33,10 @@
       "Bash(while read:*)",
       "Bash(do if:*)",
       "Bash(then echo:*)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(grep -c \"GameHeader\" src/components/games/category-*/*.jsx)",
+      "Bash(grep -n \"GameHeader.*/>$\" src/components/games/category-c/SayiSembolEslestirme.jsx)",
+      "Bash(node fix-layout.cjs)"
     ]
   }
 }

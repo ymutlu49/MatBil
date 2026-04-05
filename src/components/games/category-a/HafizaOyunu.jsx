@@ -51,8 +51,9 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
   const isRevealed=(i)=>flipped.includes(i)||matched.includes(i);
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <div className="flex items-center justify-between w-full max-w-md mb-2"><button onClick={onBack} className={`px-4 py-2 ${colors?.button} text-white rounded-xl font-bold`}>{'🏠'}</button><div className="text-sm text-gray-600">Eşleşen: {matched.length/2}/{cards.length/2}</div><div className="bg-yellow-100 px-4 py-2 rounded-full font-bold text-yellow-700">{'⭐'} {sc}</div></div>
+    <div className={`h-screen ${colors?.bg} flex flex-col p-3 overflow-hidden`}>
+      <div className="shrink-0 flex items-center justify-between w-full max-w-md mx-auto mb-2"><button onClick={onBack} className={`px-4 py-2 ${colors?.button} text-white rounded-xl font-bold`}>{'🏠'}</button><div className="text-sm text-gray-600">Eşleşen: {matched.length/2}/{cards.length/2}</div><div className="bg-yellow-100 px-4 py-2 rounded-full font-bold text-yellow-700">{'⭐'} {sc}</div></div>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-3 text-center"><span className="text-sm font-medium text-gray-600">{'💡'} {instrText}</span></div>
       <div className="grid gap-2" style={{gridTemplateColumns:`repeat(${cards.length<=12?4:5},1fr)`}}>
         {cards.map((c,i)=>(
@@ -80,6 +81,7 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

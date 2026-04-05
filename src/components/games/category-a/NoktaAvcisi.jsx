@@ -148,6 +148,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Nokta Avcısı" colors={colors} hideRound={rahatMod}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border} ${correctFlash ? 'anim-correct-pulse' : ''}`}>
         {(show || fading) && dots?.groups?.map((grp,gi)=>(
           grp.dots.map((d,di)=>{
@@ -175,7 +176,8 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
         {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
       </div>
       {!show && !fading && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}
-    </div>
+
+      </div>    </div>
   );
 };
 

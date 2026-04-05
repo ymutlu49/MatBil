@@ -53,6 +53,7 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Kod Çevirici" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center min-h-[100px] flex flex-col items-center">
         <div className="text-xs text-gray-400 mb-2">{codeLabel[p?.fromType]} gösterimi:</div>
         {p && renderCode(p.val, p.fromType)}
@@ -68,7 +69,8 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
           {renderCode(o,p?.toType,'sm')}
         </button>
       ))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

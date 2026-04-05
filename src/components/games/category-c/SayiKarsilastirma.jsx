@@ -69,6 +69,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Büyük-Küçük" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-5 py-3 rounded-xl shadow mb-3 text-center">
         <span className="text-xl font-bold text-gray-700">{'⚖️'} {p?.question}</span>
         {(p?.type==='stroop'||p?.type==='mixed')&&!p?.isCongruent&&ua===null&&<div className="text-sm text-purple-500 mt-1 font-medium">⚠️ Boyutuna aldanma!</div>}
@@ -92,7 +93,8 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
           {p?.type==='stroop'&&!p?.isCongruent&&' (Boyut yanıltıcıydı!)'}
         </div>
       </div>}
-    </div>
+
+      </div>    </div>
   );
 };
 

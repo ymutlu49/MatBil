@@ -97,10 +97,12 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Ölçme Tahmini" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-green-100 p-4 rounded-2xl shadow-lg mb-3 border-2 border-green-300 text-center"><span className="text-4xl">{p?.ref?.emoji}</span><div className="font-bold text-green-700">{p?.ref?.name}</div><div className="text-2xl font-bold text-green-600">{p?.ref?.value} {p?.ref?.unit}</div></div>
       <div className="bg-white p-3 rounded-xl shadow-xl mb-3 border-2 border-amber-300 text-center"><span className="text-4xl">{p?.target?.emoji}</span><div className="font-bold text-gray-700 text-lg mt-2">{p?.target?.name}</div><div className="text-amber-600 font-medium">Yaklaşık kaç {p?.target?.unit}?</div></div>
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.target?.value?'text-green-500':'text-orange-500'}`}>{ua===p?.target?.value?'✓ Doğru!':`${encourage()} Cevap: ${p?.target?.value} ${p?.target?.unit}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">💡 {p?.ref?.name} ({p?.ref?.value} {p?.ref?.unit}) referans alındığında {p?.target?.name} yaklaşık {p?.target?.value} {p?.target?.unit} eder.</div>{!explained2 && <ExplainStep type="measurement" onDone={handleExplain2}/>}{explained2 && <div className="text-xs text-green-600 mt-2 font-medium anim-fade">{'✓'} Güzel strateji!</div>}</div>):(<div className="grid grid-cols-2 gap-3">{p?.opts?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-6 py-4 ${colors?.button} text-white rounded-xl font-bold text-xl shadow-lg`}>{o} {p?.target?.unit}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

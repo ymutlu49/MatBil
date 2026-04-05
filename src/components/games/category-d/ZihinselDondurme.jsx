@@ -52,6 +52,7 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Zihinsel Döndürme" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
 
       {/* Hedef şekil - belirgin ve büyük */}
       <div className="bg-white rounded-2xl shadow-xl px-8 py-5 mb-3 text-center border-2 border-indigo-100">
@@ -87,7 +88,8 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
         <div className={`font-bold ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>{p?.opts[ua]?.correct?'✓ Doğru! Şekli zihninde döndürebildin.':encourage()}</div>
         {!p?.opts[ua]?.correct && <div className="text-sm text-gray-500 mt-1">Aynalı şekiller farklıdır. Şeklin köşelerine ve kenarlarına odaklan!</div>}
       </div>}
-    </div>
+
+      </div>    </div>
   );
 };
 

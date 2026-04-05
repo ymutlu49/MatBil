@@ -89,6 +89,7 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Eleman ve Özellikler" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-3 text-center"><span className="text-sm text-gray-500">Düzey 2: Analiz</span></div>
 
       <div className="bg-white px-6 py-3 rounded-2xl shadow-xl mb-3 text-center">
@@ -98,7 +99,8 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
       </div>
 
       {ua!==null?(<div className="text-center max-w-sm"><div className={`text-2xl font-bold mb-2 ${ua===p?.a?'text-green-500':'text-orange-500'}`}>{ua===p?.a?'✓ Doğru!':`${encourage()} Cevap: ${p?.a}`}</div><div className="bg-amber-50 p-3 rounded-xl text-amber-700 text-sm">{'💡'} {p?.explain}</div></div>):(<div className={`grid ${p?.options?.length<=2?'grid-cols-2':'grid-cols-2'} gap-3`}>{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-6 py-4 ${colors?.button} text-white rounded-xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{o}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

@@ -43,6 +43,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parmak Köprüsü" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
         <div className="text-xs text-gray-400 mb-1">Bu sayı kadar parmakla dokun:</div>
         <div className="text-6xl font-bold text-indigo-600">{target}</div>
@@ -73,7 +74,8 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
         )}
       </div>
       <div className="text-xs text-gray-400 mt-2 text-center">Tablet/telefonda çalışır. Masaüstünde tıklama = 1 parmak</div>
-    </div>
+
+      </div>    </div>
   );
 };
 

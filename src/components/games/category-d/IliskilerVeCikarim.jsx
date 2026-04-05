@@ -216,6 +216,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="İlişkiler ve Çıkarım" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-3 text-center"><span className="text-sm text-gray-500">Düzey 3: İnformel Çıkarım</span></div>
 
       <div className="bg-white px-4 py-3 rounded-xl shadow-xl mb-2 text-center max-w-sm">
@@ -251,7 +252,8 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
           {'💡'} {p?.explain}
         </div>
       )}
-    </div>
+
+      </div>    </div>
   );
 };
 

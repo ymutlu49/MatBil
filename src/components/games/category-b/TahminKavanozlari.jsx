@@ -105,6 +105,7 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Tahmin Kavanozları" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
 
       {/* Kavanoz */}
       <div className="w-48 h-60 bg-white/80 rounded-2xl border-4 border-amber-400 mb-3 relative overflow-hidden">
@@ -158,7 +159,8 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
           {explained && <div className="text-xs text-green-600 mt-2 font-medium anim-fade">{'✓'} Harika düşünce!</div>}
         </div>
       )}
-    </div>
+
+      </div>    </div>
   );
 };
 

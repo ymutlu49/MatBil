@@ -102,10 +102,12 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Çoklu Gösterim" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white p-4 rounded-xl shadow-xl mb-2 min-w-[160px] min-h-[90px] flex items-center justify-center">{renderRep(p?.target,p?.qRep,true)}</div>
       <div className="text-gray-600 mb-2 text-sm">{p?.question}</div>
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.target?'text-green-500':'text-orange-500'}`}>{ua===p?.target?'✓ Doğru!':`${encourage()} Cevap: ${p?.target}`}</div></div>):(<div className="grid grid-cols-2 gap-4">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className="p-4 bg-white border-2 border-gray-300 rounded-2xl min-w-[150px] min-h-[100px] flex items-center justify-center shadow hover:border-indigo-400 transition-all">{renderRep(o, p?.aRep)}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

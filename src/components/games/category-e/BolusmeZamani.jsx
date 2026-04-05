@@ -60,6 +60,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Bölüşme Zamanı" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
 
       <div className="bg-white p-3 rounded-2xl shadow-xl mb-2 text-center w-full max-w-sm">
         <div className="flex flex-wrap justify-center gap-1 mb-2">
@@ -86,7 +87,8 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
       </div>
 
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">💡 {p?.hint}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

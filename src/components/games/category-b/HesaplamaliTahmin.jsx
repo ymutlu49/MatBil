@@ -102,12 +102,14 @@ const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Hesaplamalı Tahmin" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-5 py-3 rounded-xl shadow-xl mb-3 text-center">
         <div className="text-3xl font-bold text-purple-700">{p?.a} {p?.opSymbol} {p?.b}</div>
         <div className="text-gray-500 text-sm mt-1">Sonuca en yakın sayı hangisi?</div>
       </div>
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.closest?'text-green-500':'text-orange-500'}`}>{ua===p?.closest?'✓ Doğru!':`${encourage()} En yakın: ${p?.closest}`}</div><div className="text-gray-600 mb-1">Gerçek sonuç: {p?.a} {p?.opSymbol} {p?.b} = {p?.answer}</div><div className="bg-amber-50 p-2 rounded-xl text-sm text-amber-700">💡 Yuvarlama: {p?.hint}</div>{!explained3 && <ExplainStep type="computation" onDone={handleExplain3}/>}{explained3 && <div className="text-xs text-green-600 mt-2 font-medium anim-fade">{'✓'} Akıllıca!</div>}</div>):(<div className="grid grid-cols-2 gap-3">{p?.opts?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

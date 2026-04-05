@@ -110,6 +110,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Şekli Tanıma" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><span className="text-sm text-gray-500">Düzey 1: Görselleştirme — {['Temel','Boyut','Konumlanış','Karışık','Tam'][lv-1]}</span></div>
 
       <div className="bg-white px-6 py-3 rounded-xl shadow mb-3 flex items-center gap-3">
@@ -131,7 +132,8 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
           </button>
         ))}
       </div>
-    </div>
+
+      </div>    </div>
   );
 };
 

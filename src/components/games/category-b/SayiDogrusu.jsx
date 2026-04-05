@@ -30,6 +30,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Doğrusu" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-3 text-center font-bold text-lg`}>Ok hangi sayıyı gösteriyor?</p>
       <div className="w-full max-w-sm mb-3 px-3">
         <div className="relative h-8 mb-1"><div className="absolute flex flex-col items-center" style={{left:`${pct}%`,transform:'translateX(-50%)'}}><div className="text-2xl">{'⬇️'}</div></div></div>
@@ -42,7 +43,8 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="flex justify-between text-lg font-bold text-gray-600 mt-2"><span>0</span><span>{mx}</span></div>
       </div>
       {ua!==null?(()=>{const fb=getFeedback(ua,target,cfg[lv].tol);return(<div className="text-center"><div className={`text-2xl font-bold mb-1 ${fb.cls}`}>{fb.msg}</div><div className="bg-amber-50 px-3 py-2 rounded-xl text-sm text-amber-700 mt-1">{'💡'} Ok, 0‑{mx} arasında <strong>{target}</strong> sayısını gösteriyor.</div></div>);})():(<div className="grid grid-cols-2 gap-3 w-full max-w-sm">{opts.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{o}</button>))}</div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 

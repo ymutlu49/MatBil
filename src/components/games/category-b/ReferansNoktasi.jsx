@@ -24,6 +24,7 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Yakınlık Tahmini" colors={colors}/>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-2 font-bold text-lg`}>Bu sayı hangisine daha yakın?</p>
       <div className="bg-white px-10 py-4 rounded-2xl shadow-xl mb-3 border-4 border-amber-300"><span className="text-4xl font-bold text-amber-600">{p?.number}</span></div>
       <div className="w-full max-w-sm mb-4 px-4">
@@ -48,7 +49,8 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
         </div>
       </div>
       {ua!==null?(<div className="text-center anim-fade"><Feedback isCorrect={ua===p?.answer} answer={p?.answer} hint={`${p?.number}: ${p?.ref1}'e ${Math.abs(p?.number-p?.ref1)} uzaklıkta, ${p?.ref2}'ye ${Math.abs(p?.number-p?.ref2)} uzaklıkta → ${p?.answer}`}/></div>):(<div className="flex gap-4"><button onClick={()=>handle(p?.ref1)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref1}</button><button onClick={()=>handle(p?.ref2)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref2}</button></div>)}
-    </div>
+
+      </div>    </div>
   );
 };
 
