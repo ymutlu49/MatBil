@@ -46,7 +46,12 @@
       "Bash(node -e \"require\\(''pdfkit''\\); console.log\\(''pdfkit OK''\\)\")",
       "Bash(node generate-pdf.cjs)",
       "Bash(rm generate-pdf.cjs)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(mkdir -p /tmp/docx_extract)",
+      "Bash(unzip -o 'Bölüm 1_ DOĞUŞTAN GELEN MATEMATİK-SO.docx' -d /tmp/docx_extract/b1)",
+      "Bash(grep -v '^\\\\s*$')",
+      "Bash(pandoc \"C:/Users/yilma/Desktop/Jimaro/Diskalkuli_Platform/MatBil/Bölüm 2_ÜÇLÜ KODLAMA MODELİ VE ÇAĞDAŞ ÖĞRETIM YAKLAŞIMLARI-SO.docx\" -t plain)",
+      "Bash(unzip -l \"Bölüm 2_ÜÇLÜ KODLAMA MODELİ VE ÇAĞDAŞ ÖĞRETIM YAKLAŞIMLARI-SO.docx\")"
     ]
   }
 }

@@ -25,6 +25,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
   });
 
   // Öğretmen notları
+  const [viewMode, setViewMode] = useState('teacher'); // 'teacher' | 'child'
   const [teacherNote, setTeacherNote] = useState(() => { try { return localStorage.getItem(`matbil_note_${user?.name}`) || ''; } catch { return ''; } });
   const saveNote = (txt) => { setTeacherNote(txt); try { localStorage.setItem(`matbil_note_${user?.name}`, txt); } catch {} };
 
@@ -41,7 +42,13 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
         <div className="max-w-lg mx-auto flex items-center justify-between mb-2">
           <button onClick={onBack} className="px-3 py-1.5 bg-white text-gray-600 rounded-lg font-bold shadow text-sm hover:bg-gray-50">← Geri</button>
           <h2 className="text-base font-bold text-gray-700">📊 Gelişim Raporu</h2>
-          {onPDF && <button onClick={onPDF} className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg font-bold shadow hover:bg-indigo-700 text-sm">📄 PDF</button>}
+          <div className="flex items-center gap-1.5">
+            <div className="flex bg-gray-100 rounded-lg p-0.5">
+              <button onClick={()=>setViewMode('teacher')} className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${viewMode==='teacher'?'bg-indigo-600 text-white shadow':'text-gray-500'}`}>👩‍🏫 Akademik</button>
+              <button onClick={()=>setViewMode('child')} className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all ${viewMode==='child'?'bg-emerald-500 text-white shadow':'text-gray-500'}`}>🧒 Öğrenci</button>
+            </div>
+            {onPDF && <button onClick={onPDF} className="px-2.5 py-1.5 bg-indigo-600 text-white rounded-lg font-bold shadow hover:bg-indigo-700 text-xs">📄</button>}
+          </div>
         </div>
       </div>
 
@@ -491,29 +498,41 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
                       <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${levelColor}`}>{levelLabel}</span>
                     </div>
 
-                    {/* Kuramsal çerçeve */}
-                    <div className="bg-gray-50 rounded-lg p-2">
-                      <div className="text-xs font-bold text-gray-600 mb-1">📖 Kuramsal Çerçeve</div>
-                      <div className="text-xs text-gray-500 leading-relaxed">{ch.theory.substring(0, 200)}{ch.theory.length > 200 ? '...' : ''}</div>
-                    </div>
-
-                    {/* Kitap bölüm referansları */}
-                    <div className="flex flex-wrap gap-1">
-                      {ch.chapters.map((c, i) => (
-                        <span key={i} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{c.split('—')[0].trim()}</span>
-                      ))}
-                    </div>
-
-                    {/* Değerlendirme ve öneri */}
-                    {cat.played > 0 && (
-                      <div className={`rounded-lg p-2 text-xs leading-relaxed ${catPctVal >= 70 ? 'bg-green-50 text-green-700' : catPctVal >= 30 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
-                        <span className="font-bold">{catPctVal >= 70 ? '✅ Değerlendirme: ' : catPctVal >= 30 ? '📋 Değerlendirme: ' : '⚠️ Değerlendirme: '}</span>
-                        {catPctVal >= 70 ? ch.strongMsg : ch.weakMsg}
+                    {viewMode === 'teacher' ? (<>
+                      {/* Akademik: Kuramsal çerçeve */}
+                      <div className="bg-gray-50 rounded-lg p-2">
+                        <div className="text-xs font-bold text-gray-600 mb-1">📖 Kuramsal Çerçeve</div>
+                        <div className="text-xs text-gray-500 leading-relaxed">{ch.theory.substring(0, 200)}{ch.theory.length > 200 ? '...' : ''}</div>
                       </div>
-                    )}
-
-                    {/* Kaynaklar */}
-                    <div className="text-xs text-gray-400 italic">Kaynaklar: {ch.refs}</div>
+                      {/* Kitap bölüm referansları */}
+                      <div className="flex flex-wrap gap-1">
+                        {ch.chapters.map((c, i) => (
+                          <span key={i} className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{c.split('—')[0].trim()}</span>
+                        ))}
+                      </div>
+                      {/* Akademik değerlendirme */}
+                      {cat.played > 0 && (
+                        <div className={`rounded-lg p-2 text-xs leading-relaxed ${catPctVal >= 70 ? 'bg-green-50 text-green-700' : catPctVal >= 30 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>
+                          <span className="font-bold">{catPctVal >= 70 ? '✅ Değerlendirme: ' : catPctVal >= 30 ? '📋 Değerlendirme: ' : '⚠️ Değerlendirme: '}</span>
+                          {catPctVal >= 70 ? ch.strongMsg : ch.weakMsg}
+                        </div>
+                      )}
+                      {/* Kaynaklar */}
+                      <div className="text-xs text-gray-400 italic">Kaynaklar: {ch.refs}</div>
+                    </>) : (<>
+                      {/* Çocuk: Ne öğreniyorsun? */}
+                      <div className="bg-blue-50 rounded-lg p-3">
+                        <div className="text-sm font-bold text-blue-700 mb-1">🎯 Bu alanda ne öğreniyorsun?</div>
+                        <div className="text-sm text-gray-600 leading-relaxed">{ch.childTheory}</div>
+                      </div>
+                      {/* Çocuk değerlendirme */}
+                      {cat.played > 0 && (
+                        <div className={`rounded-lg p-3 text-sm leading-relaxed ${catPctVal >= 70 ? 'bg-green-50 text-green-700' : catPctVal >= 30 ? 'bg-amber-50 text-amber-700' : 'bg-orange-50 text-orange-700'}`}>
+                          <span className="text-lg mr-1">{catPctVal >= 70 ? '🌟' : catPctVal >= 30 ? '💪' : '🤗'}</span>
+                          {catPctVal >= 70 ? ch.childStrongMsg : ch.childWeakMsg}
+                        </div>
+                      )}
+                    </>)}
                   </div>
                 </div>
               );
