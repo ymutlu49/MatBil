@@ -68,7 +68,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
           <div className="relative" style={{height: 100}}>
             {/* Karakter */}
             <div className="absolute transition-all duration-300 -translate-x-1/2 text-center z-10" style={{left:`${pct}%`, top: 0}}>
-              <div style={{fontSize: 48, lineHeight: 1, transform: lastDir >= 0 ? 'scaleX(1)' : 'scaleX(-1)'}} className={moving ? 'anim-walk' : ''}>🚶</div>
+              <div style={{fontSize: 48, lineHeight: 1, transform: lastDir >= 0 ? 'scaleX(-1)' : 'scaleX(1)'}} className={moving ? 'anim-walk' : ''}>🚶</div>
             </div>
 
             {/* Doğru çizgisi */}
