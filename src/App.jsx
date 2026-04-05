@@ -238,13 +238,10 @@ const App = () => {
 
                   {isOpen && (
                     <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-xl`}>
-                      {catGames.map(([id, g], idx) => {
+                      {catGames.map(([id, g]) => {
                         const gp = progress[id];
-                        const prevSub = idx > 0 ? catGames[idx-1][1].sub : null;
-                        const showSub = cat.id === 'D' && g.sub && g.sub !== prevSub;
                         return (
                           <React.Fragment key={id}>
-                            {showSub && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{g.sub === 'Büyük Uzay' ? '🌍' : '📦'} {g.sub}</div>}
                             <div className="mx-1.5 mb-0.5">
                               <button onClick={() => setCurrentGame(id)}
                                 className="w-full py-2 px-3 bg-white/80 hover:bg-white hover:shadow-md rounded-lg flex items-center gap-2 transition-all">
