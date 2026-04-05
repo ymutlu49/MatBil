@@ -75,6 +75,13 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
             <div className="absolute left-0 right-0" style={{top: 60}}>
               {/* Ana çizgi */}
               <div className="w-full h-1 bg-gray-800 rounded-full"/>
+              {/* Yürünen mesafe göstergesi */}
+              {steps > 0 && (() => {
+                const startPctVal = (p.a / p.max) * 100;
+                const leftPos = Math.min(startPctVal, pct);
+                const width = Math.abs(pct - startPctVal);
+                return <div className={`absolute h-2 rounded-full ${pos >= p.a ? 'bg-emerald-400' : 'bg-orange-400'}`} style={{left:`${leftPos}%`, width:`${width}%`, top: -2, opacity: 0.7}} />;
+              })()}
               {/* Oklar */}
               <div className="absolute -left-1 top-1/2 -translate-y-1/2 w-0 h-0" style={{borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderRight:'8px solid #1f2937'}}/>
               <div className="absolute -right-1 top-1/2 -translate-y-1/2 w-0 h-0" style={{borderTop:'6px solid transparent',borderBottom:'6px solid transparent',borderLeft:'8px solid #1f2937'}}/>
