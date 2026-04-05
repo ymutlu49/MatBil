@@ -17,7 +17,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
-  // Onluk \u00e7ubuk SVG
+  // Onluk çubuk SVG
   const TenBar = ({count, highlight}) => (
     <div className="flex gap-1 flex-wrap justify-center">
       {Array.from({length:count},(_,i)=>(
@@ -27,7 +27,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       ))}
     </div>
   );
-  // Birlik k\u00fcp
+  // Birlik küp
   const UnitCubes = ({count, highlight}) => (
     <div className="flex gap-1 flex-wrap justify-center" style={{maxWidth:80}}>
       {Array.from({length:count},(_,i)=>(
@@ -35,7 +35,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       ))}
     </div>
   );
-  // Y\u00fczl\u00fck kare
+  // Yüzlük kare
   const HundredSquare = ({count, highlight}) => (
     <div className="flex gap-1 flex-wrap justify-center">
       {Array.from({length:count},(_,i)=>(
@@ -56,11 +56,11 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       const type=types[Math.floor(Math.random()*types.length)];
       if(type==='countTens'){
         a=tens; askHL='onluk'; showNumber=false;
-        q=`Ka\u00e7 tane onluk \u00e7ubuk var?`;
+        q=`Kaç tane onluk çubuk var?`;
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9)+1;if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens*10; askHL='onluk';
-        q=`${n} say\u0131s\u0131n\u0131n onluk basama\u011f\u0131n\u0131n de\u011feri ka\u00e7t\u0131r?`;
+        q=`${n} sayısının onluk basamağının değeri kaçtır?`;
         o=[a,tens,ones,a+10].filter(x=>x>=0);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9+1)*10;if(!o.includes(c))o.push(c);at++;}
       }
@@ -72,16 +72,16 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       const type=types[Math.floor(Math.random()*types.length)];
       if(type==='countOnes'){
         a=ones; askHL='birlik'; showNumber=false;
-        q=`Ka\u00e7 tane birlik k\u00fcp var?`;
+        q=`Kaç tane birlik küp var?`;
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c)&&c>=0)o.push(c);at++;}
       } else if(type==='valueOnes'){
         a=ones; askHL='birlik';
-        q=`${n} say\u0131s\u0131n\u0131n birlik basama\u011f\u0131ndaki rakam ka\u00e7t\u0131r?`;
+        q=`${n} sayısının birlik basamağındaki rakam kaçtır?`;
         o=[a,tens,a+1,tens*10].filter(x=>x>=0&&x<=99);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens; askHL='onluk'; showNumber=false;
-        q=`Ka\u00e7 tane onluk \u00e7ubuk var?`;
+        q=`Kaç tane onluk çubuk var?`;
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9)+1;if(!o.includes(c))o.push(c);at++;}
       }
     } else if(l===3){
@@ -92,13 +92,13 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       const type=types[Math.floor(Math.random()*types.length)];
       if(type==='totalFromVisual'){
         a=n; askHL='toplam'; showNumber=false;
-        q=`Bu \u00e7ubuk ve k\u00fcpler toplam ka\u00e7 eder?`;
+        q=`Bu çubuk ve küpler toplam kaç eder?`;
         o=[a,a+10,a-10,tens+ones].filter(x=>x>0);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.max(1,a+Math.floor(Math.random()*21)-10);if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens; askHL='onluk';
         const wrongTens=[ones,tens+1,tens-1,Math.floor(n/100)].filter(x=>x>0&&x!==a);
-        q=`${n} say\u0131s\u0131nda ka\u00e7 tane onluk vard\u0131r?`;
+        q=`${n} sayısında kaç tane onluk vardır?`;
         o=[a,...wrongTens];
         o=[...new Set(o)].slice(0,4);let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9)+1;if(!o.includes(c))o.push(c);at++;}
       }
@@ -111,21 +111,21 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       const type=types[Math.floor(Math.random()*types.length)];
       if(type==='totalFromVisual'){
         a=n; askHL='toplam'; showNumber=false;
-        q=`Bu bloklar toplam ka\u00e7 eder?`;
+        q=`Bu bloklar toplam kaç eder?`;
         o=[a,a+100,a-100,a+10].filter(x=>x>0);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.max(1,a+Math.floor(Math.random()*101)-50);if(!o.includes(c))o.push(c);at++;}
       } else if(type==='countHundreds'){
-        a=hundreds; askHL='y\u00fczl\u00fck'; showNumber=false;
-        q=`Ka\u00e7 tane y\u00fczl\u00fck kare var?`;
+        a=hundreds; askHL='yüzlük'; showNumber=false;
+        q=`Kaç tane yüzlük kare var?`;
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*5)+1;if(!o.includes(c))o.push(c);at++;}
       } else if(type==='valueHundreds'){
-        a=hundreds*100; askHL='y\u00fczl\u00fck';
-        q=`${n} say\u0131s\u0131n\u0131n y\u00fczl\u00fck basama\u011f\u0131n\u0131n de\u011feri ka\u00e7t\u0131r?`;
+        a=hundreds*100; askHL='yüzlük';
+        q=`${n} sayısının yüzlük basamağının değeri kaçtır?`;
         o=[a,hundreds,tens*10,n].filter(x=>x>0);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*4+1)*100;if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens; askHL='onluk';
-        q=`${n} say\u0131s\u0131n\u0131n onluk basama\u011f\u0131ndaki rakam ka\u00e7t\u0131r?`;
+        q=`${n} sayısının onluk basamağındaki rakam kaçtır?`;
         o=[a,hundreds,ones,a+1].filter(x=>x>=0);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}
       }
@@ -137,20 +137,20 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak De\u011feri" emoji="\ud83c\udfdb\ufe0f" description="Onluk \u00e7ubuklar\u0131 ve birlik k\u00fcpleri kullanarak basamak de\u011ferlerini ke\u015ffet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birle\u015ftir)','Seviye 4 (Y\u00fczl\u00fckler)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Basamak De\u011feri" emoji="\ud83c\udfdb\ufe0f" level={lv} instruction="Onluk \u00e7ubuklar ve birlik k\u00fcpler g\u00f6sterilecek. G\u00f6rselden sayarak veya say\u0131y\u0131 ayr\u0131\u015ft\u0131rarak do\u011fru cevab\u0131 bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak Değeri" emoji="��️" description="Onluk çubukları ve birlik küpleri kullanarak basamak değerlerini keşfet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birleştir)','Seviye 4 (Yüzlükler)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Basamak Değeri" emoji="��️" level={lv} instruction="Onluk çubuklar ve birlik küpler gösterilecek. Görselden sayarak veya sayıyı ayrıştırarak doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const hl = p?.askHL;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Basamak De\u011feri" colors={colors}/>
-      {/* G\u00f6rsel temsil */}
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Basamak Değeri" colors={colors}/>
+      {/* Görsel temsil */}
       <div className="bg-white rounded-2xl shadow-xl p-3 mb-2 w-full max-w-sm">
         {p?.showNumber && <div className="text-center text-3xl font-bold mb-2" style={{color:numColor(p?.number,p?.number>99?999:99)}}>{p?.number}</div>}
         <div className="flex items-end justify-center gap-4 min-h-[64px]">
           {p?.hundreds > 0 && <div className="text-center">
-            <HundredSquare count={p?.hundreds} highlight={hl==='y\u00fczl\u00fck'}/>
-            {ua!==null && <div className="text-[10px] text-red-600 font-bold mt-1">{p?.hundreds} y\u00fczl\u00fck</div>}
+            <HundredSquare count={p?.hundreds} highlight={hl==='yüzlük'}/>
+            {ua!==null && <div className="text-[10px] text-red-600 font-bold mt-1">{p?.hundreds} yüzlük</div>}
           </div>}
           {p?.tens > 0 && <div className="text-center">
             <TenBar count={p?.tens} highlight={hl==='onluk'}/>
@@ -164,8 +164,8 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       </div>
       {/* Soru */}
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><div className="text-sm text-gray-700 font-medium">{p?.question}</div></div>
-      {/* Cevap / Se\u00e7enekler */}
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'\u2713 Do\u011fru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'\ud83d\udca1'} {p?.hundreds>0?`${p?.hundreds} y\u00fczl\u00fck (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {/* Cevap / Seçenekler */}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'��'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

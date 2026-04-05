@@ -53,18 +53,18 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(genPattern(l));setUa(null);setGs('playing');};
   const handle=(i)=>{setUa(i);if(p?.opts[i]?.correct)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(genPattern(lv));setUa(null);}else setGs('results');},1200);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Simetri Aynas\u0131" emoji="\ud83e\ude9e" description="Deseni simetri eksenine g\u00f6re tamamla! Ayna g\u00f6r\u00fcnt\u00fcs\u00fcn\u00fc bul." levels={['Sv1: 3x3 Kolay','Sv2: 3x3 Orta','Sv3: 4x4 Zor','Sv4: 4x4 Uzman']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Simetri Aynas\u0131" emoji="\ud83e\ude9e" level={lv} instruction="Sol tarafta bir desen g\u00f6sterilecek. Sa\u011f taraftaki simetrik (ayna) tamamlamay\u0131 se\u00e7eneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Simetri Aynası" emoji="��" description="Deseni simetri eksenine göre tamamla! Ayna görüntüsünü bul." levels={['Sv1: 3x3 Kolay','Sv2: 3x3 Orta','Sv3: 4x4 Zor','Sv4: 4x4 Uzman']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Simetri Aynası" emoji="��" level={lv} instruction="Sol tarafta bir desen gösterilecek. Sağ taraftaki simetrik (ayna) tamamlamayı seçeneklerden bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Simetri Aynas\u0131" colors={colors}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Simetri Aynası" colors={colors}/>
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
         <div className="text-xs text-gray-400 mb-2">Deseni simetrik tamamla (| simetri ekseni):</div>
         {p && renderGrid(p.left, null, p.sz, p.half)}
-        <div className="text-[10px] text-indigo-500 mt-1">{'\ud83d\udfe6'} Sol yar\u0131 | {'\u2753'} Sa\u011f yar\u0131 = ?</div>
+        <div className="text-[10px] text-indigo-500 mt-1">{'��'} Sol yarı | {'❓'} Sağ yarı = ?</div>
       </div>
-      <div className="text-sm text-gray-600 mb-2 font-medium">Do\u011fru ayna g\u00f6r\u00fcnt\u00fcs\u00fcn\u00fc se\u00e7:</div>
+      <div className="text-sm text-gray-600 mb-2 font-medium">Doğru ayna görüntüsünü seç:</div>
       <div className="grid grid-cols-2 gap-2">
         {p?.opts?.map((o,i)=>(
           <button key={i} onClick={()=>ua===null&&handle(i)} className={`p-2 bg-white border-2 rounded-xl flex items-center justify-center shadow transition-all ${
@@ -75,7 +75,7 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
         ))}
       </div>
       {ua!==null && <div className={`mt-2 text-center font-bold text-sm ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>
-        {p?.opts[ua]?.correct?'\u2713 Harika! Simetriyi do\u011fru g\u00f6rd\u00fcn!':encourage()+' Ayna ekseni boyunca her h\u00fccreyi kontrol et!'}
+        {p?.opts[ua]?.correct?'✓ Harika! Simetriyi doğru gördün!':encourage()+' Ayna ekseni boyunca her hücreyi kontrol et!'}
       </div>}
     </div>
   );

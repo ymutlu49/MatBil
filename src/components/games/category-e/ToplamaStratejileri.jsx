@@ -29,8 +29,8 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(ans)=>{setUa(ans);if(ans===p?.correctAnswer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Toplama Stratejileri" emoji="\u2795" description="Toplama i\u015flemini g\u00f6rsel destekle \u00f6\u011fren! \u0130leri seviyelerde eksik say\u0131y\u0131 bul." levels={['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Toplama Stratejileri" emoji="\u2795" level={lv} instruction="Toplama i\u015flemi g\u00f6sterilecek. Sonucu bul! \u0130leri seviyelerde eksik olan say\u0131y\u0131 tamamla." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Toplama Stratejileri" emoji="➕" description="Toplama işlemini görsel destekle öğren! İleri seviyelerde eksik sayıyı bul." levels={['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Toplama Stratejileri" emoji="➕" level={lv} instruction="Toplama işlemi gösterilecek. Sonucu bul! İleri seviyelerde eksik olan sayıyı tamamla." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   return (
@@ -51,7 +51,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="text-3xl font-bold text-purple-700 text-center">{p?.question}</div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.correctAnswer?'text-green-500':'text-orange-500'}`}>{ua===p?.correctAnswer?'\u2713 Do\u011fru!':`${encourage()} Cevap: ${p?.correctAnswer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'\ud83d\udca1'} {p?.a} + {p?.b} = {p?.answer}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.correctAnswer?'text-green-500':'text-orange-500'}`}>{ua===p?.correctAnswer?'✓ Doğru!':`${encourage()} Cevap: ${p?.correctAnswer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'��'} {p?.a} + {p?.b} = {p?.answer}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

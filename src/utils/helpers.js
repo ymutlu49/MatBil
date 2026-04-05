@@ -29,10 +29,10 @@ export const vibrate = (pattern) => {
 
 const encourageMessages = [
   'Tekrar dene!',
-  'Yakla\u015Ft\u0131n!',
+  'Yaklaştın!',
   'Bir daha dene!',
   'Neredeyse!',
-  'Vazge\u00E7me!',
+  'Vazgeçme!',
 ];
 
 export const encourage = () => {

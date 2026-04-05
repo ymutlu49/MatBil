@@ -74,17 +74,17 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setFc(Math.floor(Math.random()*cfg[l].max)+1);setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===fc)setSc(s=>s+10*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setFc(Math.floor(Math.random()*cfg[lv].max)+1);setUa(null);}else setGs('results');},1200);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Ka\u00E7 Parmak?" emoji="\uD83D\uDD90\uFE0F" description="Parmak say\u0131s\u0131n\u0131 h\u0131zlica say! Ellerdeki a\u00E7\u0131k parmaklar\u0131 saymadan tan\u0131maya \u00E7al\u0131\u015F." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 H\u0131zl\u0131)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Ka\u00E7 Parmak?" emoji="\uD83D\uDD90\uFE0F" level={lv} instruction="Ekranda bir veya iki el g\u00F6sterilecek. A\u00E7\u0131k parmaklar\u0131n say\u0131s\u0131n\u0131 tek bak\u0131\u015Fta tan\u0131 ve do\u011Fru say\u0131y\u0131 se\u00E7!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kaç Parmak?" emoji="��️" description="Parmak sayısını hızlica say! Ellerdeki açık parmakları saymadan tanımaya çalış." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="��️" level={lv} instruction="Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Ka\u00E7 Parmak?" colors={colors} hideRound={rahatMod}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Kaç Parmak?" colors={colors} hideRound={rahatMod}/>
       <div className="bg-white p-4 rounded-2xl shadow-xl mb-3 flex gap-2 items-end justify-center min-h-[180px]">
         <Hand fingers={Math.min(fc,5)}/>
         {fc>5&&<Hand fingers={fc-5} mirror/>}
       </div>
-      {ua!==null?(<Feedback isCorrect={ua===fc} answer={fc} hint={ua===fc ? `S\u00FCper! ${fc} parmak vard\u0131.` : `${fc} parmak a\u00E7\u0131kt\u0131. Elde 5, iki elde 10 parmak oldu\u011Funu hat\u0131rla!`}/>):(<div className="grid grid-cols-5 gap-2">{Array.from({length:cfg[lv].max},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>)}
+      {ua!==null?(<Feedback isCorrect={ua===fc} answer={fc} hint={ua===fc ? `Süper! ${fc} parmak vardı.` : `${fc} parmak açıktı. Elde 5, iki elde 10 parmak olduğunu hatırla!`}/>):(<div className="grid grid-cols-5 gap-2">{Array.from({length:cfg[lv].max},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>)}
     </div>
   );
 };

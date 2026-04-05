@@ -100,7 +100,7 @@ const App = () => {
     const GameComp = game.comp;
     const prevBest = progress[currentGame]?.bestScore || 0;
     return (
-      <Suspense fallback={<div className="h-screen flex items-center justify-center bg-gray-50"><div className="text-2xl animate-pulse">{'\uD83E\uDDE0'} Y\u00FCkleniyor...</div></div>}>
+      <Suspense fallback={<div className="h-screen flex items-center justify-center bg-gray-50"><div className="text-2xl animate-pulse">{'��'} Yükleniyor...</div></div>}>
         <GameComp onBack={() => setCurrentGame(null)} colors={COLORS[game.cat]}
           rahatMod={rahatMod} sesAcik={sesAcik} prevBest={prevBest}
           onGameComplete={(score, level) => handleGameComplete(currentGame, score, level)} />
@@ -112,33 +112,33 @@ const App = () => {
   const handleDownloadPDF = () => downloadEtkinlikPDF(import.meta.env.BASE_URL);
 
   return (
-    <div className={`h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col overflow-hidden ${buyukYazi ? "text-lg" : ""}`} role="main" aria-label="Matematiksel Bili\u015Fin Temelleri Ana Men\u00FC">
+    <div className={`h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col overflow-hidden ${buyukYazi ? "text-lg" : ""}`} role="main" aria-label="Matematiksel Bilişin Temelleri Ana Menü">
       <div className="w-full max-w-md mx-auto flex flex-col flex-1 min-h-0 p-3">
 
-        {/* \u00DCst Bar */}
+        {/* Üst Bar */}
         <div className="flex items-center justify-between mb-2 bg-white rounded-xl shadow-md p-2 shrink-0">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs">{user.name.charAt(0).toUpperCase()}</div>
             <div>
               <div className="font-bold text-gray-800 text-sm leading-tight">{user.name}</div>
-              {(user.age || user.city) && <div className="text-[10px] text-gray-400">{user.age && `${user.age} ya\u015F`}{user.age && user.city && ' \u00B7 '}{user.city || ''}</div>}
+              {(user.age || user.city) && <div className="text-[10px] text-gray-400">{user.age && `${user.age} yaş`}{user.age && user.city && ' · '}{user.city || ''}</div>}
             </div>
           </div>
           <div className="flex items-center gap-1.5">
-            <button onClick={() => setView('report')} className="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors">{'\uD83D\uDCCA'} Rapor</button>
-            <button onClick={toggleYazi} aria-label={buyukYazi?'B\u00FCy\u00FCk yaz\u0131 aktif':'Normal yaz\u0131'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${buyukYazi ? 'bg-orange-100 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>{buyukYazi ? 'A+' : 'A'}</button>
-            <button onClick={toggleSes} aria-label={sesAcik?'Ses a\u00E7\u0131k':'Ses kapal\u0131'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${sesAcik ? 'bg-blue-100 text-blue-600' : 'bg-gray-50 text-gray-400'}`}>{sesAcik ? '\uD83D\uDD0A' : '\uD83D\uDD07'}</button>
-            <button onClick={toggleRahat} aria-label={rahatMod?'Rahat mod aktif':'Normal mod'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${rahatMod ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400'}`}>{'\uD83D\uDC22'}</button>
-            <button onClick={() => setView('admin')} className="px-2 py-1.5 bg-slate-50 text-slate-500 rounded-lg font-bold text-xs hover:bg-slate-100 transition-colors">{'\uD83D\uDD10'}</button>
-            <button onClick={handleLogout} className="px-2 py-1.5 bg-gray-100 text-gray-500 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">{'\uD83D\uDEAA'}</button>
+            <button onClick={() => setView('report')} className="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors">{'��'} Rapor</button>
+            <button onClick={toggleYazi} aria-label={buyukYazi?'Büyük yazı aktif':'Normal yazı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${buyukYazi ? 'bg-orange-100 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>{buyukYazi ? 'A+' : 'A'}</button>
+            <button onClick={toggleSes} aria-label={sesAcik?'Ses açık':'Ses kapalı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${sesAcik ? 'bg-blue-100 text-blue-600' : 'bg-gray-50 text-gray-400'}`}>{sesAcik ? '��' : '��'}</button>
+            <button onClick={toggleRahat} aria-label={rahatMod?'Rahat mod aktif':'Normal mod'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${rahatMod ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400'}`}>{'��'}</button>
+            <button onClick={() => setView('admin')} className="px-2 py-1.5 bg-slate-50 text-slate-500 rounded-lg font-bold text-xs hover:bg-slate-100 transition-colors">{'��'}</button>
+            <button onClick={handleLogout} className="px-2 py-1.5 bg-gray-100 text-gray-500 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">{'��'}</button>
           </div>
         </div>
 
-        {/* Ba\u015Fl\u0131k + \u0130lerleme */}
+        {/* Başlık + İlerleme */}
         <div className="shrink-0">
           <div className="text-center mb-2">
-            <h1 className="text-lg font-bold text-gray-800">{'\uD83E\uDDE0'} Matematiksel Bili\u015Fin Temelleri</h1>
-            <p className="text-indigo-700 font-semibold text-xs italic">Say\u0131 Hissinden \u015Eekil Alg\u0131s\u0131na</p>
+            <h1 className="text-lg font-bold text-gray-800">{'��'} Matematiksel Bilişin Temelleri</h1>
+            <p className="text-indigo-700 font-semibold text-xs italic">Sayı Hissinden Şekil Algısına</p>
           </div>
           <div className="flex gap-2 mb-2">
             {(() => {
@@ -151,8 +151,8 @@ const App = () => {
                   <div className="text-[10px] text-gray-500 font-medium">Oyun</div>
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-1.5 text-center">
-                  <div className="text-sm font-bold text-yellow-600">{'\u2B50'}{totalStars}</div>
-                  <div className="text-[10px] text-gray-500 font-medium">Y\u0131ld\u0131z</div>
+                  <div className="text-sm font-bold text-yellow-600">{'⭐'}{totalStars}</div>
+                  <div className="text-[10px] text-gray-500 font-medium">Yıldız</div>
                 </div>
                 <div className="flex-1 bg-white rounded-lg shadow p-1.5 text-center">
                   <div className="text-sm font-bold text-green-600">{Object.values(progress).reduce((s, g) => s + (g.attempts || 0), 0)}</div>
@@ -166,7 +166,7 @@ const App = () => {
         {/* Rozetler */}
         {(() => { const earned = checkBadges(progress, GAMES); return earned.length > 0 ? (
           <div className="shrink-0 mb-2 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 rounded-xl border border-amber-200 p-2">
-            <div className="text-xs font-bold text-amber-700 mb-1">{'\uD83C\uDFC6'} Rozetlerin ({earned.length}/{BADGES.length})</div>
+            <div className="text-xs font-bold text-amber-700 mb-1">{'��'} Rozetlerin ({earned.length}/{BADGES.length})</div>
             <div className="flex gap-1.5 flex-wrap">{earned.map(b => (
               <div key={b.id} className="bg-white rounded-lg px-2 py-1 shadow-sm border border-amber-100 flex items-center gap-1" title={b.desc}>
                 <span className="text-base">{b.emoji}</span>
@@ -179,16 +179,16 @@ const App = () => {
         {/* Streak */}
         {streak.count > 0 && (
           <div className="shrink-0 mb-2 bg-gradient-to-r from-orange-50 via-red-50 to-amber-50 rounded-xl border border-orange-200 p-2.5 flex items-center gap-3">
-            <div className="text-3xl">{'\uD83D\uDD25'}</div>
+            <div className="text-3xl">{'��'}</div>
             <div className="flex-1">
-              <div className="font-bold text-orange-700 text-sm">{streak.count} g\u00FCn seri!</div>
-              <div className="text-[10px] text-gray-500">{streak.best > streak.count ? `En iyi: ${streak.best} g\u00FCn` : streak.count >= 7 ? 'Harika devam et!' : 'Her g\u00FCn oyna, serini uzat!'}</div>
+              <div className="font-bold text-orange-700 text-sm">{streak.count} gün seri!</div>
+              <div className="text-[10px] text-gray-500">{streak.best > streak.count ? `En iyi: ${streak.best} gün` : streak.count >= 7 ? 'Harika devam et!' : 'Her gün oyna, serini uzat!'}</div>
             </div>
             <div className="flex gap-0.5">{Array.from({length:Math.min(7,streak.count)},(_,i)=><div key={i} className="w-2 h-5 bg-orange-400 rounded-full"/>)}{Array.from({length:Math.max(0,7-streak.count)},(_,i)=><div key={i} className="w-2 h-5 bg-gray-200 rounded-full"/>)}</div>
           </div>
         )}
 
-        {/* \u00D6nerilen Oyun */}
+        {/* Önerilen Oyun */}
         {(() => {
           const unplayed = Object.entries(GAMES).filter(([id]) => !progress[id]);
           const weak = Object.entries(progress).filter(([,d]) => d.stars <= 1 && d.attempts >= 1).sort(([,a],[,b]) => a.stars - b.stars);
@@ -209,24 +209,24 @@ const App = () => {
             <button onClick={() => setCurrentGame(recId)} className="shrink-0 mb-2 w-full bg-gradient-to-r from-indigo-50 via-blue-50 to-cyan-50 border-2 border-indigo-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-indigo-300 transition-all group">
               <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-blue-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{game.emoji}</div>
               <div className="flex-1 text-left">
-                <div className="font-bold text-gray-800 text-sm">{'\uD83C\uDFAF'} Sana \u00D6nerilen: {game.name}</div>
-                <div className="text-[10px] text-gray-500">{isWeak ? 'Bu oyunda geli\u015Fim f\u0131rsat\u0131n var!' : (stale.length > 0 && rec === stale[0] ? 'Tekrar zaman\u0131 geldi! \uD83D\uDD04' : 'Hen\u00FCz denemedi\u011Fin bir oyun!')}</div>
+                <div className="font-bold text-gray-800 text-sm">{'��'} Sana Önerilen: {game.name}</div>
+                <div className="text-[10px] text-gray-500">{isWeak ? 'Bu oyunda gelişim fırsatın var!' : (stale.length > 0 && rec === stale[0] ? 'Tekrar zamanı geldi! ��' : 'Henüz denemediğin bir oyun!')}</div>
               </div>
-              <div className="px-2.5 py-1 bg-indigo-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-indigo-600 transition-colors">{'\u25B6'} Oyna</div>
+              <div className="px-2.5 py-1 bg-indigo-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-indigo-600 transition-colors">{'▶'} Oyna</div>
             </button>
           );
         })()}
 
-        {/* Etkinlik Kitap\u00E7\u0131\u011F\u0131 */}
+        {/* Etkinlik Kitapçığı */}
         <div className="shrink-0 mb-2">
           <button onClick={handleDownloadPDF}
             className="w-full bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all group">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{'\uD83D\uDCDD'}</div>
+            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{'��'}</div>
             <div className="flex-1 text-left">
-              <div className="font-bold text-gray-800 text-sm">K\u00E2\u011F\u0131t-Kalem Etkinlik Kitap\u00E7\u0131\u011F\u0131</div>
-              <div className="text-[10px] text-gray-500">14 etkinlik \u00B7 5 kategori \u00B7 Yazd\u0131r & \u00E7\u00F6z</div>
+              <div className="font-bold text-gray-800 text-sm">Kâğıt-Kalem Etkinlik Kitapçığı</div>
+              <div className="text-[10px] text-gray-500">14 etkinlik · 5 kategori · Yazdır & çöz</div>
             </div>
-            <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{'\uD83D\uDCE5'} \u0130ndir</div>
+            <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{'��'} İndir</div>
           </button>
         </div>
 
@@ -250,26 +250,26 @@ const App = () => {
                     </div>
                     <div className="flex items-center gap-1.5">
                       {catPlayed > 0 && <span className="bg-white/20 px-1.5 py-0.5 rounded-full text-[10px]">{catPlayed}/{catGames.length}</span>}
-                      {catStars > 0 && <span className="text-[10px]">{'\u2B50'}{catStars}</span>}
-                      <span className={`transition-transform duration-300 text-base ${isOpen ? 'rotate-180' : ''}`}>{'\u25BE'}</span>
+                      {catStars > 0 && <span className="text-[10px]">{'⭐'}{catStars}</span>}
+                      <span className={`transition-transform duration-300 text-base ${isOpen ? 'rotate-180' : ''}`}>{'▾'}</span>
                     </div>
                   </button>
 
                   {isOpen && (
                     <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-xl`}>
-                      {cat.id === 'D' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'\uD83D\uDCE6'} K\u00FC\u00E7\u00FCk Uzay (Nesne)</div>}
+                      {cat.id === 'D' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'��'} Küçük Uzay (Nesne)</div>}
                       {catGames.map(([id, g]) => {
                         const gp = progress[id];
                         return (
                           <React.Fragment key={id}>
-                            {cat.id === 'D' && id === 'D4' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'\uD83C\uDF0D'} B\u00FCy\u00FCk Uzay (Mek\u00E2n)</div>}
+                            {cat.id === 'D' && id === 'D4' && <div className="text-center text-xs font-bold text-emerald-600 pt-2 pb-1 tracking-wide">{'��'} Büyük Uzay (Mekân)</div>}
                             <div className="mx-1.5 mb-0.5">
                               <button onClick={() => setCurrentGame(id)}
                                 className="w-full py-2 px-3 bg-white/80 hover:bg-white hover:shadow-md rounded-lg flex items-center gap-2 transition-all">
                                 <span className="text-lg">{g.emoji}</span>
                                 <span className="flex-1 text-left font-semibold text-gray-800 text-sm">{g.name}</span>
-                                {gp && <div className="flex gap-0.5">{[1,2,3].map(i => <span key={i} className="text-xs">{i <= (gp.stars || 0) ? '\u2B50' : '\u2606'}</span>)}</div>}
-                                <span className="text-gray-300 text-sm">{'\u203A'}</span>
+                                {gp && <div className="flex gap-0.5">{[1,2,3].map(i => <span key={i} className="text-xs">{i <= (gp.stars || 0) ? '⭐' : '☆'}</span>)}</div>}
+                                <span className="text-gray-300 text-sm">{'›'}</span>
                               </button>
                             </div>
                           </React.Fragment>
@@ -283,8 +283,8 @@ const App = () => {
             })}
 
             <div className="text-center pt-3 pb-2">
-              <p className="text-[10px] text-gray-400">Prof. Dr. Y\u0131lmaz Mutlu \u2022 Prof. Dr. Sinan Olkun</p>
-              <p className="text-[10px] text-gray-300">v14.0 \u2022 {Object.keys(GAMES).length} Oyun</p>
+              <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
+              <p className="text-[10px] text-gray-300">v14.0 • {Object.keys(GAMES).length} Oyun</p>
             </div>
           </div>
         </div>

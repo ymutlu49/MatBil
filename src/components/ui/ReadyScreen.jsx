@@ -10,15 +10,15 @@ const ReadyScreen = ({ title, emoji, level, levelLabel, instruction, colors, onS
           {levelLabel || `Seviye ${level}`}
         </div>
         <div className={`${colors?.light || 'bg-gray-100'} rounded-xl p-2.5 mb-3`}>
-          <p className="text-gray-600 text-sm leading-relaxed">{'\uD83D\uDCCB'} {instruction}</p>
+          <p className="text-gray-600 text-sm leading-relaxed">{'��'} {instruction}</p>
         </div>
         <button onClick={onStart}
           className={`w-full py-3 rounded-xl text-white font-bold text-lg shadow-lg bg-gradient-to-r ${colors?.gradient || 'from-indigo-400 to-purple-500'} hover:opacity-90 active:scale-[0.98] transition-all`}>
-          {'\uD83D\uDE80'} Ba\u015Fla
+          {'��'} Başla
         </button>
       </div>
       <button onClick={onBack} className="w-full mt-2 py-2 text-gray-500 font-medium text-sm hover:text-gray-700 transition-colors">
-        \u2190 Seviye Se\u00E7imine D\u00F6n
+        ← Seviye Seçimine Dön
       </button>
     </div>
   </div>

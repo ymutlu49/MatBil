@@ -10,7 +10,15 @@
       "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../../utils''|from ''../../../utils''|g\" {} +)",
       "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../../constants/|from ''../../../constants/|g\" {} +)",
       "Bash(find src/components/games -name \"*.jsx\" -exec sed -i \"s|from ''../ui/|from ''../../ui/|g\" {} +)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(gh api:*)",
+      "Bash(gh run:*)",
+      "Bash(node -e \":*)",
+      "Bash(grep -rn '\\\\\\\\u[0-9A-Fa-f]\\\\{4\\\\}' src/ --include=\"*.jsx\" --include=\"*.js\")",
+      "Bash(node fix-chars.js)",
+      "Bash(mv fix-chars.js fix-chars.cjs)",
+      "Bash(node fix-chars.cjs)"
     ]
   }
 }

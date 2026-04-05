@@ -7,20 +7,20 @@ import ReadyScreen from '../../ui/ReadyScreen';
 
 const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
-  const nw=['','bir','iki','\u00fc\u00e7','d\u00f6rt','be\u015f','alt\u0131','yedi','sekiz','dokuz','on'];
+  const nw=['','bir','iki','üç','dört','beş','altı','yedi','sekiz','dokuz','on'];
 
-  // \u00c7oklu temsil render
+  // Çoklu temsil render
   const renderRep=(val,type,size='text-5xl')=>{
     if(type==='number') return <span className={`font-bold text-indigo-700 ${size}`}>{val}</span>;
     if(type==='word') return <span className="font-bold text-indigo-700 text-2xl capitalize">{nw[val]||val}</span>;
     if(type==='dots') return <div className="flex flex-wrap justify-center gap-1.5" style={{maxWidth:100}}>{Array.from({length:val},(_,i)=><div key={i} className="w-5 h-5 bg-indigo-500 rounded-full"/>)}</div>;
     if(type==='tally'){
       const groups=Math.floor(val/5), rem=val%5;
-      return <div className="flex gap-2 items-end">{Array.from({length:groups},(_,i)=><span key={i} className="text-3xl font-bold text-indigo-700">{'\u535C'}</span>)}{rem>0&&<span className="text-2xl text-indigo-700 font-bold">{'|'.repeat(rem)}</span>}</div>;
+      return <div className="flex gap-2 items-end">{Array.from({length:groups},(_,i)=><span key={i} className="text-3xl font-bold text-indigo-700">{'卜'}</span>)}{rem>0&&<span className="text-2xl text-indigo-700 font-bold">{'|'.repeat(rem)}</span>}</div>;
     }
     if(type==='fingers'){
       const h1=Math.min(val,5), h2=Math.max(0,val-5);
-      return <div className="flex gap-1">{h1>0&&<span className="text-4xl">{'\ud83d\udd90\ufe0f'.repeat(h1===5?1:0)}{h1<5?['','\u261d\ufe0f','\u270c\ufe0f','\ud83e\udd1f','\ud83d\udd96'][h1]:''}</span>}{h2>0&&<span className="text-4xl">{h2===5?'\ud83d\udd90\ufe0f':['','\u261d\ufe0f','\u270c\ufe0f','\ud83e\udd1f','\ud83d\udd96'][h2]}</span>}</div>;
+      return <div className="flex gap-1">{h1>0&&<span className="text-4xl">{'��️'.repeat(h1===5?1:0)}{h1<5?['','☝️','✌️','��','��'][h1]:''}</span>}{h2>0&&<span className="text-4xl">{h2===5?'��️':['','☝️','✌️','��','��'][h2]}</span>}</div>;
     }
     return <span className={`font-bold ${size}`}>{val}</span>;
   };
@@ -35,7 +35,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
     const types = l===1 ? ['normal','stroop'] : l===2 ? ['stroop','rep'] : l===3 ? ['stroop','rep','mixed'] : ['stroop','rep','mixed'];
     const type = types[Math.floor(Math.random()*types.length)];
 
-    // Stroop: Fiziksel boyut uyumsuzlu\u011fu
+    // Stroop: Fiziksel boyut uyumsuzluğu
     let sizes, repType='number', isCongruent=true;
     if(type==='stroop' || type==='mixed'){
       const sorted=[...nums].sort((a,b)=>b-a);
@@ -55,7 +55,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
 
     const answer = Math.max(...nums);
-    const question = nums.length>=3 ? 'Hangisi en \u00e7ok?' : 'Hangisi daha \u00e7ok?';
+    const question = nums.length>=3 ? 'Hangisi en çok?' : 'Hangisi daha çok?';
     const hint = nums.length===2 ? `${Math.min(...nums)} < ${Math.max(...nums)}` : [...nums].sort((a,b)=>a-b).join(' < ');
 
     return{nums,answer,question,hint,type,sizes,repType,isCongruent};
@@ -63,15 +63,15 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="B\u00fcy\u00fck-K\u00fc\u00e7\u00fck" emoji="\u2696\ufe0f" description="Hangisi daha \u00e7ok? Boyutuna aldanma, say\u0131sal de\u011fere odaklan!" levels={['Seviye 1 (0-10, Stroop)','Seviye 2 (0-10, \u00e7oklu temsil)','Seviye 3 (0-100, kar\u0131\u015f\u0131k)','Seviye 4 (0-100, 3 say\u0131)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="B\u00fcy\u00fck-K\u00fc\u00e7\u00fck" emoji="\u2696\ufe0f" level={lv} instruction="Say\u0131lar farkl\u0131 boyutlarda veya farkl\u0131 temsillerle g\u00f6sterilecek. Fiziksel boyutuna aldanma, de\u011feri b\u00fcy\u00fck olan\u0131 se\u00e7!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Büyük-Küçük" emoji="⚖️" description="Hangisi daha çok? Boyutuna aldanma, sayısal değere odaklan!" levels={['Seviye 1 (0-10, Stroop)','Seviye 2 (0-10, çoklu temsil)','Seviye 3 (0-100, karışık)','Seviye 4 (0-100, 3 sayı)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Büyük-Küçük" emoji="⚖️" level={lv} instruction="Sayılar farklı boyutlarda veya farklı temsillerle gösterilecek. Fiziksel boyutuna aldanma, değeri büyük olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="B\u00fcy\u00fck-K\u00fc\u00e7\u00fck" colors={colors}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Büyük-Küçük" colors={colors}/>
       <div className="bg-white px-5 py-3 rounded-xl shadow mb-3 text-center">
-        <span className="text-xl font-bold text-gray-700">{'\ud83d\udd3c'} {p?.question}</span>
-        {(p?.type==='stroop'||p?.type==='mixed')&&!p?.isCongruent&&ua===null&&<div className="text-xs text-purple-500 mt-1">{'\ud83d\udca1'} Boyutuna aldanma!</div>}
+        <span className="text-xl font-bold text-gray-700">{'��'} {p?.question}</span>
+        {(p?.type==='stroop'||p?.type==='mixed')&&!p?.isCongruent&&ua===null&&<div className="text-xs text-purple-500 mt-1">{'��'} Boyutuna aldanma!</div>}
       </div>
       <div className="flex items-center gap-5 mb-4">
         {p?.nums?.map((n,i)=>(
@@ -86,10 +86,10 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
         ))}
       </div>
       {ua!==null&&<div className="text-center">
-        <div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'\u2713 Do\u011fru!':`${encourage()} Cevap: ${p?.answer}`}</div>
+        <div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div>
         <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">
-          {'\ud83d\udca1'} {p?.hint}
-          {p?.type==='stroop'&&!p?.isCongruent&&' (Boyut yan\u0131lt\u0131c\u0131yd\u0131!)'}
+          {'��'} {p?.hint}
+          {p?.type==='stroop'&&!p?.isCongruent&&' (Boyut yanıltıcıydı!)'}
         </div>
       </div>}
     </div>

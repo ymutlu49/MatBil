@@ -42,7 +42,7 @@ const AdminPanel = ({ onBack }) => {
         ].join(','));
       });
     });
-    const csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+    const csv = '﻿' + headers.join(',') + '\n' + rows.join('\n');
     const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

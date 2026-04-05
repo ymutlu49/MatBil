@@ -6,9 +6,9 @@ const Feedback = ({ isCorrect, answer, hint }) => {
   return (
     <div className={`text-center ${isCorrect ? 'anim-pop' : 'anim-shake'}`}>
       <div className={`text-2xl font-bold mb-2 ${isCorrect ? 'text-green-500' : 'text-orange-500'}`}>
-        {isCorrect ? '\u2713 Do\u011Fru!' : `${encourage()} Cevap: ${answer}`}
+        {isCorrect ? '✓ Doğru!' : `${encourage()} Cevap: ${answer}`}
       </div>
-      {hint && <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 max-w-sm mx-auto anim-fade">\uD83D\uDCA1 {hint}</div>}
+      {hint && <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 max-w-sm mx-auto anim-fade">�� {hint}</div>}
     </div>
   );
 };

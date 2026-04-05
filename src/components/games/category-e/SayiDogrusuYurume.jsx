@@ -46,8 +46,8 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
     },1800);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Say\u0131 Y\u00fcr\u00fcy\u00fc\u015f\u00fc" emoji="\ud83d\udeb6" description="Say\u0131 do\u011frusu \u00fczerinde y\u00fcr\u00fcyerek toplama ve \u00e7\u0131karma yap! \u0130leri git veya geri gel." levels={['Sv1: Toplama (0-10)','Sv2: Toplama (0-10)','Sv3: Kar\u0131\u015f\u0131k (0-15)','Sv4: Kar\u0131\u015f\u0131k (0-20)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Say\u0131 Y\u00fcr\u00fcy\u00fc\u015f\u00fc" emoji="\ud83d\udeb6" level={lv} instruction="Say\u0131 do\u011frusu \u00fczerinde ba\u015flang\u0131\u00e7 noktas\u0131ndas\u0131n. Ok butonlar\u0131yla do\u011fru say\u0131da ad\u0131m atarak sonuca ula\u015f!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Yürüyüşü" emoji="��" description="Sayı doğrusu üzerinde yürüyerek toplama ve çıkarma yap! İleri git veya geri gel." levels={['Sv1: Toplama (0-10)','Sv2: Toplama (0-10)','Sv3: Karışık (0-15)','Sv4: Karışık (0-20)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Sayı Yürüyüşü" emoji="��" level={lv} instruction="Sayı doğrusu üzerinde başlangıç noktasındasın. Ok butonlarıyla doğru sayıda adım atarak sonuca ulaş!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const pct=p?(pos/p.max)*100:0;
@@ -56,10 +56,10 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Say\u0131 Y\u00fcr\u00fcy\u00fc\u015f\u00fc" colors={colors}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Yürüyüşü" colors={colors}/>
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center w-full max-w-sm">
         <div className="text-2xl font-bold text-purple-700 mb-1">{p?.a} {p?.op} {p?.b} = ?</div>
-        <div className="text-sm text-gray-500">{p?.op==='+'?`${p?.a}'den ${p?.b} ad\u0131m ileri y\u00fcr\u00fc`:`${p?.a}'den ${p?.b} ad\u0131m geri gel`}</div>
+        <div className="text-sm text-gray-500">{p?.op==='+'?`${p?.a}'den ${p?.b} adım ileri yürü`:`${p?.a}'den ${p?.b} adım geri gel`}</div>
       </div>
 
       <div className="w-full max-w-sm mb-3 px-2">
@@ -68,7 +68,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
           <div className="absolute top-5 h-7 w-0.5 bg-blue-400" style={{left:`${startPct}%`}}/>
           {submitted && <div className="absolute top-5 h-7 w-0.5 bg-green-500" style={{left:`${ansPct}%`}}/>}
           <div className="absolute top-0 transition-all duration-300 -translate-x-1/2 text-center" style={{left:`${pct}%`}}>
-            <div className="text-2xl">{'\ud83d\udeb6'}</div>
+            <div className="text-2xl">{'��'}</div>
             <div className="text-xs font-bold bg-white px-1 rounded shadow" style={{color:numColor(pos,p?.max||20)}}>{pos}</div>
           </div>
         </div>
@@ -82,22 +82,22 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
       {!submitted ? (
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-3">
-            <button onClick={()=>step(-1)} disabled={pos<=0} className={`w-16 h-16 rounded-2xl font-bold text-2xl shadow-lg transition-all ${pos>0?'bg-orange-400 text-white hover:bg-orange-500':'bg-gray-200 text-gray-400'}`}>{'\u2190'}</button>
+            <button onClick={()=>step(-1)} disabled={pos<=0} className={`w-16 h-16 rounded-2xl font-bold text-2xl shadow-lg transition-all ${pos>0?'bg-orange-400 text-white hover:bg-orange-500':'bg-gray-200 text-gray-400'}`}>{'←'}</button>
             <div className="text-center">
-              <div className="text-xs text-gray-500">{steps} ad\u0131m</div>
+              <div className="text-xs text-gray-500">{steps} adım</div>
               <div className="text-sm font-bold text-gray-700">Konum: {pos}</div>
             </div>
-            <button onClick={()=>step(1)} disabled={pos>=p?.max} className={`w-16 h-16 rounded-2xl font-bold text-2xl shadow-lg transition-all ${pos<p?.max?'bg-emerald-400 text-white hover:bg-emerald-500':'bg-gray-200 text-gray-400'}`}>{'\u2192'}</button>
+            <button onClick={()=>step(1)} disabled={pos>=p?.max} className={`w-16 h-16 rounded-2xl font-bold text-2xl shadow-lg transition-all ${pos<p?.max?'bg-emerald-400 text-white hover:bg-emerald-500':'bg-gray-200 text-gray-400'}`}>{'→'}</button>
           </div>
-          <button onClick={submit} className={`px-8 py-3 ${colors?.button} text-white rounded-xl font-bold shadow-lg mt-2`}>{'\u2713'} Buras\u0131!</button>
+          <button onClick={submit} className={`px-8 py-3 ${colors?.button} text-white rounded-xl font-bold shadow-lg mt-2`}>{'✓'} Burası!</button>
         </div>
       ) : (
         <div className="text-center anim-fade">
           <div className={`text-2xl font-bold mb-2 ${pos===p?.answer?'text-green-500':'text-orange-500'}`}>
-            {pos===p?.answer?'\u2713 Do\u011fru yere y\u00fcr\u00fcd\u00fcn!':encourage()}
+            {pos===p?.answer?'✓ Doğru yere yürüdün!':encourage()}
           </div>
           <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">
-            {'\ud83d\udca1'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a y\u00fcr\u00fcd\u00fcn)`:''}
+            {'��'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
           </div>
         </div>
       )}

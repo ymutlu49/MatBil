@@ -14,7 +14,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [wrong,setWrong]=useState([]);const [rotatingId,setRotatingId]=useState(null);const [extraRot,setExtraRot]=useState({});
 
   const shapeTypes = ['cember','kare','ucgen','dikdortgen'];
-  const shapeNames = {cember:'\u00c7ember',kare:'Kare',ucgen:'\u00dc\u00e7gen',dikdortgen:'Dikd\u00f6rtgen'};
+  const shapeNames = {cember:'Çember',kare:'Kare',ucgen:'Üçgen',dikdortgen:'Dikdörtgen'};
 
   const isMatchingType = (shapeType, targetT) => {
     if(targetT === 'dikdortgen') return shapeType === 'dikdortgen' || shapeType === 'kare';
@@ -101,25 +101,25 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="\u015eekli Tan\u0131ma" emoji="\ud83d\udd0d" description="\u0130stenen \u015fekli bul ve dokun! Renk, boyut veya d\u00f6nd\u00fcrme de\u011fi\u015fse de \u015fekli tan\u0131." levels={['D\u00fczey 1a (Temel \u015fekiller)','D\u00fczey 1b (Farkl\u0131 boyutlar)','D\u00fczey 1c (E\u011fik/d\u00f6nd\u00fcr\u00fclm\u00fc\u015f)','D\u00fczey 1d (Orant\u0131s\u0131z \u015fekiller)','D\u00fczey 1e (Tam zorluk)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="\u015eekli Tan\u0131ma" emoji="\ud83d\udd0d" level={lv} instruction="\u00c7e\u015fitli \u015fekiller g\u00f6sterilecek. \u0130stenen geometrik \u015fekli bul ve \u00fczerine dokun! Renk veya boyut farkl\u0131 olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Şekli Tanıma" emoji="��" description="İstenen şekli bul ve dokun! Renk, boyut veya döndürme değişse de şekli tanı." levels={['Düzey 1a (Temel şekiller)','Düzey 1b (Farklı boyutlar)','Düzey 1c (Eğik/döndürülmüş)','Düzey 1d (Orantısız şekiller)','Düzey 1e (Tam zorluk)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Şekli Tanıma" emoji="��" level={lv} instruction="Çeşitli şekiller gösterilecek. İstenen geometrik şekli bul ve üzerine dokun! Renk veya boyut farklı olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={5} onNextLevel={startG} prevBest={prevBest}/>;
 
   const tc = shapes.filter(s=>s.isTarget).length;
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="\u015eekli Tan\u0131ma" colors={colors}/>
-      <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><span className="text-sm text-gray-500">D\u00fczey 1: G\u00f6rselle\u015ftirme \u2014 {['Temel','Boyut','Konumlan\u0131\u015f','Kar\u0131\u015f\u0131k','Tam'][lv-1]}</span></div>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Şekli Tanıma" colors={colors}/>
+      <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><span className="text-sm text-gray-500">Düzey 1: Görselleştirme — {['Temel','Boyut','Konumlanış','Karışık','Tam'][lv-1]}</span></div>
 
       <div className="bg-white px-6 py-3 rounded-xl shadow mb-3 flex items-center gap-3">
         <span className="text-gray-600">Bul:</span>
         <SVGShape type={targetType} size={40} color="#374151"/>
         <span className="font-bold text-lg">{shapeNames[targetType]}</span>
-        {targetType==='dikdortgen' && <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Kare de say\u0131l\u0131r!</span>}
+        {targetType==='dikdortgen' && <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Kare de sayılır!</span>}
         <span className="ml-2 bg-green-100 px-3 py-1 rounded-full text-green-700 text-sm">{found.length}/{tc}</span>
       </div>
-      <div className="text-xs text-gray-600 mb-2">{'\ud83d\udca1'} {targetType==='dikdortgen' ? 'Her kare ayn\u0131 zamanda bir dikd\u00f6rtgendir!' : targetType==='kare' && lv>=3 ? 'E\u011fik duran kare h\u00e2l\u00e2 karedir! \u00d6zelliklerine odaklan: 4 e\u015fit kenar, 4 dik a\u00e7\u0131.' : targetType==='ucgen' && lv>=3 ? '\u00dc\u00e7gen ters dursa da \u00fc\u00e7gendir! 3 kenar ve 3 a\u00e7\u0131s\u0131 var m\u0131?' : 'Renk, boyut veya d\u00f6nd\u00fcrme de\u011fi\u015fse de \u015fekli tan\u0131! Ye\u015fil \u015fekle dokunarak d\u00f6nd\u00fcrebilirsin.'}</div>
+      <div className="text-xs text-gray-600 mb-2">{'��'} {targetType==='dikdortgen' ? 'Her kare aynı zamanda bir dikdörtgendir!' : targetType==='kare' && lv>=3 ? 'Eğik duran kare hâlâ karedir! Özelliklerine odaklan: 4 eşit kenar, 4 dik açı.' : targetType==='ucgen' && lv>=3 ? 'Üçgen ters dursa da üçgendir! 3 kenar ve 3 açısı var mı?' : 'Renk, boyut veya döndürme değişse de şekli tanı! Yeşil şekle dokunarak döndürebilirsin.'}</div>
 
       <div className="grid grid-cols-4 gap-3 bg-white p-4 rounded-2xl shadow-xl">
         {shapes.map(s=>(

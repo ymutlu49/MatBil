@@ -23,8 +23,8 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Par\u00e7a-B\u00fct\u00fcn" emoji="\ud83e\udde9" description="\u00dc\u00e7genin k\u00f6\u015felerindeki say\u0131lar aras\u0131ndaki ili\u015fkiyi ke\u015ffet! Par\u00e7alar\u0131n toplam\u0131 b\u00fct\u00fcn\u00fc verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 \u0130leri)','Seviye 4 (1-15)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Par\u00e7a-B\u00fct\u00fcn" emoji="\ud83e\udde9" level={lv} instruction="\u00dc\u00e7genin tepesinde b\u00fct\u00fcn, alt k\u00f6\u015felerinde par\u00e7alar var. \u0130ki par\u00e7an\u0131n toplam\u0131 b\u00fct\u00fcne e\u015fittir. Eksik say\u0131y\u0131 bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parça-Bütün" emoji="��" description="Üçgenin köşelerindeki sayılar arasındaki ilişkiyi keşfet! Parçaların toplamı bütünü verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Parça-Bütün" emoji="��" level={lv} instruction="Üçgenin tepesinde bütün, alt köşelerinde parçalar var. İki parçanın toplamı bütüne eşittir. Eksik sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isMissing=(t)=>p?.missingType===t;
@@ -37,7 +37,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Par\u00e7a-B\u00fct\u00fcn" colors={colors}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parça-Bütün" colors={colors}/>
 
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-2 w-full max-w-xs">
         <div className="relative" style={{height:190}}>
@@ -50,32 +50,32 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('whole')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-indigo-100 border-indigo-400'}`}>
               {nodeVal(p?.whole,'whole')}
             </div>
-            <span className="text-[10px] font-bold text-indigo-500 mt-0.5">B\u00dcT\u00dcN</span>
+            <span className="text-[10px] font-bold text-indigo-500 mt-0.5">BÜTÜN</span>
           </div>
 
           <div className="absolute left-0 bottom-0 flex flex-col items-center" style={{left:4}}>
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part1')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-rose-100 border-rose-400'}`}>
               {nodeVal(p?.part1,'part1')}
             </div>
-            <span className="text-[10px] font-bold text-rose-500 mt-0.5">PAR\u00c7A</span>
+            <span className="text-[10px] font-bold text-rose-500 mt-0.5">PARÇA</span>
           </div>
 
           <div className="absolute right-0 bottom-0 flex flex-col items-center" style={{right:4}}>
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part2')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-sky-100 border-sky-400'}`}>
               {nodeVal(p?.part2,'part2')}
             </div>
-            <span className="text-[10px] font-bold text-sky-500 mt-0.5">PAR\u00c7A</span>
+            <span className="text-[10px] font-bold text-sky-500 mt-0.5">PARÇA</span>
           </div>
         </div>
       </div>
 
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center max-w-xs">
         <div className="text-sm text-gray-700 font-medium">
-          {isMissing('whole')?'\u0130ki par\u00e7an\u0131n toplam\u0131 (b\u00fct\u00fcn) ka\u00e7t\u0131r?':isMissing('part1')?`B\u00fct\u00fcn ${p?.whole}, bir par\u00e7a ${p?.part2}. Eksik par\u00e7a ka\u00e7?`:`B\u00fct\u00fcn ${p?.whole}, bir par\u00e7a ${p?.part1}. Eksik par\u00e7a ka\u00e7?`}
+          {isMissing('whole')?'İki parçanın toplamı (bütün) kaçtır?':isMissing('part1')?`Bütün ${p?.whole}, bir parça ${p?.part2}. Eksik parça kaç?`:`Bütün ${p?.whole}, bir parça ${p?.part1}. Eksik parça kaç?`}
         </div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'\u2713 Do\u011fru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'\ud83d\udca1'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'��'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

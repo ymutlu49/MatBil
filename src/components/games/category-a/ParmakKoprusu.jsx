@@ -37,14 +37,14 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     },1500);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak K\u00F6pr\u00FCs\u00FC" emoji="\uD83D\uDD90\uFE0F" description="Ekrana do\u011Fru say\u0131da parmakla ayn\u0131 anda dokun! Parmaklar\u0131n say\u0131larla ba\u011Flant\u0131s\u0131n\u0131 g\u00FC\u00E7lendir." levels={['Sv1 (1-5)','Sv2 (2-7)','Sv3 (3-9)','Sv4 (1-10)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Parmak K\u00F6pr\u00FCs\u00FC" emoji="\uD83D\uDD90\uFE0F" level={lv} instruction="Bir say\u0131 g\u00F6sterilecek. Ekrana o kadar parma\u011F\u0131nla ayn\u0131 anda dokun! Parmaklar\u0131n\u0131 kald\u0131rd\u0131\u011F\u0131nda cevab\u0131n kontrol edilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak Köprüsü" emoji="��️" description="Ekrana doğru sayıda parmakla aynı anda dokun! Parmakların sayılarla bağlantısını güçlendir." levels={['Sv1 (1-5)','Sv2 (2-7)','Sv3 (3-9)','Sv4 (1-10)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Parmak Köprüsü" emoji="��️" level={lv} instruction="Bir sayı gösterilecek. Ekrana o kadar parmağınla aynı anda dokun! Parmaklarını kaldırdığında cevabın kontrol edilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parmak K\u00F6pr\u00FCs\u00FC" colors={colors}/>
+      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parmak Köprüsü" colors={colors}/>
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
-        <div className="text-xs text-gray-400 mb-1">Bu say\u0131 kadar parmakla dokun:</div>
+        <div className="text-xs text-gray-400 mb-1">Bu sayı kadar parmakla dokun:</div>
         <div className="text-6xl font-bold text-indigo-600">{target}</div>
       </div>
       <div ref={touchRef}
@@ -56,23 +56,23 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
         {ua!==null ? (
           <div className="text-center">
             <div className={`text-3xl font-bold mb-2 ${ua===target?'text-green-500':'text-orange-500'}`}>
-              {ua===target?'\u2713 Do\u011Fru!':encourage()}
+              {ua===target?'✓ Doğru!':encourage()}
             </div>
-            <div className="text-gray-600">Sen {ua} parmak bast\u0131n, do\u011Fru cevap: {target}</div>
+            <div className="text-gray-600">Sen {ua} parmak bastın, doğru cevap: {target}</div>
           </div>
         ) : fingerCount>0 ? (
           <div className="text-center">
             <div className="text-5xl font-bold text-indigo-600 mb-2">{fingerCount}</div>
-            <div className="text-sm text-indigo-400">parmak alg\u0131land\u0131 \u2014 kald\u0131rarak onayla</div>
+            <div className="text-sm text-indigo-400">parmak algılandı — kaldırarak onayla</div>
           </div>
         ) : (
           <div className="text-center text-gray-400">
-            <div className="text-4xl mb-2">{'\uD83D\uDD90\uFE0F'}</div>
+            <div className="text-4xl mb-2">{'��️'}</div>
             <div className="text-sm">Buraya {target} parmakla dokun</div>
           </div>
         )}
       </div>
-      <div className="text-[10px] text-gray-400 mt-2 text-center">Tablet/telefonda \u00E7al\u0131\u015F\u0131r. Masa\u00FCst\u00FCnde t\u0131klama = 1 parmak</div>
+      <div className="text-[10px] text-gray-400 mt-2 text-center">Tablet/telefonda çalışır. Masaüstünde tıklama = 1 parmak</div>
     </div>
   );
 };
