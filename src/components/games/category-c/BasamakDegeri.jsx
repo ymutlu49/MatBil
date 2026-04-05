@@ -17,30 +17,36 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
-  // Onluk çubuk SVG
+  // Birim boyutu: tüm görseller bu ölçüye göre orantılı
+  const UNIT = 14; // px - birlik küpünün kenar uzunluğu
+
+  // Onluk çubuk: 1 birim genişlik × 10 birim yükseklik
   const TenBar = ({count, highlight}) => (
-    <div className="flex gap-1.5 flex-wrap justify-center">
+    <div className="flex gap-1 flex-wrap justify-center items-end">
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-6 rounded-sm shadow-sm flex flex-col gap-px p-px ${highlight?'bg-blue-500 ring-2 ring-blue-300':'bg-blue-400'}`} style={{height:60}}>
+        <div key={i} className={`rounded-sm shadow-sm flex flex-col gap-px p-px ${highlight?'bg-blue-500 ring-2 ring-blue-300':'bg-blue-400'}`}
+          style={{width: UNIT + 4, height: UNIT * 10 + 12}}>
           {Array.from({length:10},(_,j)=><div key={j} className="flex-1 bg-blue-100 rounded-[1px]"/>)}
         </div>
       ))}
     </div>
   );
-  // Birlik küp
+  // Birlik küp: 1 birim × 1 birim kare
   const UnitCubes = ({count, highlight}) => (
-    <div className="flex gap-1.5 flex-wrap justify-center" style={{maxWidth:100}}>
+    <div className="flex gap-1 flex-wrap justify-center items-end" style={{maxWidth: UNIT * 4 + 16}}>
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-6 h-6 rounded-sm shadow-sm ${highlight?'bg-amber-500 border-amber-600 ring-2 ring-amber-300':'bg-amber-300 border-amber-400'} border`}/>
+        <div key={i} className={`rounded-sm shadow-sm ${highlight?'bg-amber-500 border-amber-600 ring-2 ring-amber-300':'bg-amber-300 border-amber-400'} border`}
+          style={{width: UNIT, height: UNIT}}/>
       ))}
     </div>
   );
-  // Yüzlük kare
+  // Yüzlük kare: 10×10 birim grid
   const HundredSquare = ({count, highlight}) => (
-    <div className="flex gap-2 flex-wrap justify-center">
+    <div className="flex gap-2 flex-wrap justify-center items-end">
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-16 h-16 rounded shadow-sm grid grid-cols-5 gap-px p-px ${highlight?'bg-red-500 ring-2 ring-red-300':'bg-red-400'}`}>
-          {Array.from({length:25},(_,j)=><div key={j} className="bg-red-100 rounded-[1px]"/>)}
+        <div key={i} className={`rounded shadow-sm grid grid-cols-10 gap-px p-px ${highlight?'bg-red-500 ring-2 ring-red-300':'bg-red-400'}`}
+          style={{width: UNIT * 10 + 12, height: UNIT * 10 + 12}}>
+          {Array.from({length:100},(_,j)=><div key={j} className="bg-red-100 rounded-[1px]"/>)}
         </div>
       ))}
     </div>
