@@ -26,4 +26,5 @@ export const HELP_MAP = {
   'Bölüşme Zamanı': { goal: 'Bölme Kavramı (Eşit Paylaştırma)', tip: 'Toplam miktarı eşit gruplara ayırmayı düşün.' },
   'Sayı Bağları': { goal: 'Sayı Ayrıştırma (Number Bonds)', tip: 'Bir sayıyı iki parçaya ayır. Parçaların toplamı bütüne eşit olmalı. Örn: 7 = 3+4 = 2+5 = 1+6. Butterworth ve ark. (2011) bu becerinin diskalkuli müdahalesinde temel olduğunu gösterdi.' },
   'Çıkarma Stratejileri': { goal: 'Esnek Çıkarma Stratejileri', tip: 'Farklı stratejiler dene: geriye sayma, onluğa tamamlama veya toplama ile kontrol. Bir strateji zorsa başkasını dene!' },
+  'Nokta Karşılaştırma': { goal: 'Yaklaşık Sayı Sistemi (YSS/ANS)', tip: 'Saymadan, sezgisel olarak hangisinde daha çok olduğunu hisset. Bu beceri doğuştan gelen sayı hissinin temelidir (Halberda ve ark., 2008). Weber oranı küçüldükçe zorluk artar.' },
 };
