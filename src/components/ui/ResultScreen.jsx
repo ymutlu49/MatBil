@@ -27,7 +27,8 @@ const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete
   }, []);
 
   return (
-    <div className={`h-screen ${colors?.bg || 'bg-gray-50'} flex flex-col items-center justify-center p-4 overflow-hidden anim-slide-up relative`}>
+    <div className={`h-screen ${colors?.bg || 'bg-gray-50'} flex flex-col items-center justify-center p-4 overflow-hidden anim-slide-up relative`}
+      role="status" aria-live="polite" aria-label={`Sonuç: ${score} puan, ${stars} yıldız. ${msg}`}>
       {stars === 3 && <Confetti />}
       <div className="text-6xl mb-3 anim-pop">{isNewRecord ? '🏅' : stars >= 2 ? '🏆' : stars === 1 ? '💪' : '🎯'}</div>
       <h2 className="text-3xl font-bold text-gray-800 mb-2">{msg}</h2>
