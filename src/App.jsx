@@ -211,19 +211,6 @@ const App = () => {
           );
         })()}
 
-        {/* Etkinlik Kitapçığı */}
-        <div className="shrink-0 mb-2">
-          <button onClick={handleDownloadPDF}
-            className="w-full bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all group">
-            <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{"📝"}</div>
-            <div className="flex-1 text-left">
-              <div className="font-bold text-gray-800 text-sm">Kâğıt-Kalem Etkinlik Kitapçığı</div>
-              <div className="text-[10px] text-gray-500">14 etkinlik · 5 kategori · Yazdır & çöz</div>
-            </div>
-            <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{"📥"} İndir</div>
-          </button>
-        </div>
-
         {/* Accordion Kategoriler */}
         <div className="flex-1 min-h-0 overflow-y-auto scroll-area">
           <div className="space-y-1.5 pb-32">
@@ -276,9 +263,23 @@ const App = () => {
               );
             })}
 
-            <div className="text-center pt-3 pb-2">
+            {/* Etkinlik Kitapçığı */}
+            <div className="mt-4 mb-3">
+              <button onClick={handleDownloadPDF}
+                className="w-full bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all group">
+                <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{"📝"}</div>
+                <div className="flex-1 text-left">
+                  <div className="font-bold text-gray-800 text-sm">Kâğıt-Kalem Etkinlik Kitapçığı</div>
+                  <div className="text-[10px] text-gray-500">27 etkinlik · 5 kategori · Yazdır & çöz</div>
+                </div>
+                <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{"📥"} İndir</div>
+              </button>
+            </div>
+
+            <div className="text-center pt-2 pb-2">
               <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
               <p className="text-[10px] text-gray-300">v14.0 • {Object.keys(GAMES).length} Oyun</p>
+              <p className="text-[10px] text-gray-300 mt-0.5">www.diskalkuli.com</p>
             </div>
           </div>
         </div>
