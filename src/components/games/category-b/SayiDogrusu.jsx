@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -18,7 +18,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
     else{t=Math.floor(Math.random()*(c.max-2))+2;}
     setTarget(t);const o=[t];let at=0,sp=l===3?100:3;
     while(o.length<4&&at<60){const delta=l===3?(Math.floor(Math.random()*4)+1)*50*(Math.random()>0.5?1:-1):(Math.floor(Math.random()*sp)+1)*(Math.random()>0.5?1:-1);const v=Math.max(l===3?50:1,Math.min(c.max,t+delta));if(!o.includes(v))o.push(v);at++;if(at>30)sp++;}
-    while(o.length<4)o.push(o.length*c.step+t);setOpts(o.sort(()=>Math.random()-0.5));setUa(null);};
+    while(o.length<4)o.push(o.length*c.step+t);setOpts(shuffle(o));setUa(null);};
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);genR(l);setGs('playing');};
   const getFeedback=(ans,tgt,tol)=>{if(ans===tgt)return{cls:'text-green-500',msg:'✓ Doğru!'};const diff=Math.abs(ans-tgt);if(diff<=tol)return{cls:'text-amber-500',msg:` Çok yaklaştın! Yanıt: ${tgt}`};return{cls:'text-orange-500',msg:`${encourage()} Yanıt: ${tgt}`};};

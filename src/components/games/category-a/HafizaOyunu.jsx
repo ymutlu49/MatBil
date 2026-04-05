@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -12,11 +12,11 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
   // Seviye 1: Kolay (1-4) cokluk-cokluk, Seviye 2: Orta (5-9) sembol-sembol, Seviye 3: Zor (1-9) cokluk-sembol
   const cfg={1:{range:[1,2,3,4],type:'dots-dots',pairs:4},2:{range:[5,6,7,8,9],type:'num-num',pairs:5},3:{range:[1,2,3,4,5,6,7,8,9],type:'dots-num',pairs:6}};
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setFlipped([]);setMatched([]);const c=cfg[l];const vals=c.range.sort(()=>Math.random()-0.5).slice(0,c.pairs);let cp;
+  const startG=(l)=>{setLv(l);setSc(0);setFlipped([]);setMatched([]);const c=cfg[l];const vals=c.range.slice(0,c.pairs);let cp;
     if(c.type==='dots-dots'){cp=[...vals.map(v=>({value:v,type:'dots',col:'bg-rose-400'})),...vals.map(v=>({value:v,type:'dots',col:'bg-blue-400'}))];}
     else if(c.type==='num-num'){cp=[...vals.map(v=>({value:v,type:'number',col:'text-rose-600'})),...vals.map(v=>({value:v,type:'number',col:'text-blue-600'}))];}
     else{cp=[...vals.map(v=>({value:v,type:'dots',col:'bg-purple-500'})),...vals.map(v=>({value:v,type:'number',col:'text-purple-700'}))];}
-    setCards(cp.sort(()=>Math.random()-0.5).map((c2,i)=>({...c2,id:i})));setGs('playing');};
+    setCards(shuffle(cp).map((c2,i)=>({...c2,id:i})));setGs('playing');};
   const handleClick=(i)=>{if(flipped.length===2||flipped.includes(i)||matched.includes(i))return;const nf=[...flipped,i];setFlipped(nf);if(nf.length===2){const[f,s]=nf;if(cards[f].value===cards[s].value&&f!==s){const nm=[...matched,f,s];setMatched(nm);setSc(s2=>s2+20*lv);setFlipped([]);if(nm.length===cards.length)setTimeout(()=>setGs('results'),800);}else setTimeout(()=>setFlipped([]),1000);}};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Hafıza Oyunu" emoji="" description="Kartları çevir ve aynı sayıdaki eşlerini bul! Eşleşen çiftler puan kazandırır." levels={['Kolay (1-4, Çokluk-Çokluk)','Orta (5-9, Sembol-Sembol)','Zor (1-9, Çokluk-Sembol)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Hafıza Oyunu" emoji="" level={lv} instruction="Kartları ikişer ikişer çevir. Aynı sayıyı gösteren kartları bulursan eşleşir ve açık kalır. Tüm çiftleri bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

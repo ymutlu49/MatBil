@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, speakNumber, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, speakNumber, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -71,7 +71,7 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
     const o=[t];let at=0;
     while(o.length<4&&at<50){const c=Math.floor(Math.random()*mx)+1;if(!o.includes(c))o.push(c);at++;}
     while(o.length<4)o.push(o.length+mx);
-    return{target:t,qRep,aRep,options:o.sort(()=>Math.random()-0.5)};
+    return{target:t,qRep,aRep,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

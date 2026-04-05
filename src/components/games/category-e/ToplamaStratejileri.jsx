@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -23,7 +23,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
       default:question=`${a} + ${b} = ?`;correctAnswer=answer;break;
     }
     const o=[correctAnswer];let at=0;while(o.length<4&&at<40){const v=Math.max(0,correctAnswer+Math.floor(Math.random()*6)-3);if(!o.includes(v)&&v>=0)o.push(v);at++;}while(o.length<4)o.push(o.length+correctAnswer);
-    return{a,b,answer,type,question,correctAnswer,options:o.sort(()=>Math.random()-0.5)};
+    return{a,b,answer,type,question,correctAnswer,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

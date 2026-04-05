@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -132,7 +132,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
     o=o.filter((v,i,ar)=>ar.indexOf(v)===i).slice(0,4);
     while(o.length<4){o.push(o[o.length-1]+1);}
-    return{number:n,question:q,answer:a,options:o.sort(()=>Math.random()-0.5),askHL,tens:tens||Math.floor(n/10)%10,ones:ones!==undefined?ones:n%10,hundreds,showNumber};
+    return{number:n,question:q,answer:a,options:shuffle(o),askHL,tens:tens||Math.floor(n/10)%10,ones:ones!==undefined?ones:n%10,hundreds,showNumber};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

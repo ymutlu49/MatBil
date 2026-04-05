@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -89,7 +89,7 @@ const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
     while(opts.length<4){opts.push(base+(opts.length)*step);}
     opts=opts.slice(0,4);
     const closest=opts.reduce((prev,curr)=>Math.abs(curr-answer)<Math.abs(prev-answer)?curr:prev);
-    return{a,b,answer,closest,op,opSymbol,hint,opts:opts.sort(()=>Math.random()-0.5)};
+    return{a,b,answer,closest,op,opSymbol,hint,opts:shuffle(opts)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

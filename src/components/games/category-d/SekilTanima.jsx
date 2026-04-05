@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS } from '../../../utils';
 import SVGShape from '../../ui/SVGShape';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -78,7 +78,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
       allShapes.push({type:t,size:sz,rot,color:col,sx:1,sy:1,isTarget:false});
     }
 
-    setShapes(allShapes.sort(()=>Math.random()-0.5).map((s,i)=>({...s,id:i})));
+    setShapes(shuffle(allShapes).map((s,i)=>({...s,id:i})));
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};

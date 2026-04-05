@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -68,7 +68,7 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
     while(o.length<4)o.push(o.length+mx);
     const question = type==='identify' ? 'Bu kaçtır?' : 'Aynı değeri bul:';
     const aRep2 = type==='identify' ? 'number' : at2;
-    return{target:t,type,qRep:qt,aRep:aRep2,question,options:o.sort(()=>Math.random()-0.5)};
+    return{target:t,type,qRep:qt,aRep:aRep2,question,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

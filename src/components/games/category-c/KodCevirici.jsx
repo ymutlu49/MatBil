@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, speakNumber } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -39,8 +39,7 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     const avail=codes[l]; const fromType=avail[Math.floor(Math.random()*avail.length)];
     let toType; do{toType=avail[Math.floor(Math.random()*avail.length)];}while(toType===fromType);
     let opts=[val]; while(opts.length<4){const o=Math.floor(Math.random()*(r.max-r.min+1))+r.min;if(!opts.includes(o))opts.push(o);}
-    opts.sort(()=>Math.random()-0.5);
-    return {val,fromType,toType,opts};
+    return {val,fromType,toType,opts:shuffle(opts)};
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};

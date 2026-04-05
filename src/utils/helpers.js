@@ -1,5 +1,14 @@
 export const TOTAL_ROUNDS = 10;
 
+export const shuffle = (arr) => {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
 export const playSound = (type) => {
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -61,7 +61,7 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
   const genOpts = (q) => {
     if(q.type==='identify') return q.opts;
     if(q.type==='property') return ['Evet','Hayır'];
-    const o=[q.a];let at=0;while(o.length<4&&at<40){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}while(o.length<4)o.push(o.length+10);return o.sort(()=>Math.random()-0.5);
+    const o=[q.a];let at=0;while(o.length<4&&at<40){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}while(o.length<4)o.push(o.length+10);return shuffle(o);
   };
 
   const gen = (l, u) => {

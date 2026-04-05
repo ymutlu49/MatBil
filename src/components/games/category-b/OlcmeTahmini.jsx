@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -86,7 +86,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
     {id:80,ref:{name:'Büyük pizza',emoji:'🍕',value:800,unit:'g'},target:{name:'Hamburger',emoji:'🍔',value:250,unit:'g'},opts:[100,250,500,800],lv:4},
     {id:81,ref:{name:'Penguen',emoji:'🐧',value:30,unit:'kg'},target:{name:'Papağan',emoji:'🦜',value:1,unit:'kg'},opts:[1,3,8,15],lv:4},
   ];
-  const gen=(l,u)=>{const av=comps.filter(c=>c.lv<=l&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>c.lv<=l);const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:c.opts.sort(()=>Math.random()-0.5)};};
+  const gen=(l,u)=>{const av=comps.filter(c=>c.lv<=l&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>c.lv<=l);const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:shuffle(c.opts)};};
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setUsed([]);const f=gen(l,[]);setP(f);setUsed([f.id]);setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.target?.value)setSc(s=>s+20*lv);setExplained2(false);};

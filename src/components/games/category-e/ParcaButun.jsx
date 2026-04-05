@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -17,7 +17,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
     const mt=Math.random()<0.33?'whole':(Math.random()<0.5?'part1':'part2');
     const answer=mt==='whole'?whole:mt==='part1'?part1:part2;
     const o=[answer];let at=0;while(o.length<4&&at<40){const c=Math.max(0,answer+Math.floor(Math.random()*6)-3);if(!o.includes(c)&&c>=0)o.push(c);at++;}while(o.length<4)o.push(o.length+answer);
-    return{whole,part1,part2,missingType:mt,answer,options:o.sort(()=>Math.random()-0.5)};
+    return{whole,part1,part2,missingType:mt,answer,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -30,7 +30,7 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     };
     const opts = [{right, correct:true}];
     for(let i=0;i<3;i++) opts.push({right:makeWrong(), correct:false});
-    return {left, sz, half, opts:opts.sort(()=>Math.random()-0.5), axis:l>=3?'yatay':'dikey'};
+    return {left, sz, half, opts:shuffle(opts), axis:l>=3?'yatay':'dikey'};
   };
 
   const renderGrid = (left, right, sz, half, small=false) => {

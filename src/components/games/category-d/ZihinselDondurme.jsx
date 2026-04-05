@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -39,7 +39,7 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
       usedRots.push(r);
       opts.push({rot:r,mirror:l>=2?Math.random()>0.4:Math.random()>0.7,correct:false});
     }
-    return {patId:pat.id,baseRot,opts:opts.sort(()=>Math.random()-0.5),correctIdx:0};
+    return {patId:pat.id,baseRot,opts:shuffle(opts),correctIdx:0};
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};

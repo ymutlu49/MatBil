@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -46,7 +46,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
 
     const o=[answer];let at=0;while(o.length<4&&at<40){const v=Math.max(1,answer+Math.floor(Math.random()*6)-3);if(!o.includes(v))o.push(v);at++;}while(o.length<4)o.push(o.length+answer);
-    return{numKids,perKid,total,item,kidEmojis,type,answer,question,hint,options:o.sort(()=>Math.random()-0.5)};
+    return{numKids,perKid,total,item,kidEmojis,type,answer,question,hint,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
