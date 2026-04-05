@@ -86,7 +86,7 @@ const LoginScreen = ({ onLogin }) => {
         {/* Krediler */}
         <div className="text-center mt-3">
           <p className="text-xs text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
-          <p className="text-xs text-gray-300 mt-0.5">v14.0</p>
+          <p className="text-xs text-gray-300 mt-0.5">v15.0</p>
         </div>
       </div>
     </div>

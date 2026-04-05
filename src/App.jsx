@@ -276,7 +276,7 @@ const App = () => {
 
             <div className="text-center pt-2 pb-2">
               <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
-              <p className="text-[10px] text-gray-300">v14.0 • {Object.keys(GAMES).length} Oyun</p>
+              <p className="text-[10px] text-gray-300">v15.0 • {Object.keys(GAMES).length} Oyun</p>
               <p className="text-[10px] text-gray-300 mt-0.5">www.diskalkuli.com</p>
             </div>
           </div>

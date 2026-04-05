@@ -92,9 +92,9 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           <h3 className="font-bold text-gray-700 mb-2 text-sm">🧠 Bilişsel Profil (Üçlü Kodlama Modeli)</h3>
           {(() => {
             const codeMap = {
-              analog: {name:'Analog Büyüklük', emoji:'🔵', games:['A1','A2','A3','A4','A5','B1','B3'], desc:'Nicelik algısı ve sanbil'},
-              sozel: {name:'Sözel-İşitsel Kod', emoji:'🟢', games:['C5','E1','E2'], desc:'Sayı sözcükleri ve aritmetik bellek'},
-              gorsel: {name:'Görsel-Sembolik Kod', emoji:'🟣', games:['C1','C2','C3','C4','B2','B5'], desc:'Rakam tanıma ve basamak değeri'},
+              analog: {name:'Analog Büyüklük', emoji:'🔵', games:['A1','A2','A3','A4','A5','A7','A8','B1','B3'], desc:'Nicelik algısı ve sanbil'},
+              sozel: {name:'Sözel-İşitsel Kod', emoji:'🟢', games:['C5','E1','E2','E8','E9'], desc:'Sayı sözcükleri ve aritmetik bellek'},
+              gorsel: {name:'Görsel-Sembolik Kod', emoji:'🟣', games:['C1','C2','C3','C4','B2','B5','E6','E7'], desc:'Rakam tanıma ve basamak değeri'},
             };
             const profiles = Object.entries(codeMap).map(([key,cfg]) => {
               const played = cfg.games.filter(id => progress[id]);
@@ -151,7 +151,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
 
         {/* 🔬 MacDonald-Wilkins Sanbil Düzeyi */}
         {(() => {
-          const sanbilGames = ['A1','A2','A3','A4','A5'];
+          const sanbilGames = ['A1','A2','A3','A4','A5','A7','A8'];
           const played = sanbilGames.filter(id => progress[id]);
           if(played.length < 2) return null;
           const avgStars = played.reduce((s,id) => s + (progress[id]?.stars||0), 0) / played.length;
@@ -186,7 +186,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
 
         {/* 📐 Van Hiele Geometrik Düşünce Düzeyi */}
         {(() => {
-          const geoGames = ['D1','D2','D3','D4','D5'];
+          const geoGames = ['D1','D2','D3','D4','D5','D6'];
           const played = geoGames.filter(id => progress[id]);
           if(played.length < 1) return null;
           // Basitleştirilmiş Van Hiele düzey tahmini
@@ -233,7 +233,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           const insights = [];
 
           // 1. Sanbil analizi
-          const sanbilGames = ['A1','A2','A3','A5','A6'];
+          const sanbilGames = ['A1','A2','A3','A5','A6','A7','A8'];
           const sanbilPlayed = sanbilGames.filter(id => progress[id]);
           if(sanbilPlayed.length >= 2) {
             const avgS = sanbilPlayed.reduce((s,id) => s + (progress[id]?.stars||0), 0) / sanbilPlayed.length;
@@ -265,7 +265,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           }
 
           // 4. Geometri-uzamsal analizi
-          const geo = ['D1','D2','D3','D5','D6'];
+          const geo = ['D1','D2','D3','D4','D5','D6'];
           const geoPlayed = geo.filter(id => progress[id]);
           if(geoPlayed.length >= 1) {
             const dondurme = progress['D5'];
@@ -279,7 +279,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           }
 
           // 5. Aritmetik analizi
-          const aritmetik = ['E1','E2','E3','E4','E5'];
+          const aritmetik = ['E1','E2','E3','E4','E5','E6','E7','E8','E9'];
           const aritPlayed = aritmetik.filter(id => progress[id]);
           if(aritPlayed.length >= 1) {
             const toplama = progress['E3'];
@@ -393,8 +393,9 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           <div className="text-[10px] text-gray-400 mb-2">Her kavramın Somut (C), Temsili (R) ve Soyut (A) düzeyindeki yetkinliği</div>
           {(() => {
             const craMap = {
-              'Sayı Hissi': {C:['A3','A4'],R:['A1','A5'],A:['C1','C2']},
-              'Toplama/Çıkarma': {C:['E2'],R:['E5','E3'],A:['B5']},
+              'Sayı Hissi': {C:['A3','A4','A8'],R:['A1','A5','A7'],A:['C1','C2']},
+              'Toplama/Çıkarma': {C:['E2','E6'],R:['E5','E3'],A:['E7','E8']},
+              'Çarpma/Bölme': {C:['E4'],R:['E9'],A:['B5']},
               'Geometri': {C:['D1','D6'],R:['D2','D5'],A:['D3','D4']},
               'Tahmin': {C:['B1'],R:['B3','B4'],A:['B2','B5']},
             };
