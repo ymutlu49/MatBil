@@ -18,7 +18,7 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
     if(type==='dots') return <div className="flex flex-wrap justify-center gap-1.5" style={{maxWidth:lg?110:90}}>{Array.from({length:Math.min(val,20)},(_,i)=><div key={i} className={`${lg?'w-5 h-5':'w-4 h-4'} bg-indigo-500 rounded-full`}/>)}</div>;
     if(type==='tally'){
       const groups=Math.floor(val/5), rem=val%5;
-      return <div className="flex gap-1.5 items-end flex-wrap justify-center">{Array.from({length:groups},(_,i)=><span key={i} className={`${lg?'text-3xl':'text-2xl'} font-bold text-indigo-700`}>{'卜'}</span>)}{rem>0&&<span className={`${lg?'text-2xl':'text-xl'} text-indigo-700 font-bold`}>{'|'.repeat(rem)}</span>}</div>;
+      return <div className="flex gap-1.5 items-end flex-wrap justify-center">{Array.from({length:groups},(_,i)=><span key={i} className={`${lg?'text-3xl':'text-2xl'} font-bold text-indigo-700`}>卌</span>)}{rem>0&&<span className={`${lg?'text-2xl':'text-xl'} text-indigo-700 font-bold`}>{'|'.repeat(rem)}</span>}</div>;
     }
     if(type==='tenFrame'){
       const full=Math.min(val,10);
@@ -26,7 +26,7 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
     }
     if(type==='fingers'){
       const hands = val<=5 ? [{c:val}] : [{c:5},{c:val-5}];
-      const fEmoji = (c) => ['','☝️','✌️','','',''][c]||'';
+      const fEmoji = (c) => ['','☝️','✌️','🤟','🖖','🖐️'][c]||'';
       return <div className="flex gap-1">{hands.map((h,i)=><span key={i} className={lg?'text-4xl':'text-3xl'}>{fEmoji(h.c)}</span>)}</div>;
     }
     return <span className={`font-bold ${sz}`}>{val}</span>;
@@ -49,8 +49,8 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.target){setSc(s=>s+15*lv);speakNumber(p.target);}setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı-Sembol Eşleştirme" emoji="" description="Sayıyı nokta, parmak, çetele veya sözcükle eşleştir!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Sayı-Sembol Eşleştirme" emoji="" level={lv} instruction="Bir sayı farklı biçimlerde gösterilecek: rakam, nokta, sözcük, çetele, parmak veya onluk çerçeve. Aynı sayının farklı temsilini bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı-Sembol Eşleştirme" emoji="🔗" description="Sayıyı nokta, parmak, çetele veya sözcükle eşleştir!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Sayı-Sembol Eşleştirme" emoji="🔗" level={lv} instruction="Bir sayı farklı biçimlerde gösterilecek: rakam, nokta, sözcük, çetele, parmak veya onluk çerçeve. Aynı sayının farklı temsilini bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

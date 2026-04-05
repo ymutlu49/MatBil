@@ -8,11 +8,11 @@ import ReadyScreen from '../../ui/ReadyScreen';
 const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const items=[
-    {e:'🏠',n:'elma'},{e:'🏠',n:'portakal'},{e:'🏠',n:'limon'},{e:'🏠',n:'üzüm'},{e:'🏠',n:'çilek'},
-    {e:'🏠',n:'muz'},{e:'🏠',n:'kurabiye'},{e:'🏠',n:'kek'},{e:'🏠',n:'şeker'},{e:'🏠',n:'balon'},
-    {e:'✏️',n:'kalem'},{e:'🏠',n:'kitap'},{e:'⚽',n:'top'},{e:'🏠',n:'çiçek'},{e:'🏠',n:'oyuncak'}
+    {e:'🍎',n:'elma'},{e:'🍊',n:'portakal'},{e:'🍋',n:'limon'},{e:'🍇',n:'üzüm'},{e:'🍓',n:'çilek'},
+    {e:'🍌',n:'muz'},{e:'🍪',n:'kurabiye'},{e:'🧁',n:'kek'},{e:'🍬',n:'şeker'},{e:'🎈',n:'balon'},
+    {e:'✏️',n:'kalem'},{e:'📚',n:'kitap'},{e:'⚽',n:'top'},{e:'🌸',n:'çiçek'},{e:'🧸',n:'oyuncak'}
   ];
-  const kids=['','','','',''];
+  const kids=['👧','👦','🧒','👶','🧒'];
   const cfg={1:{maxKids:2,maxPer:3},2:{maxKids:3,maxPer:3},3:{maxKids:4,maxPer:4},4:{maxKids:5,maxPer:5}};
 
   const gen=(l)=>{
@@ -52,8 +52,8 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Bölüşme Zamanı" emoji="" description="Nesneleri eşit paylaştır veya gruplara ayır!" levels={['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Bölüşme Zamanı" emoji="" level={lv} instruction="Nesneleri çocuklara eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Bölüşme Zamanı" emoji="🍎" description="Nesneleri eşit paylaştır veya gruplara ayır!" levels={['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Bölüşme Zamanı" emoji="🍎" level={lv} instruction="Nesneleri çocuklara eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isGroupQ = p?.type==='groupCount'||p?.type==='groupSize';
@@ -85,7 +85,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="text-sm text-gray-700 font-medium">{p?.question}</div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'📋'} {p?.hint}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">💡 {p?.hint}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };
