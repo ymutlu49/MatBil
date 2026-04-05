@@ -188,6 +188,29 @@ const App = () => {
           </div>
         )}
 
+        {/* Günlük Hedef */}
+        {(() => {
+          const today = new Date().toISOString().split('T')[0];
+          const todayPlays = Object.values(progress).filter(g => g.lastPlayed && g.lastPlayed.startsWith(today)).length;
+          const dailyGoal = 3;
+          const pct = Math.min(100, Math.round((todayPlays / dailyGoal) * 100));
+          const done = todayPlays >= dailyGoal;
+          return (
+            <div className={`shrink-0 mb-2 rounded-xl border p-2.5 flex items-center gap-3 ${done ? 'bg-green-50 border-green-200' : 'bg-indigo-50 border-indigo-200'}`}>
+              <div className="text-2xl">{done ? '🎉' : '🎯'}</div>
+              <div className="flex-1">
+                <div className={`font-bold text-sm ${done ? 'text-green-700' : 'text-indigo-700'}`}>{done ? 'Günlük hedefini tamamladın!' : `Bugünkü hedef: ${dailyGoal} oyun`}</div>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex-1 h-2 bg-white rounded-full overflow-hidden">
+                    <div className={`h-full rounded-full transition-all duration-500 ${done ? 'bg-green-400' : 'bg-indigo-400'}`} style={{width:`${pct}%`}}/>
+                  </div>
+                  <span className="text-xs font-bold text-gray-500">{todayPlays}/{dailyGoal}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Etkinlik Kitapçığı */}
         <div className="shrink-0 mb-2">
           <button onClick={handleDownloadPDF}
