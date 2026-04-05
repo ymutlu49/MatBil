@@ -32,7 +32,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Doğrusu" colors={colors}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-3 text-center font-bold text-lg`}>Ok hangi sayıyı gösteriyor?</p>
-      <div className="w-full max-w-lg mb-4 px-6">
+      <div className="w-full max-w-2xl mb-4 px-8">
         {/* Ok işareti */}
         <div className="relative h-10 mb-1">
           <div className="absolute flex flex-col items-center -translate-x-1/2" style={{left:`${pct}%`}}>

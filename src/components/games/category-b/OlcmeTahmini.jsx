@@ -32,59 +32,49 @@ const ExplainStep = ({ type, onDone, prevBest }) => {
 const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);const [used,setUsed]=useState([]);
   const [explained2,setExplained2]=useState(false);
+  // Benchmark (Referans Noktası) Stratejisi Yaklaşımı
+  // Kaynak: Joram ve ark. (2005); Hildreth (1983); DREME Stanford
+  // Tüm değerler standart/ortalama ölçülere dayalı, tartışmasız
   const comps=[
-    // Seviye 1: UZUNLUK (Kolay)
-    {id:1,ref:{name:'Cetvel',emoji:'📏',value:30,unit:'cm'},target:{name:'Kalem',emoji:'✏️',value:15,unit:'cm'},opts:[5,15,40,80],lv:1},
-    {id:2,ref:{name:'Kapı yüksekliği',emoji:'🚪',value:200,unit:'cm'},target:{name:'Masa yüksekliği',emoji:'🍽️',value:75,unit:'cm'},opts:[30,75,150,200],lv:1},
-    {id:3,ref:{name:'Araba uzunluğu',emoji:'🚗',value:4,unit:'m'},target:{name:'Otobüs uzunluğu',emoji:'🚌',value:12,unit:'m'},opts:[6,12,20,30],lv:1},
-    {id:4,ref:{name:'Araba uzunluğu',emoji:'🚗',value:4,unit:'m'},target:{name:'Bisiklet uzunluğu',emoji:'🚲',value:2,unit:'m'},opts:[1,2,4,6],lv:1},
-    {id:50,ref:{name:'Adım boyu',emoji:'🦶',value:60,unit:'cm'},target:{name:'Sınıf tahtası genişliği',emoji:'🏫',value:300,unit:'cm'},opts:[100,200,300,500],lv:1},
-    {id:51,ref:{name:'Karış',emoji:'🖐️',value:20,unit:'cm'},target:{name:'Kitap uzunluğu',emoji:'📕',value:25,unit:'cm'},opts:[10,25,40,60],lv:1},
-    {id:52,ref:{name:'Parmak genişliği',emoji:'☝️',value:1,unit:'cm'},target:{name:'Silgi uzunluğu',emoji:'🧼',value:5,unit:'cm'},opts:[2,5,10,15],lv:1},
-    {id:53,ref:{name:'Bebekboyu',emoji:'👶',value:50,unit:'cm'},target:{name:'Yastık uzunluğu',emoji:'🛏️',value:70,unit:'cm'},opts:[30,50,70,100],lv:1},
-    {id:54,ref:{name:'Direksiyon genişliği',emoji:'🛞',value:40,unit:'cm'},target:{name:'Pizza genişliği',emoji:'🍕',value:30,unit:'cm'},opts:[15,30,50,70],lv:1},
-    {id:55,ref:{name:'Çocuk boyu',emoji:'🧒',value:120,unit:'cm'},target:{name:'Dolap yüksekliği',emoji:'🗄️',value:180,unit:'cm'},opts:[100,140,180,220],lv:1},
-    {id:56,ref:{name:'Ayak uzunluğu',emoji:'👟',value:25,unit:'cm'},target:{name:'Tablet uzunluğu',emoji:'💻',value:24,unit:'cm'},opts:[12,24,35,50],lv:1},
-    {id:57,ref:{name:'Masa uzunluğu',emoji:'🍽️',value:120,unit:'cm'},target:{name:'Pencere genişliği',emoji:'🪟',value:100,unit:'cm'},opts:[60,100,150,200],lv:1},
-    // Seviye 2: UZUNLUK (Ileri)
-    {id:5,ref:{name:'Cetvel',emoji:'📏',value:30,unit:'cm'},target:{name:'Defter uzunluğu',emoji:'📓',value:24,unit:'cm'},opts:[10,24,50,80],lv:2},
-    {id:6,ref:{name:'Basketbol topu genişliği',emoji:'🏀',value:24,unit:'cm'},target:{name:'Tenis topu genişliği',emoji:'🎾',value:7,unit:'cm'},opts:[3,7,15,24],lv:2},
-    {id:7,ref:{name:'A4 kağıt uzunluğu',emoji:'📄',value:30,unit:'cm'},target:{name:'A4 kağıt genişliği',emoji:'📄',value:21,unit:'cm'},opts:[10,21,40,60],lv:2},
-    {id:8,ref:{name:'Kapı genişliği',emoji:'🚪',value:80,unit:'cm'},target:{name:'Buzdolabı genişliği',emoji:'🧊',value:60,unit:'cm'},opts:[30,60,90,120],lv:2},
-    {id:58,ref:{name:'Futbol kalesi genişliği',emoji:'🥅',value:7,unit:'m'},target:{name:'Voleybol ağı uzunluğu',emoji:'🥅',value:9,unit:'m'},opts:[5,9,14,18],lv:2},
-    {id:59,ref:{name:'Televizyon genişliği',emoji:'📺',value:55,unit:'inch'},target:{name:'Laptop genişliği',emoji:'💻',value:15,unit:'inch'},opts:[10,15,25,40],lv:2},
-    {id:60,ref:{name:'Yüzme havuzu',emoji:'🏊',value:25,unit:'m'},target:{name:'Sınıf uzunluğu',emoji:'🏫',value:8,unit:'m'},opts:[4,8,15,25],lv:2},
-    {id:61,ref:{name:'Gitar uzunluğu',emoji:'🎸',value:100,unit:'cm'},target:{name:'Keman uzunluğu',emoji:'🎻',value:60,unit:'cm'},opts:[30,60,90,120],lv:2},
-    {id:62,ref:{name:'Zürafa boynu',emoji:'🦒',value:2,unit:'m'},target:{name:'Fil yüksekliği',emoji:'🐘',value:3,unit:'m'},opts:[1,3,5,8],lv:2},
-    {id:63,ref:{name:'Kol uzunluğu',emoji:'💪',value:60,unit:'cm'},target:{name:'Bacak uzunluğu',emoji:'🦵',value:80,unit:'cm'},opts:[50,80,110,140],lv:2},
-    {id:64,ref:{name:'Bant rulosu genişliği',emoji:'🔵',value:5,unit:'cm'},target:{name:'Kol saati genişliği',emoji:'⌚',value:4,unit:'cm'},opts:[2,4,7,10],lv:2},
-    {id:65,ref:{name:'Merdiven basamağı',emoji:'🪜',value:20,unit:'cm'},target:{name:'Tabure yüksekliği',emoji:'🪑',value:45,unit:'cm'},opts:[25,45,70,100],lv:2},
-    // Seviye 3: KUTLE ve HACIM (Kolay)
-    {id:9,ref:{name:'1 kg şeker',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Elma',emoji:'🍎',value:200,unit:'g'},opts:[50,200,500,1000],lv:3},
-    {id:10,ref:{name:'1 kg un',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Yumurta',emoji:'🥚',value:60,unit:'g'},opts:[10,60,200,500],lv:3},
-    {id:11,ref:{name:'Bebek doğum ağırlığı',emoji:'👶',value:3500,unit:'g'},target:{name:'Karpuz',emoji:'🍉',value:3000,unit:'g'},opts:[500,1500,3000,5000],lv:3},
-    {id:12,ref:{name:'1 litre su',emoji:'🫗',value:1000,unit:'ml'},target:{name:'Su bardağı',emoji:'🥛',value:250,unit:'ml'},opts:[50,250,600,1000],lv:3},
-    {id:66,ref:{name:'1 litre süt',emoji:'🥛',value:1000,unit:'ml'},target:{name:'Çay bardağı',emoji:'🍵',value:100,unit:'ml'},opts:[50,100,300,500],lv:3},
-    {id:67,ref:{name:'Cep telefonu',emoji:'📱',value:180,unit:'g'},target:{name:'Tablet',emoji:'💻',value:500,unit:'g'},opts:[200,500,900,1500],lv:3},
-    {id:68,ref:{name:'Futbol topu',emoji:'⚽',value:430,unit:'g'},target:{name:'Tenis topu',emoji:'🎾',value:58,unit:'g'},opts:[20,58,150,300],lv:3},
-    {id:69,ref:{name:'Kedi ağırlığı',emoji:'🐱',value:4,unit:'kg'},target:{name:'Tavşan ağırlığı',emoji:'🐰',value:2,unit:'kg'},opts:[1,2,4,8],lv:3},
-    {id:70,ref:{name:'Pet şişe',emoji:'🍶',value:500,unit:'ml'},target:{name:'Yoğurt kabı',emoji:'🥣',value:200,unit:'ml'},opts:[100,200,400,700],lv:3},
-    {id:71,ref:{name:'Çikolata bar',emoji:'🍫',value:80,unit:'g'},target:{name:'Ceviz',emoji:'🥜',value:10,unit:'g'},opts:[3,10,30,60],lv:3},
-    {id:72,ref:{name:'Okul çantası (dolu)',emoji:'🎒',value:5,unit:'kg'},target:{name:'Ders kitabı',emoji:'📘',value:500,unit:'g'},opts:[200,500,1000,2000],lv:3},
-    {id:73,ref:{name:'1 litre meyve suyu',emoji:'🧃',value:1000,unit:'ml'},target:{name:'Kaşık',emoji:'🥄',value:15,unit:'ml'},opts:[5,15,50,100],lv:3},
-    // Seviye 4: KUTLE ve HACIM (Ileri)
-    {id:13,ref:{name:'1 litre su',emoji:'🫗',value:1000,unit:'ml'},target:{name:'Çay kaşığı',emoji:'🥄',value:5,unit:'ml'},opts:[1,5,20,100],lv:4},
-    {id:14,ref:{name:'Küvet',emoji:'🛁',value:200,unit:'litre'},target:{name:'Kova',emoji:'🪣',value:10,unit:'litre'},opts:[5,10,25,50],lv:4},
-    {id:15,ref:{name:'1 kg pirinç',emoji:'🍚',value:1000,unit:'g'},target:{name:'Ekmek',emoji:'🍞',value:400,unit:'g'},opts:[100,400,800,1500],lv:4},
-    {id:16,ref:{name:'Köpek ağırlığı',emoji:'🐕',value:15,unit:'kg'},target:{name:'Portakal',emoji:'🍊',value:150,unit:'g'},opts:[30,150,500,1000],lv:4},
-    {id:74,ref:{name:'İnsan vücudu',emoji:'🧑',value:70,unit:'kg'},target:{name:'Bisiklet',emoji:'🚲',value:12,unit:'kg'},opts:[5,12,25,40],lv:4},
-    {id:75,ref:{name:'Otomobil',emoji:'🚗',value:1500,unit:'kg'},target:{name:'Motor',emoji:'🏍️',value:200,unit:'kg'},opts:[80,200,500,800],lv:4},
-    {id:76,ref:{name:'Havuz',emoji:'🏊',value:50000,unit:'litre'},target:{name:'Çamaşır makinesi',emoji:'🧺',value:60,unit:'litre'},opts:[20,60,150,300],lv:4},
-    {id:77,ref:{name:'Kalem kutusu',emoji:'🧰',value:300,unit:'g'},target:{name:'Silgi',emoji:'🧼',value:30,unit:'g'},opts:[10,30,80,200],lv:4},
-    {id:78,ref:{name:'Bebek ağırlığı',emoji:'👶',value:3,unit:'kg'},target:{name:'Sırt çantası (boş)',emoji:'🎒',value:800,unit:'g'},opts:[300,800,1500,3000],lv:4},
-    {id:79,ref:{name:'Kahve fincanı',emoji:'☕',value:150,unit:'ml'},target:{name:'Damacana',emoji:'🚰',value:19000,unit:'ml'},opts:[5000,10000,19000,30000],lv:4},
-    {id:80,ref:{name:'Büyük pizza',emoji:'🍕',value:800,unit:'g'},target:{name:'Hamburger',emoji:'🍔',value:250,unit:'g'},opts:[100,250,500,800],lv:4},
-    {id:81,ref:{name:'Penguen',emoji:'🐧',value:30,unit:'kg'},target:{name:'Papağan',emoji:'🦜',value:1,unit:'kg'},opts:[1,3,8,15],lv:4},
+    // Seviye 1: UZUNLUK — Vücut ölçüleri ve sınıf nesneleri (Benchmark: kendi vücudun)
+    {id:1,ref:{name:'Cetvel (30 cm)',emoji:'📏',value:30,unit:'cm'},target:{name:'Kalem',emoji:'✏️',value:18,unit:'cm'},q:'Bir kalem yaklaşık kaç cm?',lv:1,opts:[8,18,35,50]},
+    {id:2,ref:{name:'Karış (yaklaşık 20 cm)',emoji:'🖐️',value:20,unit:'cm'},target:{name:'A4 kağıt kısa kenarı',emoji:'📄',value:21,unit:'cm'},q:'A4 kağıdın kısa kenarı kaç cm?',lv:1,opts:[10,21,35,50]},
+    {id:3,ref:{name:'Parmak genişliği (1 cm)',emoji:'☝️',value:1,unit:'cm'},target:{name:'Silgi',emoji:'🧹',value:5,unit:'cm'},q:'Bir silgi yaklaşık kaç cm uzunluğunda?',lv:1,opts:[2,5,12,20]},
+    {id:4,ref:{name:'Adım (yaklaşık 50 cm)',emoji:'👟',value:50,unit:'cm'},target:{name:'Sıra genişliği',emoji:'🪑',value:50,unit:'cm'},q:'Okul sırası yaklaşık kaç cm genişliğinde?',lv:1,opts:[25,50,80,120]},
+    {id:5,ref:{name:'Cetvel (30 cm)',emoji:'📏',value:30,unit:'cm'},target:{name:'Kitap uzunluğu',emoji:'📕',value:25,unit:'cm'},q:'Bir kitap yaklaşık kaç cm uzunluğunda?',lv:1,opts:[10,25,40,60]},
+    {id:6,ref:{name:'Karış (yaklaşık 20 cm)',emoji:'🖐️',value:20,unit:'cm'},target:{name:'Ayakkabı uzunluğu',emoji:'👟',value:22,unit:'cm'},q:'Bir çocuk ayakkabısı yaklaşık kaç cm?',lv:1,opts:[12,22,35,45]},
+    {id:7,ref:{name:'Çocuk boyu (120 cm)',emoji:'🧒',value:120,unit:'cm'},target:{name:'Kapı yüksekliği',emoji:'🚪',value:200,unit:'cm'},q:'Bir kapının yüksekliği yaklaşık kaç cm?',lv:1,opts:[120,160,200,250]},
+    {id:8,ref:{name:'Adım (yaklaşık 50 cm)',emoji:'👟',value:50,unit:'cm'},target:{name:'Masa uzunluğu',emoji:'🍽️',value:120,unit:'cm'},q:'Yemek masası yaklaşık kaç cm uzunluğunda?',lv:1,opts:[60,120,200,300]},
+
+    // Seviye 2: UZUNLUK — Dış mekan ve büyük nesneler
+    {id:10,ref:{name:'1 metre (kol açıklığı)',emoji:'📏',value:100,unit:'cm'},target:{name:'Araba uzunluğu',emoji:'🚗',value:4,unit:'m'},q:'Bir otomobil yaklaşık kaç metre uzunluğunda?',lv:2,opts:[2,4,7,10]},
+    {id:11,ref:{name:'1 metre',emoji:'📏',value:1,unit:'m'},target:{name:'Sınıf uzunluğu',emoji:'🏫',value:8,unit:'m'},q:'Bir sınıf odası yaklaşık kaç metre uzunluğunda?',lv:2,opts:[3,8,15,25]},
+    {id:12,ref:{name:'Basketbol potası (3.05 m)',emoji:'🏀',value:305,unit:'cm'},target:{name:'Tek katlı bina',emoji:'🏠',value:3,unit:'m'},q:'Tek katlı bir binanın yüksekliği yaklaşık kaç metre?',lv:2,opts:[2,3,5,8]},
+    {id:13,ref:{name:'Futbol sahası (100 m)',emoji:'⚽',value:100,unit:'m'},target:{name:'Olimpik yüzme havuzu',emoji:'🏊',value:50,unit:'m'},q:'Olimpik yüzme havuzu kaç metre?',lv:2,opts:[25,50,75,100]},
+    {id:14,ref:{name:'A4 kağıt uzun kenar (30 cm)',emoji:'📄',value:30,unit:'cm'},target:{name:'Televizyon köşegen',emoji:'📺',value:100,unit:'cm'},q:'Bir televizyonun köşegeni yaklaşık kaç cm?',lv:2,opts:[50,100,150,200]},
+    {id:15,ref:{name:'Çocuk boyu (120 cm)',emoji:'🧒',value:120,unit:'cm'},target:{name:'Bisiklet yüksekliği',emoji:'🚲',value:100,unit:'cm'},q:'Bir çocuk bisikletinin yüksekliği yaklaşık kaç cm?',lv:2,opts:[60,100,150,200]},
+    {id:16,ref:{name:'1 metre',emoji:'📏',value:1,unit:'m'},target:{name:'Otobüs uzunluğu',emoji:'🚌',value:12,unit:'m'},q:'Bir şehir otobüsü yaklaşık kaç metre?',lv:2,opts:[6,12,20,30]},
+    {id:17,ref:{name:'Adım (50 cm)',emoji:'👟',value:50,unit:'cm'},target:{name:'Masa yüksekliği',emoji:'🍽️',value:75,unit:'cm'},q:'Yemek masası yüksekliği yaklaşık kaç cm?',lv:2,opts:[45,75,110,150]},
+
+    // Seviye 3: KÜTLE — Günlük nesneler (Benchmark: 1 kg paket)
+    {id:20,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Elma',emoji:'🍎',value:200,unit:'g'},q:'Bir elma yaklaşık kaç gram?',lv:3,opts:[50,200,500,1000]},
+    {id:21,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Yumurta',emoji:'🥚',value:60,unit:'g'},q:'Bir yumurta yaklaşık kaç gram?',lv:3,opts:[15,60,200,400]},
+    {id:22,ref:{name:'1 litre su (1 kg)',emoji:'💧',value:1,unit:'kg'},target:{name:'Ekmek',emoji:'🍞',value:400,unit:'g'},q:'Bir ekmek yaklaşık kaç gram?',lv:3,opts:[100,400,800,1500]},
+    {id:23,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Cep telefonu',emoji:'📱',value:180,unit:'g'},q:'Bir cep telefonu yaklaşık kaç gram?',lv:3,opts:[50,180,500,900]},
+    {id:24,ref:{name:'1 kg un paketi',emoji:'⚖️',value:1,unit:'kg'},target:{name:'Ders kitabı',emoji:'📘',value:500,unit:'g'},q:'Bir ders kitabı yaklaşık kaç gram?',lv:3,opts:[100,500,1000,2000]},
+    {id:25,ref:{name:'1 litre su şişesi',emoji:'💧',value:1000,unit:'ml'},target:{name:'Su bardağı',emoji:'🥛',value:250,unit:'ml'},q:'Bir su bardağı yaklaşık kaç ml alır?',lv:3,opts:[50,250,600,1000]},
+    {id:26,ref:{name:'1 litre süt kutusu',emoji:'🥛',value:1000,unit:'ml'},target:{name:'Çay bardağı',emoji:'🍵',value:100,unit:'ml'},q:'Bir çay bardağı yaklaşık kaç ml alır?',lv:3,opts:[30,100,300,500]},
+    {id:27,ref:{name:'Pet şişe (500 ml)',emoji:'🍶',value:500,unit:'ml'},target:{name:'Yoğurt kabı',emoji:'🥣',value:200,unit:'ml'},q:'Küçük bir yoğurt kabı yaklaşık kaç ml?',lv:3,opts:[50,200,400,700]},
+
+    // Seviye 4: KÜTLE ve HACİM — Büyük nesneler ve karışık birimler
+    {id:30,ref:{name:'Yetişkin (70 kg)',emoji:'🧑',value:70,unit:'kg'},target:{name:'Bisiklet',emoji:'🚲',value:12,unit:'kg'},q:'Bir bisiklet yaklaşık kaç kg?',lv:4,opts:[5,12,25,40]},
+    {id:31,ref:{name:'Dolu okul çantası (5 kg)',emoji:'🎒',value:5,unit:'kg'},target:{name:'Kedi',emoji:'🐱',value:4,unit:'kg'},q:'Bir ev kedisi yaklaşık kaç kg?',lv:4,opts:[1,4,10,20]},
+    {id:32,ref:{name:'1 litre su',emoji:'💧',value:1000,unit:'ml'},target:{name:'Çay kaşığı',emoji:'🥄',value:5,unit:'ml'},q:'Bir çay kaşığı yaklaşık kaç ml?',lv:4,opts:[1,5,15,50]},
+    {id:33,ref:{name:'Kova (10 litre)',emoji:'🪣',value:10,unit:'litre'},target:{name:'Küvet',emoji:'🛁',value:200,unit:'litre'},q:'Bir küvet yaklaşık kaç litre su alır?',lv:4,opts:[50,200,500,1000]},
+    {id:34,ref:{name:'1 kg pirinç paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Karpuz',emoji:'🍉',value:5,unit:'kg'},q:'Bir karpuz yaklaşık kaç kg?',lv:4,opts:[2,5,10,20]},
+    {id:35,ref:{name:'Çocuk (30 kg)',emoji:'🧒',value:30,unit:'kg'},target:{name:'Köpek (orta boy)',emoji:'🐕',value:15,unit:'kg'},q:'Orta boy bir köpek yaklaşık kaç kg?',lv:4,opts:[5,15,30,50]},
+    {id:36,ref:{name:'1 litre su şişesi',emoji:'💧',value:1,unit:'litre'},target:{name:'Çamaşır makinesi kapasitesi',emoji:'🧺',value:50,unit:'litre'},q:'Bir çamaşır makinesi yaklaşık kaç litre su kullanır?',lv:4,opts:[10,50,150,300]},
+    {id:37,ref:{name:'Büyük pizza (800 g)',emoji:'🍕',value:800,unit:'g'},target:{name:'Hamburger',emoji:'🍔',value:250,unit:'g'},q:'Bir hamburger yaklaşık kaç gram?',lv:4,opts:[100,250,500,800]},
   ];
   const gen=(l,u)=>{const av=comps.filter(c=>c.lv<=l&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>c.lv<=l);const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:shuffle(c.opts)};};
   const prepG=(l)=>{setLv(l);setGs('ready');};
@@ -99,7 +89,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Ölçme Tahmini" colors={colors}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-green-100 p-4 rounded-2xl shadow-lg mb-3 border-2 border-green-300 text-center"><span className="text-4xl">{p?.ref?.emoji}</span><div className="font-bold text-green-700">{p?.ref?.name}</div><div className="text-2xl font-bold text-green-600">{p?.ref?.value} {p?.ref?.unit}</div></div>
-      <div className="bg-white p-3 rounded-xl shadow-xl mb-3 border-2 border-amber-300 text-center"><span className="text-4xl">{p?.target?.emoji}</span><div className="font-bold text-gray-700 text-lg mt-2">{p?.target?.name}</div><div className="text-amber-600 font-medium">Yaklaşık kaç {p?.target?.unit}?</div></div>
+      <div className="bg-white p-4 rounded-xl shadow-xl mb-3 border-2 border-amber-300 text-center"><span className="text-4xl">{p?.target?.emoji}</span><div className="font-bold text-gray-700 text-lg mt-2">{p?.q || `${p?.target?.name} yaklaşık kaç ${p?.target?.unit}?`}</div></div>
       {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.target?.value?'text-green-500':'text-orange-500'}`}>{ua===p?.target?.value?'✓ Doğru!':`${encourage()} Cevap: ${p?.target?.value} ${p?.target?.unit}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">💡 {p?.ref?.name} ({p?.ref?.value} {p?.ref?.unit}) referans alındığında {p?.target?.name} yaklaşık {p?.target?.value} {p?.target?.unit} eder.</div>{!explained2 && <ExplainStep type="measurement" onDone={handleExplain2}/>}{explained2 && <div className="text-xs text-green-600 mt-2 font-medium anim-fade">{'✓'} Güzel strateji!</div>}</div>):(<div className="grid grid-cols-2 gap-3">{p?.opts?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-6 py-4 ${colors?.button} text-white rounded-xl font-bold text-xl shadow-lg`}>{o} {p?.target?.unit}</button>))}</div>)}
 
       </div>    </div>

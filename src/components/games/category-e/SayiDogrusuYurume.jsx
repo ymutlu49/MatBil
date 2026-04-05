@@ -64,7 +64,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
         </div>
 
         {/* Sayı Doğrusu */}
-        <div className="w-full max-w-lg mb-4 px-6">
+        <div className="w-full max-w-2xl mb-4 px-8">
           <div className="relative" style={{height: 100}}>
             {/* Karakter */}
             <div className="absolute transition-all duration-300 -translate-x-1/2 text-center z-10" style={{left:`${pct}%`, top: 0}}>

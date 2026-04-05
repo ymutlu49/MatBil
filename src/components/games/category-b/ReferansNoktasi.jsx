@@ -27,7 +27,7 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <p className={`${colors?.text} mb-2 font-bold text-lg`}>Bu sayı hangisine daha yakın?</p>
       <div className="bg-white px-10 py-4 rounded-2xl shadow-xl mb-3 border-4 border-amber-300"><span className="text-4xl font-bold text-amber-600">{p?.number}</span></div>
-      <div className="w-full max-w-lg mb-4 px-6">
+      <div className="w-full max-w-2xl mb-4 px-8">
         <div className="relative" style={{height:50}}>
           {/* Ana çizgi */}
           <div className="absolute top-1/2 left-0 right-0 h-1.5 bg-gray-700 rounded-full" style={{transform:'translateY(-50%)'}}/>
