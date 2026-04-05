@@ -36,7 +36,17 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(grep -c \"GameHeader\" src/components/games/category-*/*.jsx)",
       "Bash(grep -n \"GameHeader.*/>$\" src/components/games/category-c/SayiSembolEslestirme.jsx)",
-      "Bash(node fix-layout.cjs)"
+      "Bash(node fix-layout.cjs)",
+      "Bash(pip install:*)",
+      "Bash(python3 -c \":*)",
+      "Bash(pip3 install:*)",
+      "Bash(ls /c/Python*/python.exe /c/Users/yilma/AppData/Local/Programs/Python/*/python.exe)",
+      "Bash(where python:*)",
+      "Bash(python -m pip install reportlab)",
+      "Bash(node -e \"require\\(''pdfkit''\\); console.log\\(''pdfkit OK''\\)\")",
+      "Bash(node generate-pdf.cjs)",
+      "Bash(rm generate-pdf.cjs)",
+      "Bash(npm uninstall:*)"
     ]
   }
 }
