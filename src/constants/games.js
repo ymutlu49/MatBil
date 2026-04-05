@@ -8,6 +8,7 @@ const GruplamaUstasi = lazy(() => import('../components/games/category-a/Gruplam
 const GunlukSanbil = lazy(() => import('../components/games/category-a/GunlukSanbil'));
 const ParmakKoprusu = lazy(() => import('../components/games/category-a/ParmakKoprusu'));
 const NoktaKarsilastirma = lazy(() => import('../components/games/category-a/NoktaKarsilastirma'));
+const SayiAyristirma = lazy(() => import('../components/games/category-a/SayiAyristirma'));
 
 const TahminKavanozlari = lazy(() => import('../components/games/category-b/TahminKavanozlari'));
 const SayiDogrusu = lazy(() => import('../components/games/category-b/SayiDogrusu'));
@@ -35,6 +36,8 @@ const BolusmeZamani = lazy(() => import('../components/games/category-e/BolusmeZ
 const SayiDogrusuYurume = lazy(() => import('../components/games/category-e/SayiDogrusuYurume'));
 const SayiBaglari = lazy(() => import('../components/games/category-e/SayiBaglari'));
 const CikarmaStratejileri = lazy(() => import('../components/games/category-e/CikarmaStratejileri'));
+const GeriSayma = lazy(() => import('../components/games/category-e/GeriSayma'));
+const CarpmaKavrami = lazy(() => import('../components/games/category-e/CarpmaKavrami'));
 
 export const GAMES = {
   A1: { comp: NoktaAvcisi, name: 'Nokta Avcısı', emoji: '🎯', cat: 'A', levels: ['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)'], instr: 'Ekranda noktalar kısa süreligiğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!' },
@@ -44,6 +47,7 @@ export const GAMES = {
   A5: { comp: GunlukSanbil, name: 'Günlük Sanbil', emoji: '🏠', cat: 'A', levels: ['Seviye 1 (2-5, 3sn)','Seviye 2 (2-6, 2.5sn)','Seviye 3 (2-7, 2sn)','Seviye 4 (2-8, 1.5sn)'], instr: 'Meyve, çiçek veya oyuncak gibi nesneler kısa süreligiğine görünüp kaybolacak. Kaç tane olduğunu saymadan bul!' },
   A6: { comp: ParmakKoprusu, name: 'Parmak Köprüsü', emoji: '🖐️', cat: 'A', levels: ['1-5','2-7','3-9','1-10'], instr: 'Ekrana doğru sayıda parmakla aynı anda dokun!' },
   A7: { comp: NoktaKarsilastirma, name: 'Nokta Karşılaştırma', emoji: '👀', cat: 'A', levels: ['Kolay','Orta','Zor','Uzman'], instr: 'İki nokta kümesinden hangisinde daha çok var? Saymadan, bir bakışta karar ver! Yaklaşık Sayı Sistemi (YSS) hassasiyetini ölçer.' },
+  A8: { comp: SayiAyristirma, name: 'Sayı Ayrıştırma', emoji: '🔀', cat: 'A', levels: ['Seviye 1 (5-6)','Seviye 2 (6-8)','Seviye 3 (Gruplama)','Seviye 4 (Strateji)'], instr: 'Noktaları alt gruplara ayır! Kavramsal sanbil becerisini geliştir. Büyük kümeleri küçük parçalara böl.' },
   B1: { comp: TahminKavanozlari, name: 'Tahmin Kavanozları', emoji: '🫙', cat: 'B', levels: ['Seviye 1 (5-15)','Seviye 2 (10-25)','Seviye 3 (15-35)','Seviye 4 (20-50)'], instr: 'Kavanozdaki bilyelere bak ve kaç tane olduğunu tahmin et. Artı/eksi butonlarıyla sayını ayarla ve gönder! Yakın tahminler de puan kazandırır.' },
   B2: { comp: SayiDogrusu, name: 'Sayı Doğrusu', emoji: '📏', cat: 'B', levels: ['Seviye 1 (0-10)','Seviye 2 (0-100)','Seviye 3 (0-1000)'], instr: 'Sayı doğrusu üzerinde bir ok gösterilecek. Okun gösterdiği sayıyı seçenekler arasından bul!' },
   B3: { comp: ReferansNoktasi, name: 'Yakınlık Tahmini', emoji: '🎯', cat: 'B', levels: ['Seviye 1 (0-5-10)','Seviye 2 (0-10-20)','Seviye 3 (0-25-50)','Seviye 4 (0-50-100)'], instr: 'Bir sayı gösterilecek. Bu sayı, verilen iki referans noktasından hangisine daha yakın? Doğru olanı seç!' },
@@ -67,4 +71,6 @@ export const GAMES = {
   E5: { comp: SayiDogrusuYurume, name: 'Sayı Yürüyüşü', emoji: '🚶', cat: 'E', levels: ['Toplama (0-10)','Toplama (0-10)','Karışık (0-15)','Karışık (0-20)'], instr: 'Sayı doğrusu üzerinde yürüyerek toplama/çıkarma yap!' },
   E6: { comp: SayiBaglari, name: 'Sayı Bağları', emoji: '🔗', cat: 'E', levels: ['Seviye 1 (3-5)','Seviye 2 (5-8)','Seviye 3 (6-10)','Seviye 4 (8-15)'], instr: 'Bir sayının parçalarını bul! Hangi iki sayının toplamı bu sayıyı verir? Sayı bağlarını keşfet!' },
   E7: { comp: CikarmaStratejileri, name: 'Çıkarma Stratejileri', emoji: '➖', cat: 'E', levels: ['Basit (1-10)','Onluktan çıkarma','Eksik çıkan','İki basamaklı'], instr: 'Çıkarma işlemlerini farklı stratejilerle çöz! Geriye sayma, onluktan çıkarma ve tamamlama stratejilerini öğren.' },
+  E8: { comp: GeriSayma, name: 'Geri Sayma', emoji: '⏪', cat: 'E', levels: ['10\'dan geriye','20\'den geriye','İkişer geriye','Beşer geriye'], instr: 'Geriye doğru say! Eksik sayıyı bul. Geri sayma, çıkarma becerisinin temelidir.' },
+  E9: { comp: CarpmaKavrami, name: 'Çarpma Kavramı', emoji: '✖️', cat: 'E', levels: ['Grupları say','Kaç grup?','Tekrarlı toplama','Eksik çarpan'], instr: 'Çarpmayı tekrarlı toplama olarak öğren! Eşit grupları say ve toplamı bul.' },
 };

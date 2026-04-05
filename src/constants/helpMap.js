@@ -27,4 +27,7 @@ export const HELP_MAP = {
   'Sayı Bağları': { goal: 'Sayı Ayrıştırma (Number Bonds)', tip: 'Bir sayıyı iki parçaya ayır. Parçaların toplamı bütüne eşit olmalı. Örn: 7 = 3+4 = 2+5 = 1+6. Butterworth ve ark. (2011) bu becerinin diskalkuli müdahalesinde temel olduğunu gösterdi.' },
   'Çıkarma Stratejileri': { goal: 'Esnek Çıkarma Stratejileri', tip: 'Farklı stratejiler dene: geriye sayma, onluğa tamamlama veya toplama ile kontrol. Bir strateji zorsa başkasını dene!' },
   'Nokta Karşılaştırma': { goal: 'Yaklaşık Sayı Sistemi (YSS/ANS)', tip: 'Saymadan, sezgisel olarak hangisinde daha çok olduğunu hisset. Bu beceri doğuştan gelen sayı hissinin temelidir (Halberda ve ark., 2008). Weber oranı küçüldükçe zorluk artar.' },
+  'Sayı Ayrıştırma': { goal: 'Kavramsal Sanbil (Conceptual Subitizing)', tip: 'Büyük kümeleri küçük alt gruplara böl! 8 noktayı 5+3 veya 4+4 olarak görmeyi dene. MacDonald-Wilkins modelinde bu en üst sanbil düzeyidir.' },
+  'Geri Sayma': { goal: 'Geriye Sayma (Ordinalite)', tip: 'Sayı doğrusunda geriye doğru git. Her adımda bir önceki sayıyı düşün. Geri sayma, çıkarma işleminin temelidir.' },
+  'Çarpma Kavramı': { goal: 'Tekrarlı Toplama (Çarpma Temeli)', tip: 'Eşit grupları say! 3 grup 4 nesne = 4+4+4 = 12. Çarpma, tekrarlı toplamanın kısa yoludur.' },
 };
