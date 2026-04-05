@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TOTAL_ROUNDS, encourage } from '../../../utils';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -8,16 +8,25 @@ import ReadyScreen from '../../ui/ReadyScreen';
 
 const YonVeMesafe = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
+  const lastAnswer = useRef(null);
+  const lastObjs = useRef([]);
   const objs=[{e:'🏠',n:'ev'},{e:'🌳',n:'ağaç'},{e:'🚗',n:'araba'},{e:'⭐',n:'yıldız'},{e:'🎈',n:'balon'},{e:'🐶',n:'köpek'},{e:'🌸',n:'çiçek'},{e:'📚',n:'kitap'},{e:'🐱',n:'kedi'},{e:'🍎',n:'elma'}];
   const lvCfg={1:{dirs:['solunda','sağında'],label:'Yatay (Sol/Sağ)'},2:{dirs:['üstünde','altında'],label:'Dikey (Üst/Alt)'},3:{dirs:['solunda','sağında','üstünde','altında'],label:'Dört Yön Karışık'},4:{dirs:['solunda','sağında','üstünde','altında'],label:'Çoklu Nesne'}};
   const posMap={solunda:3,sağında:5,'üstünde':1,altında:7};
   const gen=(l)=>{
     const g=Array(9).fill(null);
-    const o1=objs[Math.floor(Math.random()*objs.length)];
-    let o2;do{o2=objs[Math.floor(Math.random()*objs.length)];}while(o2.e===o1.e);
+    // Önceki nesnelerden farklı seç
+    let o1,o2;
+    do { o1=objs[Math.floor(Math.random()*objs.length)]; } while(lastObjs.current.includes(o1.e));
+    do { o2=objs[Math.floor(Math.random()*objs.length)]; } while(o2.e===o1.e || lastObjs.current.includes(o2.e));
+    lastObjs.current = [o1.e, o2.e];
     g[4]=o1;
     const dirs=lvCfg[l].dirs;
-    const pos=dirs[Math.floor(Math.random()*dirs.length)];
+    // Önceki cevaptan farklı yön seç (mümkünse)
+    let pos;
+    const available = dirs.filter(d => d !== lastAnswer.current);
+    pos = available.length > 0 ? available[Math.floor(Math.random()*available.length)] : dirs[Math.floor(Math.random()*dirs.length)];
+    lastAnswer.current = pos;
     g[posMap[pos]]=o2;
     if(l===4){
       let o3;do{o3=objs[Math.floor(Math.random()*objs.length)];}while(o3.e===o1.e||o3.e===o2.e);
