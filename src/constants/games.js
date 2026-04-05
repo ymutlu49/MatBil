@@ -32,6 +32,7 @@ const ParcaButun = lazy(() => import('../components/games/category-e/ParcaButun'
 const ToplamaStratejileri = lazy(() => import('../components/games/category-e/ToplamaStratejileri'));
 const BolusmeZamani = lazy(() => import('../components/games/category-e/BolusmeZamani'));
 const SayiDogrusuYurume = lazy(() => import('../components/games/category-e/SayiDogrusuYurume'));
+const SayiBaglari = lazy(() => import('../components/games/category-e/SayiBaglari'));
 
 export const GAMES = {
   A1: { comp: NoktaAvcisi, name: 'Nokta Avcısı', emoji: '🎯', cat: 'A', levels: ['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)'], instr: 'Ekranda noktalar kısa süreligiğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!' },
@@ -61,4 +62,5 @@ export const GAMES = {
   E3: { comp: ToplamaStratejileri, name: 'Toplama Stratejileri', emoji: '➕', cat: 'E', levels: ['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)'], instr: 'Toplama işleminin sonucunu bul! İleri seviyelerde eksik olan sayıyı tamamla.' },
   E4: { comp: BolusmeZamani, name: 'Bölüşme Zamanı', emoji: '🍎', cat: 'E', levels: ['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)'], instr: 'Nesneleri eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!' },
   E5: { comp: SayiDogrusuYurume, name: 'Sayı Yürüyüşü', emoji: '🚶', cat: 'E', levels: ['Toplama (0-10)','Toplama (0-10)','Karışık (0-15)','Karışık (0-20)'], instr: 'Sayı doğrusu üzerinde yürüyerek toplama/çıkarma yap!' },
+  E6: { comp: SayiBaglari, name: 'Sayı Bağları', emoji: '🔗', cat: 'E', levels: ['Seviye 1 (3-5)','Seviye 2 (5-8)','Seviye 3 (6-10)','Seviye 4 (8-15)'], instr: 'Bir sayının parçalarını bul! Hangi iki sayının toplamı bu sayıyı verir? Sayı bağlarını keşfet!' },
 };

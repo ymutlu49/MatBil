@@ -5,7 +5,7 @@ export const SKILL_GRAPH = {
   symbolRecog: { name: 'Sembol Tanıma', games: ['C1','C5'], prereqs: [] },
   placeValue: { name: 'Basamak Değeri', games: ['C4'], prereqs: ['symbolRecog','counting'] },
   estimation: { name: 'Tahmin', games: ['B1','B2','B4','B5'], prereqs: ['magnitude','subitizing'] },
-  addition: { name: 'Toplama', games: ['E1','E2','E3','E5'], prereqs: ['counting','magnitude'] },
+  addition: { name: 'Toplama', games: ['E1','E2','E3','E5','E6'], prereqs: ['counting','magnitude'] },
   division: { name: 'Bölme/Gruplama', games: ['E4'], prereqs: ['counting','addition'] },
   shapeRecog: { name: 'Şekil Tanıma', games: ['D1','D2'], prereqs: [] },
   spatialRel: { name: 'Uzamsal İlişkiler', games: ['D3','D4','D5','D6'], prereqs: ['shapeRecog'] },
