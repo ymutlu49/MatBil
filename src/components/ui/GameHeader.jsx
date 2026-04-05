@@ -16,7 +16,11 @@ const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, h
             <div className="text-sm font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">🧠 {help.goal}</div>
             <button onClick={() => setShowHelp(false)} className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 text-lg hover:bg-gray-200">✕</button>
           </div>
-          <p className="text-base text-gray-600 leading-relaxed">💡 {help.tip}</p>
+          <div className="flex items-start gap-2">
+            <p className="text-base text-gray-600 leading-relaxed flex-1">💡 {help.tip}</p>
+            <button onClick={() => { try { const u = new SpeechSynthesisUtterance(help.tip); u.lang='tr-TR'; u.rate=0.85; u.pitch=1.1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch{} }}
+              className="shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 hover:bg-indigo-100 flex items-center justify-center" title="Sesli oku">🔊</button>
+          </div>
         </div>
       )}
       <div className="flex items-center justify-between gap-1.5">
