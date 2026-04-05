@@ -73,3 +73,31 @@ button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 @media (prefers-contrast: more) {
   button { border: 2px solid currentColor !important; }
 }
+
+/* Konfeti animasyonu */
+@keyframes confettiFall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+.confetti-container { z-index: 50; }
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall 2.5s ease-out forwards;
+}
+.confetti-piece:nth-child(odd) {
+  width: 8px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+/* Doğru cevap parlama efekti */
+@keyframes correctGlow {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 20px 10px rgba(34, 197, 94, 0.2); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.anim-correct-glow { animation: correctGlow 0.6s ease-out; }

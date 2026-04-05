@@ -34,19 +34,33 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   };
 
   const renderGrid = (left, right, sz, half, small=false) => {
-    const cs = small ? 10 : 14;
+    const cs = small ? 28 : 40;
     const full = left.map((row,r) => [...row, ...(right ? right[r] : Array(half).fill(-1))]);
-    return (<div className="inline-grid gap-0.5" style={{gridTemplateColumns:`repeat(${sz}, ${cs}px)`}}>
-      {full.flat().map((cell,i) => {
-        const col = i % sz;
-        const isLeft = col < half;
-        return (<div key={i} className={`rounded-sm border ${
-          cell===1 ? (isLeft?'bg-indigo-500 border-indigo-600':'bg-emerald-500 border-emerald-600') :
-          cell===0 ? 'bg-gray-100 border-gray-200' :
-          'bg-gray-300 border-gray-400 border-dashed'
-        }`} style={{width:cs,height:cs}}/>);
-      })}
-    </div>);
+    return (
+      <div className="relative inline-block">
+        <div className="inline-grid gap-1" style={{gridTemplateColumns:`repeat(${sz}, ${cs}px)`}}>
+          {full.flat().map((cell,i) => {
+            const col = i % sz;
+            const isLeft = col < half;
+            return (<div key={i} className={`rounded ${
+              cell===1 ? (isLeft?'bg-indigo-500 border-2 border-indigo-600 shadow-sm':'bg-emerald-500 border-2 border-emerald-600 shadow-sm') :
+              cell===0 ? 'bg-gray-100 border-2 border-gray-300' :
+              'bg-gray-200 border-2 border-gray-400 border-dashed'
+            }`} style={{width:cs,height:cs}}/>);
+          })}
+        </div>
+        {/* Simetri ekseni - dikey kesikli çizgi */}
+        <div
+          className="absolute top-0 bottom-0 pointer-events-none"
+          style={{
+            left: `calc(${half * (cs + 4)}px - 1px)`,
+            width: '3px',
+            backgroundImage: 'repeating-linear-gradient(to bottom, #6366F1 0px, #6366F1 6px, transparent 6px, transparent 12px)',
+            borderRadius: '2px',
+          }}
+        />
+      </div>
+    );
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
@@ -59,22 +73,37 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Simetri Aynası" colors={colors}/>
-      <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
-        <div className="text-xs text-gray-400 mb-2">Deseni simetrik tamamla (| simetri ekseni):</div>
+
+      {/* Soru deseni - büyük ve ortada */}
+      <div className="bg-white rounded-2xl shadow-xl px-6 py-4 mb-3 text-center">
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <span className="inline-block w-3 h-3 rounded-full bg-indigo-500"></span>
+          <span className="text-sm font-semibold text-indigo-600">Sol yarı (verilen)</span>
+          <span className="mx-1 text-gray-300">|</span>
+          <span className="inline-block w-3 h-3 rounded-full bg-gray-300 border border-dashed border-gray-400"></span>
+          <span className="text-sm font-semibold text-gray-500">Sağ yarı (bul!)</span>
+        </div>
         {p && renderGrid(p.left, null, p.sz, p.half)}
-        <div className="text-[10px] text-indigo-500 mt-1">{'📋'} Sol yarı | {'❓'} Sağ yarı = ?</div>
       </div>
-      <div className="text-sm text-gray-600 mb-2 font-medium">Doğru ayna görüntüsünü seç:</div>
-      <div className="grid grid-cols-2 gap-2">
+
+      {/* Talimat */}
+      <div className="text-lg text-gray-700 mb-3 font-semibold">Doğru ayna görüntüsünü seç:</div>
+
+      {/* Seçenek butonları */}
+      <div className="grid grid-cols-2 gap-3">
         {p?.opts?.map((o,i)=>(
-          <button key={i} onClick={()=>ua===null&&handle(i)} className={`p-2 bg-white border-2 rounded-xl flex items-center justify-center shadow transition-all ${
-            ua!==null ? (o.correct ? 'border-green-400 bg-green-50' : i===ua ? 'border-orange-400 bg-orange-50' : 'border-gray-200') : 'border-gray-200 hover:border-indigo-400'
-          }`}>
+          <button key={i} onClick={()=>ua===null&&handle(i)}
+            className={`bg-white border-2 rounded-2xl flex items-center justify-center shadow-md transition-all ${
+              ua!==null ? (o.correct ? 'border-green-400 bg-green-50 ring-2 ring-green-300' : i===ua ? 'border-orange-400 bg-orange-50 ring-2 ring-orange-300' : 'border-gray-200 opacity-60') : 'border-gray-200 hover:border-indigo-400 hover:shadow-lg active:scale-95'
+            }`}
+            style={{minWidth:'130px', minHeight:'130px', padding:'12px'}}
+          >
             {renderGrid(p.left, o.right, p.sz, p.half, true)}
           </button>
         ))}
       </div>
-      {ua!==null && <div className={`mt-2 text-center font-bold text-sm ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>
+
+      {ua!==null && <div className={`mt-3 text-center font-bold text-base ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>
         {p?.opts[ua]?.correct?'✓ Harika! Simetriyi doğru gördün!':encourage()+' Ayna ekseni boyunca her hücreyi kontrol et!'}
       </div>}
     </div>

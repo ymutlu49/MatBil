@@ -72,7 +72,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
           </div>
         )}
       </div>
-      <div className="text-[10px] text-gray-400 mt-2 text-center">Tablet/telefonda çalışır. Masaüstünde tıklama = 1 parmak</div>
+      <div className="text-xs text-gray-400 mt-2 text-center">Tablet/telefonda çalışır. Masaüstünde tıklama = 1 parmak</div>
     </div>
   );
 };

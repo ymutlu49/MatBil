@@ -19,9 +19,9 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   // Onluk çubuk SVG
   const TenBar = ({count, highlight}) => (
-    <div className="flex gap-1 flex-wrap justify-center">
+    <div className="flex gap-1.5 flex-wrap justify-center">
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-4 rounded-sm shadow-sm flex flex-col gap-px p-px ${highlight?'bg-blue-500':'bg-blue-300'}`} style={{height:48}}>
+        <div key={i} className={`w-6 rounded-sm shadow-sm flex flex-col gap-px p-px ${highlight?'bg-blue-500 ring-2 ring-blue-300':'bg-blue-400'}`} style={{height:60}}>
           {Array.from({length:10},(_,j)=><div key={j} className="flex-1 bg-blue-100 rounded-[1px]"/>)}
         </div>
       ))}
@@ -29,17 +29,17 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   );
   // Birlik küp
   const UnitCubes = ({count, highlight}) => (
-    <div className="flex gap-1 flex-wrap justify-center" style={{maxWidth:80}}>
+    <div className="flex gap-1.5 flex-wrap justify-center" style={{maxWidth:100}}>
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-4 h-4 rounded-sm shadow-sm ${highlight?'bg-amber-400 border-amber-500':'bg-amber-200 border-amber-300'} border`}/>
+        <div key={i} className={`w-6 h-6 rounded-sm shadow-sm ${highlight?'bg-amber-500 border-amber-600 ring-2 ring-amber-300':'bg-amber-300 border-amber-400'} border`}/>
       ))}
     </div>
   );
   // Yüzlük kare
   const HundredSquare = ({count, highlight}) => (
-    <div className="flex gap-1 flex-wrap justify-center">
+    <div className="flex gap-2 flex-wrap justify-center">
       {Array.from({length:count},(_,i)=>(
-        <div key={i} className={`w-12 h-12 rounded shadow-sm grid grid-cols-5 gap-px p-px ${highlight?'bg-red-500':'bg-red-300'}`}>
+        <div key={i} className={`w-16 h-16 rounded shadow-sm grid grid-cols-5 gap-px p-px ${highlight?'bg-red-500 ring-2 ring-red-300':'bg-red-400'}`}>
           {Array.from({length:25},(_,j)=><div key={j} className="bg-red-100 rounded-[1px]"/>)}
         </div>
       ))}
@@ -145,27 +145,27 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Basamak Değeri" colors={colors}/>
       {/* Görsel temsil */}
-      <div className="bg-white rounded-2xl shadow-xl p-3 mb-2 w-full max-w-sm">
-        {p?.showNumber && <div className="text-center text-3xl font-bold mb-2" style={{color:numColor(p?.number,p?.number>99?999:99)}}>{p?.number}</div>}
-        <div className="flex items-end justify-center gap-4 min-h-[64px]">
+      <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 w-full max-w-sm">
+        {p?.showNumber && <div className="text-center text-4xl font-bold mb-3" style={{color:numColor(p?.number,p?.number>99?999:99)}}>{p?.number}</div>}
+        <div className="flex items-end justify-center gap-5 min-h-[80px]">
           {p?.hundreds > 0 && <div className="text-center">
             <HundredSquare count={p?.hundreds} highlight={hl==='yüzlük'}/>
-            {ua!==null && <div className="text-[10px] text-red-600 font-bold mt-1">{p?.hundreds} yüzlük</div>}
+            {ua!==null && <div className="text-sm text-red-500 font-bold mt-1">{p?.hundreds} yüzlük</div>}
           </div>}
           {p?.tens > 0 && <div className="text-center">
             <TenBar count={p?.tens} highlight={hl==='onluk'}/>
-            {ua!==null && <div className="text-[10px] text-blue-600 font-bold mt-1">{p?.tens} onluk</div>}
+            {ua!==null && <div className="text-sm text-blue-500 font-bold mt-1">{p?.tens} onluk</div>}
           </div>}
           {p?.ones > 0 && <div className="text-center">
             <UnitCubes count={p?.ones} highlight={hl==='birlik'}/>
-            {ua!==null && <div className="text-[10px] text-amber-600 font-bold mt-1">{p?.ones} birlik</div>}
+            {ua!==null && <div className="text-sm text-amber-500 font-bold mt-1">{p?.ones} birlik</div>}
           </div>}
         </div>
       </div>
       {/* Soru */}
-      <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><div className="text-sm text-gray-700 font-medium">{p?.question}</div></div>
+      <div className="bg-white px-5 py-3 rounded-xl shadow mb-3 text-center"><div className="text-base text-gray-700 font-semibold">{p?.question}</div></div>
       {/* Cevap / Seçenekler */}
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'📋'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">{'💡'} {p?.hundreds>0?`${p?.hundreds} yüzlük (${p?.hundreds*100}) + `:''}{p?.tens} onluk ({p?.tens*10}) + {p?.ones} birlik ({p?.ones}) = {p?.number}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 min-h-[56px] ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

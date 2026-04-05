@@ -41,7 +41,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
         </div>
         <div className="flex justify-between text-lg font-bold text-gray-600 mt-2"><span>0</span><span>{mx}</span></div>
       </div>
-      {ua!==null?(()=>{const fb=getFeedback(ua,target,cfg[lv].tol);return(<div className="text-center"><div className={`text-2xl font-bold mb-1 ${fb.cls}`}>{fb.msg}</div><div className="bg-amber-50 px-3 py-2 rounded-xl text-sm text-amber-700 mt-1">{'📋'} Ok, 0‑{mx} arasında <strong>{target}</strong> sayısını gösteriyor.</div></div>);})():(<div className="grid grid-cols-2 gap-3 w-full max-w-sm">{opts.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{o}</button>))}</div>)}
+      {ua!==null?(()=>{const fb=getFeedback(ua,target,cfg[lv].tol);return(<div className="text-center"><div className={`text-2xl font-bold mb-1 ${fb.cls}`}>{fb.msg}</div><div className="bg-amber-50 px-3 py-2 rounded-xl text-sm text-amber-700 mt-1">{'💡'} Ok, 0‑{mx} arasında <strong>{target}</strong> sayısını gösteriyor.</div></div>);})():(<div className="grid grid-cols-2 gap-3 w-full max-w-sm">{opts.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{o}</button>))}</div>)}
     </div>
   );
 };

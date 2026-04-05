@@ -248,7 +248,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
 
       {sub && (
         <div className="bg-blue-50 p-4 rounded-xl text-blue-800 text-sm max-w-sm text-center">
-          {'📋'} {p?.explain}
+          {'💡'} {p?.explain}
         </div>
       )}
     </div>

@@ -68,11 +68,11 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
           <div className="absolute top-5 h-7 w-0.5 bg-blue-400" style={{left:`${startPct}%`}}/>
           {submitted && <div className="absolute top-5 h-7 w-0.5 bg-green-500" style={{left:`${ansPct}%`}}/>}
           <div className="absolute top-0 transition-all duration-300 -translate-x-1/2 text-center" style={{left:`${pct}%`}}>
-            <div className="text-2xl">{'📋'}</div>
+            <div className="text-2xl">{'🚶'}</div>
             <div className="text-xs font-bold bg-white px-1 rounded shadow" style={{color:numColor(pos,p?.max||20)}}>{pos}</div>
           </div>
         </div>
-        <div className="flex justify-between text-[10px] text-gray-400 mt-1">
+        <div className="flex justify-between text-xs text-gray-400 mt-1">
           <span>0</span>
           {p?.max>=10&&<span>{Math.floor(p.max/2)}</span>}
           <span>{p?.max}</span>
@@ -97,7 +97,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
             {pos===p?.answer?'✓ Doğru yere yürüdün!':encourage()}
           </div>
           <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">
-            {'📋'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
+            {'🚶'} {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
           </div>
         </div>
       )}

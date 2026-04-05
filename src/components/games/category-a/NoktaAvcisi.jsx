@@ -125,7 +125,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
             <div key={`${gi}-${di}`} className="absolute w-9 h-9 rounded-full shadow-lg" style={{left:`${d.x}%`,top:`${d.y}%`,backgroundColor:d.c,transform:'translate(-50%,-50%)'}}/>
           ))
         ))}
-        {!show && ua===null && <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-4xl mb-1">{'📋'}</span><span className={`text-lg font-bold ${colors?.text}`}>Kaç taneydi?</span></div>}
+        {!show && ua===null && <div className="absolute inset-0 flex flex-col items-center justify-center"><span className="text-4xl mb-1">{'🤔'}</span><span className={`text-lg font-bold ${colors?.text}`}>Kaç taneydi?</span></div>}
         {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
       </div>
       {!show && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}

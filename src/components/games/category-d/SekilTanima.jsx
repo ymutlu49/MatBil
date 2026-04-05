@@ -119,7 +119,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
         {targetType==='dikdortgen' && <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">Kare de sayılır!</span>}
         <span className="ml-2 bg-green-100 px-3 py-1 rounded-full text-green-700 text-sm">{found.length}/{tc}</span>
       </div>
-      <div className="text-xs text-gray-600 mb-2">{'📋'} {targetType==='dikdortgen' ? 'Her kare aynı zamanda bir dikdörtgendir!' : targetType==='kare' && lv>=3 ? 'Eğik duran kare hâlâ karedir! Özelliklerine odaklan: 4 eşit kenar, 4 dik açı.' : targetType==='ucgen' && lv>=3 ? 'Üçgen ters dursa da üçgendir! 3 kenar ve 3 açısı var mı?' : 'Renk, boyut veya döndürme değişse de şekli tanı! Yeşil şekle dokunarak döndürebilirsin.'}</div>
+      <div className="text-sm text-gray-600 mb-2">💡 {targetType==='dikdortgen' ? 'Her kare aynı zamanda bir dikdörtgendir!' : targetType==='kare' && lv>=3 ? 'Eğik duran kare hâlâ karedir! Özelliklerine odaklan: 4 eşit kenar, 4 dik açı.' : targetType==='ucgen' && lv>=3 ? 'Üçgen ters dursa da üçgendir! 3 kenar ve 3 açısı var mı?' : 'Renk, boyut veya döndürme değişse de şekli tanı! Yeşil şekle dokunarak döndürebilirsin.'}</div>
 
       <div className="grid grid-cols-4 gap-3 bg-white p-4 rounded-2xl shadow-xl">
         {shapes.map(s=>(

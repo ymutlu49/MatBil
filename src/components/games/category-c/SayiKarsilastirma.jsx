@@ -70,8 +70,8 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Büyük-Küçük" colors={colors}/>
       <div className="bg-white px-5 py-3 rounded-xl shadow mb-3 text-center">
-        <span className="text-xl font-bold text-gray-700">{'📋'} {p?.question}</span>
-        {(p?.type==='stroop'||p?.type==='mixed')&&!p?.isCongruent&&ua===null&&<div className="text-xs text-purple-500 mt-1">{'📋'} Boyutuna aldanma!</div>}
+        <span className="text-xl font-bold text-gray-700">{'⚖️'} {p?.question}</span>
+        {(p?.type==='stroop'||p?.type==='mixed')&&!p?.isCongruent&&ua===null&&<div className="text-sm text-purple-500 mt-1 font-medium">⚠️ Boyutuna aldanma!</div>}
       </div>
       <div className="flex items-center gap-5 mb-4">
         {p?.nums?.map((n,i)=>(
@@ -88,7 +88,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
       {ua!==null&&<div className="text-center">
         <div className={`text-2xl font-bold ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div>
         <div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700 mt-2">
-          {'📋'} {p?.hint}
+          {'💡'} {p?.hint}
           {p?.type==='stroop'&&!p?.isCongruent&&' (Boyut yanıltıcıydı!)'}
         </div>
       </div>}

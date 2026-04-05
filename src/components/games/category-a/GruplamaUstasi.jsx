@@ -25,7 +25,7 @@ const GruplamaUstasi = ({ onBack, colors, onGameComplete, prevBest }) => {
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Gruplama Ustası" colors={colors} hideRound={rahatMod}/>
       <div className="flex gap-3 mb-3 flex-wrap justify-center">{cards.map((c,i)=>(<Frame key={i} count={c.count} max={c.type==='five'?5:10} color={c.color}/>))}</div>
       <div className="text-base text-gray-600 mb-3 bg-white px-4 py-2 rounded-xl shadow">Toplam kaç tane?</div>
-      {ua!==null?(<div className="text-center"><div className={`text-3xl font-bold mb-2 ${ua===total?'text-green-500':'text-orange-500'}`}>{ua===total?'✓ Doğru!':`${encourage()} Cevap: ${total}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'📋'} {cards.map(c=>c.count).join(' + ')} = {total}</div></div>):(<div className="grid grid-cols-2 gap-3">{curOpts.map((n,i)=>(<button key={i} onClick={()=>handle(n)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{n}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-3xl font-bold mb-2 ${ua===total?'text-green-500':'text-orange-500'}`}>{ua===total?'✓ Doğru!':`${encourage()} Cevap: ${total}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'💡'} {cards.map(c=>c.count).join(' + ')} = {total}</div></div>):(<div className="grid grid-cols-2 gap-3">{curOpts.map((n,i)=>(<button key={i} onClick={()=>handle(n)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{n}</button>))}</div>)}
     </div>
   );
 };

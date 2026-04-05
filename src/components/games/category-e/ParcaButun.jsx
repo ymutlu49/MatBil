@@ -50,21 +50,21 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('whole')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-indigo-100 border-indigo-400'}`}>
               {nodeVal(p?.whole,'whole')}
             </div>
-            <span className="text-[10px] font-bold text-indigo-500 mt-0.5">BÜTÜN</span>
+            <span className="text-xs font-bold text-indigo-500 mt-0.5">BÜTÜN</span>
           </div>
 
           <div className="absolute left-0 bottom-0 flex flex-col items-center" style={{left:4}}>
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part1')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-rose-100 border-rose-400'}`}>
               {nodeVal(p?.part1,'part1')}
             </div>
-            <span className="text-[10px] font-bold text-rose-500 mt-0.5">PARÇA</span>
+            <span className="text-xs font-bold text-rose-500 mt-0.5">PARÇA</span>
           </div>
 
           <div className="absolute right-0 bottom-0 flex flex-col items-center" style={{right:4}}>
             <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg border-3 ${isMissing('part2')?'bg-purple-100 border-purple-400 ring-2 ring-purple-300':'bg-sky-100 border-sky-400'}`}>
               {nodeVal(p?.part2,'part2')}
             </div>
-            <span className="text-[10px] font-bold text-sky-500 mt-0.5">PARÇA</span>
+            <span className="text-xs font-bold text-sky-500 mt-0.5">PARÇA</span>
           </div>
         </div>
       </div>
@@ -75,7 +75,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
         </div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'📋'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.answer?'text-green-500':'text-orange-500'}`}>{ua===p?.answer?'✓ Doğru!':`${encourage()} Cevap: ${p?.answer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'💡'} {p?.part1} + {p?.part2} = {p?.whole}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
     </div>
   );
 };

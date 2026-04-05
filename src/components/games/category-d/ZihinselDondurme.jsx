@@ -52,24 +52,40 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Zihinsel Döndürme" colors={colors}/>
-      <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 text-center">
-        <div className="text-xs text-gray-400 mb-1">Hedef şekil:</div>
-        {p && renderShape(p.patId, p.baseRot, false, 80)}
+
+      {/* Hedef şekil - belirgin ve büyük */}
+      <div className="bg-white rounded-2xl shadow-xl px-8 py-5 mb-3 text-center border-2 border-indigo-100">
+        <div className="text-sm font-semibold text-indigo-600 mb-2">Hedef Şekil</div>
+        <div className="flex items-center justify-center bg-indigo-50 rounded-xl p-3">
+          {p && renderShape(p.patId, p.baseRot, false, 100)}
+        </div>
       </div>
-      <div className="text-sm text-gray-600 mb-2 font-medium">Aynı şeklin döndürülmüş halini bul:</div>
-      <div className="grid grid-cols-2 gap-3">
+
+      {/* Talimat */}
+      <div className="text-base text-gray-700 mb-3 font-semibold">Aynı şeklin döndürülmüş halini bul:</div>
+
+      {/* Seçenek butonları */}
+      <div className="grid grid-cols-2 gap-4">
         {p?.opts?.map((o,i)=>(
-          <button key={i} onClick={()=>ua===null&&handle(i)} className={`p-3 bg-white border-2 rounded-2xl flex items-center justify-center shadow-lg transition-all ${
-            ua!==null ? (o.correct ? 'border-green-400 bg-green-50' : i===ua ? 'border-orange-400 bg-orange-50' : 'border-gray-200') : 'border-gray-200 hover:border-indigo-400'
-          }`}>
-            {renderShape(p.patId, o.rot, o.mirror, 70, ua!==null && o.correct)}
-            {ua!==null && o.mirror && <span className="absolute text-[10px] text-orange-500 font-bold">Aynalı</span>}
+          <button key={i} onClick={()=>ua===null&&handle(i)}
+            className={`relative bg-white border-2 rounded-2xl flex items-center justify-center shadow-md transition-all ${
+              ua!==null ? (o.correct ? 'border-green-400 bg-green-50 ring-2 ring-green-300' : i===ua ? 'border-orange-400 bg-orange-50 ring-2 ring-orange-300' : 'border-gray-200 opacity-60') : 'border-gray-200 hover:border-indigo-400 hover:shadow-lg active:scale-95'
+            }`}
+            style={{padding:'14px'}}
+          >
+            {renderShape(p.patId, o.rot, o.mirror, 90, ua!==null && o.correct)}
+            {ua!==null && o.mirror && (
+              <span className="absolute top-1.5 right-1.5 text-sm font-bold text-white bg-orange-500 rounded-md px-1.5 py-0.5 shadow">
+                Aynalı
+              </span>
+            )}
           </button>
         ))}
       </div>
-      {ua!==null && <div className="mt-2 text-sm text-center">
+
+      {ua!==null && <div className="mt-3 text-base text-center">
         <div className={`font-bold ${p?.opts[ua]?.correct?'text-green-500':'text-orange-500'}`}>{p?.opts[ua]?.correct?'✓ Doğru! Şekli zihninde döndürebildin.':encourage()}</div>
-        {!p?.opts[ua]?.correct && <div className="text-xs text-gray-500 mt-1">{'📋'} Aynalı şekiller farklıdır. Şeklin köşelerine ve kenarlarına odaklan!</div>}
+        {!p?.opts[ua]?.correct && <div className="text-sm text-gray-500 mt-1">Aynalı şekiller farklıdır. Şeklin köşelerine ve kenarlarına odaklan!</div>}
       </div>}
     </div>
   );
