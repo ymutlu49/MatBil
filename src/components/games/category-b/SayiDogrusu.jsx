@@ -28,7 +28,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;
   const mx=cfg[lv].max;const pct=(target/mx)*100;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Sayı Doğrusu" colors={colors}/>
       <p className={`${colors?.text} mb-3 text-center font-bold text-lg`}>Ok hangi sayıyı gösteriyor?</p>
       <div className="w-full max-w-sm mb-3 px-3">

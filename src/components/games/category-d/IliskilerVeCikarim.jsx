@@ -214,7 +214,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
   const correctIndices = p?.opts?.map((o,i)=>o.correct?i:-1).filter(i=>i>=0) || [];
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="İlişkiler ve Çıkarım" colors={colors}/>
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-3 text-center"><span className="text-sm text-gray-500">Düzey 3: İnformel Çıkarım</span></div>
 

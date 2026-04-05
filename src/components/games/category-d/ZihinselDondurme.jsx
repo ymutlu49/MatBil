@@ -50,7 +50,7 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
   if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="" level={lv} instruction="Üstteki şekli zihninde döndür. Alttaki seçeneklerden aynı şeklin döndürülmüş halini bul! Aynalı olanlar YANLIŞ." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Zihinsel Döndürme" colors={colors}/>
 
       {/* Hedef şekil - belirgin ve büyük */}

@@ -108,7 +108,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
   const tc = shapes.filter(s=>s.isTarget).length;
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Şekli Tanıma" colors={colors}/>
       <div className="bg-white px-4 py-2 rounded-xl shadow mb-2 text-center"><span className="text-sm text-gray-500">Düzey 1: Görselleştirme — {['Temel','Boyut','Konumlanış','Karışık','Tam'][lv-1]}</span></div>
 

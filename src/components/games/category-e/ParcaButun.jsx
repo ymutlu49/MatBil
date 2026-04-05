@@ -36,7 +36,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Parça-Bütün" colors={colors}/>
 
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-2 w-full max-w-xs">

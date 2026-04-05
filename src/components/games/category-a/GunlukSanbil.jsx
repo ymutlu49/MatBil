@@ -33,7 +33,7 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod }) => {
   const sceneIdx = sceneOrder.length > 0 ? sceneOrder[si % sceneOrder.length] : 0;
   const scene=scenes[sceneIdx];
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title={`Günlük • ${scene.name}`} colors={colors} hideRound={rahatMod}/>
       <div className="w-56 h-40 bg-white rounded-2xl shadow-xl flex items-center justify-center mb-3 border-4 border-green-200">
         {show?<div className="flex gap-2 flex-wrap justify-center p-4">{Array.from({length:oc},(_,i)=>(<span key={i} className="text-4xl">{scene.obj[i%scene.obj.length]}</span>))}</div>:ua===null?<span className="text-4xl">{'❓'}</span>:<Feedback isCorrect={ua===oc} answer={oc} hint={ua===oc ? `Harika! ${oc} tane ${scene.name.toLowerCase()} nesnesi vardı.` : `${oc} tane vardı. Bir bakışta anlamaya çalış!`}/>}

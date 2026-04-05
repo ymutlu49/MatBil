@@ -34,7 +34,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Toplama Stratejileri" colors={colors}/>
 
       <div className="bg-white p-5 rounded-2xl shadow-xl mb-3 flex items-center gap-3">

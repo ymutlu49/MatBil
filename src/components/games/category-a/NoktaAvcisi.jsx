@@ -117,7 +117,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
   if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction="Ekranda noktalar kısa süreliğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
-    <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
+    <div className={`h-screen ${colors?.bg} flex flex-col items-center justify-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Nokta Avcısı" colors={colors} hideRound={rahatMod}/>
       <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border}`}>
         {show && dots?.groups?.map((grp,gi)=>(
