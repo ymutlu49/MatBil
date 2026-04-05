@@ -14,7 +14,7 @@ const STRATEGIES = {
   computation: ['Sayıları yuvarladım 🔵', 'Kolay parçalara ayırdım ✂️', 'Aşina sayıları kullandım 💡'],
 };
 
-const ExplainStep = ({ type, onDone }) => {
+const ExplainStep = ({ type, onDone, prevBest }) => {
   const strats = STRATEGIES[type] || STRATEGIES.quantity;
   return (
     <div className="mt-2 anim-fade">

@@ -7,7 +7,7 @@ import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
-const GruplamaUstasi = ({ onBack, colors, onGameComplete, prevBest }) => {
+const GruplamaUstasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [cards,setCards]=useState([]);const [ua,setUa]=useState(null);const [curOpts,setCurOpts]=useState([]);
   const Frame=({count,max,color='bg-blue-500'})=>(<div className="bg-white p-2 rounded-xl shadow-lg border-2 border-gray-200"><div className="text-xs text-center text-gray-600 font-medium mb-1">{max===5?'Beşlik':'Onluk'}</div><div className={`grid grid-cols-5 gap-1`}>{Array.from({length:max},(_,i)=>(<div key={i} className={`w-6 h-6 rounded-md border-2 border-gray-300 ${i<count?color:'bg-gray-100'}`}/>))}</div></div>);
   const cCols=['bg-red-400','bg-blue-400','bg-green-400','bg-purple-400','bg-amber-400'];

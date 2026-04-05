@@ -9,7 +9,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
 
 const useAdaptive = () => ({ record: () => {}, reset: () => {}, diff: 1 });
 
-const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod }) => {
+const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);

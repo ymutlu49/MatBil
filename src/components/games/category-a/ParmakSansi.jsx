@@ -7,7 +7,7 @@ import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
-const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod }) => {
+const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [fc,setFc]=useState(0);const [ua,setUa]=useState(null);
   const [waveAnim,setWaveAnim]=useState(false);
   const cfg={1:{max:5},2:{max:7},3:{max:10},4:{max:10}};

@@ -7,7 +7,7 @@ import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
-const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod }) => {
+const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [oc,setOc]=useState(0);const [show,setShow]=useState(false);const [ua,setUa]=useState(null);const [si,setSi]=useState(0);const [sceneOrder,setSceneOrder]=useState([]);
   const scenes=[
     {name:'Mutfak',obj:['🍎','🍊','🍋','🍇','🍓','🍌','🥕','🍅','🌽']},
