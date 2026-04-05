@@ -41,17 +41,19 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
       const sorted=[...nums].sort((a,b)=>b-a);
       isCongruent = Math.random()>0.5;
       if(isCongruent){
-        sizes = nums.map(n => n===sorted[0] ? 'text-6xl' : (n===sorted[sorted.length-1] ? 'text-2xl' : 'text-4xl'));
+        // Uyumlu: büyük sayı büyük yazılır
+        sizes = nums.map(n => n===sorted[0] ? 'text-7xl' : (n===sorted[sorted.length-1] ? 'text-3xl' : 'text-5xl'));
       } else {
-        sizes = nums.map(n => n===sorted[sorted.length-1] ? 'text-6xl' : (n===sorted[0] ? 'text-2xl' : 'text-4xl'));
+        // Uyumsuz (Stroop): küçük sayı BÜYÜK, büyük sayı KÜÇÜK yazılır
+        sizes = nums.map(n => n===sorted[sorted.length-1] ? 'text-8xl' : (n===sorted[0] ? 'text-2xl' : 'text-5xl'));
       }
       repType = type==='mixed' ? ['number','dots','word'][Math.floor(Math.random()*3)] : 'number';
     } else if(type==='rep'){
       const repTypes = c.max<=10 ? ['dots','word','tally','fingers'] : ['dots','tally'];
       repType = repTypes[Math.floor(Math.random()*repTypes.length)];
-      sizes = nums.map(()=>'text-4xl');
+      sizes = nums.map(()=>'text-5xl');
     } else {
-      sizes = nums.map(()=>'text-4xl');
+      sizes = nums.map(()=>'text-5xl');
     }
 
     const answer = Math.max(...nums);
