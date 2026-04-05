@@ -446,7 +446,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
         </div>
 
         {/* Kazanılan Rozetler */}
-        {(() => { const earned = checkBadges(progress); return earned.length > 0 ? (
+        {(() => { const earned = checkBadges(progress, GAMES); return earned.length > 0 ? (
           <div className="bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl border border-amber-200 p-3 mb-3">
             <h3 className="font-bold text-amber-700 mb-2 text-sm">🏆 Kazanılan Rozetler ({earned.length}/{BADGES.length})</h3>
             <div className="space-y-1.5">{earned.map(b => (
