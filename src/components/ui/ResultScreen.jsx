@@ -19,7 +19,7 @@ const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete
   const pct = Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100));
   const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : pct >= 30 ? 1 : 0;
   const isNewRecord = prevBest > 0 && score > prevBest;
-  const msg = isNewRecord ? 'Yeni Rekor!' : stars === 3 ? 'Mükemmel!' : stars === 2 ? 'Çok iyi!' : stars === 1 ? 'İyi başlangıç!' : 'Tekrar dene!';
+  const msg = isNewRecord ? 'Yeni Rekor!' : stars === 3 ? 'Mükemmel!' : stars === 2 ? 'Çok iyi!' : stars === 1 ? 'İyi başlangıç!' : 'Her deneme seni güçlendiriyor!';
   const canNext = stars >= 2 && level && maxLevel && level < maxLevel;
 
   useEffect(() => {

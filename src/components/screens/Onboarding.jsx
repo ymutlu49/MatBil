@@ -4,7 +4,7 @@ const Onboarding = ({ onComplete }) => {
   const [step, setStep] = useState(0);
   const steps = [
     { emoji: '🧠', title: 'Matematiksel Bilişin Temelleri', desc: 'Bu uygulama, matematiksel düşünme becerilerini oyunlarla geliştirmeni sağlar. Her oyun bilimsel araştırmalara dayanır!', bg: 'from-indigo-400 to-purple-500' },
-    { emoji: '⭐', title: '5 Kategori, 24 Oyun', desc: 'Sanbil, Tahmin, Sembolik İşleme, Geometri ve Aritmetik kategorilerinde oyunlar seni bekliyor. Her biri farklı bir beceriyi geliştirir.', bg: 'from-rose-400 to-pink-500' },
+    { emoji: '⭐', title: '6 Kategori, 36 Oyun', desc: 'Sanbil, Aritmetik, Sembolik İşleme, Geometri, Tahmin ve Bilişsel Beceriler kategorilerinde oyunlar seni bekliyor. Her biri farklı bir beceriyi geliştirir.', bg: 'from-rose-400 to-pink-500' },
     { emoji: '🐢', title: 'Kendi Hızında İlerle', desc: 'Rahat Mod (🐢) ile süreleri uzat. ? butonu ile her oyunun amacını öğren. Kişisel rekorunu kır ve rozetler kazan!', bg: 'from-emerald-400 to-teal-500' },
   ];
   const s = steps[step];

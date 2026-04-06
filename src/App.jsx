@@ -1,5 +1,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, downloadEtkinlikPDF } from './utils';
+import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, downloadEtkinlikPDF,
+  useSessionTimer, getWeeklyStats, saveSessionData,
+  MOOD_OPTIONS, saveMoodLog,
+  getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, getLevelUpMessage
+} from './utils';
 import { GAMES } from './constants/games';
 import { CATEGORIES } from './constants/categories';
 import { COLORS } from './constants/colors';
@@ -9,7 +13,19 @@ import ReportScreen from './components/screens/ReportScreen';
 import PDFReportView from './components/screens/PDFReportView';
 import AdminPanel from './components/screens/AdminPanel';
 import Onboarding from './components/screens/Onboarding';
+import ScreeningMode from './components/screens/ScreeningMode';
 
+/**
+ * Ana Uygulama - v16.1 UI/UX İyileştirmeleri
+ *
+ * Araştırma bazlı tasarım kararları:
+ * - Ekranda max 3-5 ana element (Ungrammary, 2024)
+ * - Dokunma hedefleri 60-80pt (Apple HIG / çocuk uyarlaması)
+ * - Sayısal göstergeler yerine görsel ilerleme (diskalkuli dostu)
+ * - Bilişsel yük azaltma: progressive disclosure (Frontiers, 2024)
+ * - Oturum sayacı gizli (zaman baskısı kaygı artırır)
+ * - Flat navigasyon, max 2 seviye derinlik
+ */
 const App = () => {
   const [user, setUser] = useState(null);
   const [currentGame, setCurrentGame] = useState(null);
@@ -43,8 +59,27 @@ const App = () => {
   const toggleRahat = () => { const v = !rahatMod; setRahatMod(v); try { localStorage.setItem('matbil_rahat_mod', v ? 'true' : 'false'); } catch {} };
   const [progress, setProgress] = useState({});
 
+  // Oturum zamanlayıcı (arka planda, kullanıcıya gösterilmez)
+  const session = useSessionTimer();
+
+  // Ayarlar paneli
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Ruh hali
+  const [mood, setMood] = useState(null);
+
+  // Avatar
+  const [avatarId, setAvatarId] = useState(null);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [levelUpMsg, setLevelUpMsg] = useState(null);
+  const prevLevelRef = React.useRef(null);
+
   useEffect(() => {
-    if (user) setProgress(getProgress(user.id));
+    if (user) {
+      setProgress(getProgress(user.id));
+      const savedAvatar = getAvatar(user.id);
+      setAvatarId(savedAvatar);
+    }
   }, [user]);
 
   useEffect(() => {
@@ -54,15 +89,35 @@ const App = () => {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+    const xp = getXPFromProgress(progress);
+    const level = getLevelFromXP(xp);
+    if (prevLevelRef.current && level.level > prevLevelRef.current) {
+      setLevelUpMsg(getLevelUpMessage(level));
+      setTimeout(() => setLevelUpMsg(null), 4000);
+    }
+    prevLevelRef.current = level.level;
+  }, [progress, user]);
+
+  useEffect(() => {
+    if (user && !session.isActive) session.start();
+  }, [user]);
+
   const handleLogin = (u) => {
     setUser(u);
     localStorage.setItem('matbil_current_user', JSON.stringify(u));
   };
 
   const handleLogout = () => {
+    if (user && session.elapsed > 30) {
+      saveSessionData(user.id, session.elapsed, Object.keys(progress).length);
+    }
+    session.reset();
     setUser(null);
     setCurrentGame(null);
     setView('home');
+    setMood(null);
     localStorage.removeItem('matbil_current_user');
   };
 
@@ -87,13 +142,23 @@ const App = () => {
     saveProgress(user.id, newProgress);
   };
 
+  const handleAvatarSelect = (id) => {
+    setAvatarId(id);
+    if (user) saveAvatar(user.id, id);
+    setShowAvatarPicker(false);
+  };
+
+  const handleMoodSelect = (m) => {
+    setMood(m);
+    if (user) saveMoodLog(user.id, m);
+  };
+
   if (!user) return <LoginScreen onLogin={handleLogin} />;
-
   if (showOnboarding) return <Onboarding onComplete={completeOnboarding} />;
-
   if (view === 'report') return <ReportScreen user={user} progress={progress} onBack={() => setView('home')} onPDF={() => setView('pdf')} />;
   if (view === 'pdf') return <PDFReportView user={user} progress={progress} onBack={() => setView('home')} />;
   if (view === 'admin') return <AdminPanel onBack={() => setView('home')} />;
+  if (view === 'screening') return <ScreeningMode onBack={() => setView('home')} user={user} />;
 
   if (currentGame) {
     const game = GAMES[currentGame];
@@ -111,109 +176,188 @@ const App = () => {
   const toggleCat = (catId) => { setExpandedCat(expandedCat === catId ? null : catId); };
   const handleDownloadPDF = () => downloadEtkinlikPDF(import.meta.env.BASE_URL);
 
+  // Hesaplamalar
+  const xp = getXPFromProgress(progress);
+  const level = getLevelFromXP(xp);
+  const selectedAvatar = AVATARS.find(a => a.id === avatarId);
+  const totalStars = Object.values(progress).reduce((s, g) => s + (g.stars || 0), 0);
+  const played = Object.keys(progress).length;
+  const total = Object.keys(GAMES).length;
+  const playedPct = Math.round((played / Math.max(total, 1)) * 100);
+  const today = new Date().toISOString().split('T')[0];
+  const todayPlays = Object.values(progress).filter(g => g.lastPlayed && g.lastPlayed.startsWith(today)).length;
+  const dailyGoal = 3;
+  const dailyDone = todayPlays >= dailyGoal;
+  const earned = checkBadges(progress, GAMES);
+
   return (
-    <div className={`h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col overflow-hidden ${buyukYazi ? "text-lg" : ""}`} role="main" aria-label="Matematiksel Bilişin Temelleri Ana Menü">
+    <div className={`h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col overflow-hidden ${buyukYazi ? "text-lg" : ""}`} role="main" aria-label="MatBil Ana Menü">
       <div className="w-full max-w-md mx-auto flex flex-col flex-1 min-h-0 p-3">
 
-        {/* Üst Bar */}
-        <div className="flex items-center justify-between mb-2 bg-white rounded-xl shadow-md p-2 shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs">{user.name.charAt(0).toUpperCase()}</div>
-            <div>
-              <div className="font-bold text-gray-800 text-sm leading-tight">{user.name}</div>
-              {(user.age || user.city) && <div className="text-[10px] text-gray-400">{user.age && `${user.age} yaş`}{user.age && user.city && ' · '}{user.city || ''}</div>}
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <button onClick={() => setView('report')} className="px-2.5 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-bold text-xs hover:bg-indigo-100 transition-colors">{"📊"} Rapor</button>
-            <button onClick={toggleYazi} aria-label={buyukYazi?'Büyük yazı aktif':'Normal yazı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${buyukYazi ? 'bg-orange-100 text-orange-600' : 'bg-gray-50 text-gray-400'}`}>{buyukYazi ? 'A+' : 'A'}</button>
-            <button onClick={toggleSes} aria-label={sesAcik?'Ses açık':'Ses kapalı'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${sesAcik ? 'bg-blue-100 text-blue-600' : 'bg-gray-50 text-gray-400'}`}>{sesAcik ? '🔊' : '🔇'}</button>
-            <button onClick={toggleRahat} aria-label={rahatMod?'Rahat mod aktif':'Normal mod'} className={`px-2 py-1.5 rounded-lg font-bold text-xs transition-colors ${rahatMod ? 'bg-green-100 text-green-600' : 'bg-gray-50 text-gray-400'}`}>{"🐢"}</button>
-            <button onClick={() => setView('admin')} className="px-2 py-1.5 bg-slate-50 text-slate-500 rounded-lg font-bold text-xs hover:bg-slate-100 transition-colors">{"🔐"}</button>
-            <button onClick={handleLogout} className="px-2 py-1.5 bg-gray-100 text-gray-500 rounded-lg font-bold text-xs hover:bg-gray-200 transition-colors">{"🚪"}</button>
-          </div>
-        </div>
-
-        {/* Başlık + İlerleme */}
-        <div className="shrink-0">
-          <div className="text-center mb-2">
-            <h1 className="text-lg font-bold text-gray-800">{"🧠"} Matematiksel Bilişin Temelleri</h1>
-            <p className="text-indigo-700 font-semibold text-xs italic">Sayı Hissinden Şekil Algısına</p>
-          </div>
-          <div className="flex gap-2 mb-2">
-            {(() => {
-              const played = Object.keys(progress).length;
-              const total = Object.keys(GAMES).length;
-              const totalStars = Object.values(progress).reduce((s, g) => s + (g.stars || 0), 0);
-              return (<>
-                <div className="flex-1 bg-white rounded-lg shadow p-1.5 text-center">
-                  <div className="text-sm font-bold text-indigo-600">{played}/{total}</div>
-                  <div className="text-[10px] text-gray-500 font-medium">Oyun</div>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-1.5 text-center">
-                  <div className="text-sm font-bold text-yellow-600">{'⭐'}{totalStars}</div>
-                  <div className="text-[10px] text-gray-500 font-medium">Yıldız</div>
-                </div>
-                <div className="flex-1 bg-white rounded-lg shadow p-1.5 text-center">
-                  <div className="text-sm font-bold text-green-600">{Object.values(progress).reduce((s, g) => s + (g.attempts || 0), 0)}</div>
-                  <div className="text-[10px] text-gray-500 font-medium">Deneme</div>
-                </div>
-              </>);
-            })()}
-          </div>
-        </div>
-
-        {/* Rozetler */}
-        {(() => { const earned = checkBadges(progress, GAMES); return earned.length > 0 ? (
-          <div className="shrink-0 mb-2 bg-gradient-to-r from-yellow-50 via-amber-50 to-orange-50 rounded-xl border border-amber-200 p-2">
-            <div className="text-xs font-bold text-amber-700 mb-1">{"🏆"} Rozetlerin ({earned.length}/{BADGES.length})</div>
-            <div className="flex gap-1.5 flex-wrap">{earned.map(b => (
-              <div key={b.id} className="bg-white rounded-lg px-2 py-1 shadow-sm border border-amber-100 flex items-center gap-1" title={b.desc}>
-                <span className="text-base">{b.emoji}</span>
-                <span className="text-[10px] font-bold text-gray-700">{b.name}</span>
-              </div>
-            ))}</div>
-          </div>
-        ) : null; })()}
-
-        {/* Streak */}
-        {streak.count > 0 && (
-          <div className="shrink-0 mb-2 bg-gradient-to-r from-orange-50 via-red-50 to-amber-50 rounded-xl border border-orange-200 p-2.5 flex items-center gap-3">
-            <div className="text-3xl">{"🔥"}</div>
-            <div className="flex-1">
-              <div className="font-bold text-orange-700 text-sm">{streak.count} gün seri!</div>
-              <div className="text-[10px] text-gray-500">{streak.best > streak.count ? `En iyi: ${streak.best} gün` : streak.count >= 7 ? 'Harika devam et!' : 'Her gün oyna, serini uzat!'}</div>
-            </div>
-            <div className="flex gap-0.5">{Array.from({length:Math.min(7,streak.count)},(_,i)=><div key={i} className="w-2 h-5 bg-orange-400 rounded-full"/>)}{Array.from({length:Math.max(0,7-streak.count)},(_,i)=><div key={i} className="w-2 h-5 bg-gray-200 rounded-full"/>)}</div>
+        {/* Seviye atlama bildirimi */}
+        {levelUpMsg && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-yellow-400 to-amber-500 text-white px-6 py-3 rounded-2xl shadow-2xl anim-pop text-center">
+            <div className="text-2xl mb-1">{"🎉"} Seviye Atladın!</div>
+            <div className="text-sm font-bold">{levelUpMsg}</div>
           </div>
         )}
 
-        {/* Günlük Hedef */}
-        {(() => {
-          const today = new Date().toISOString().split('T')[0];
-          const todayPlays = Object.values(progress).filter(g => g.lastPlayed && g.lastPlayed.startsWith(today)).length;
-          const dailyGoal = 3;
-          const pct = Math.min(100, Math.round((todayPlays / dailyGoal) * 100));
-          const done = todayPlays >= dailyGoal;
-          return (
-            <div className={`shrink-0 mb-2 rounded-xl border p-2.5 flex items-center gap-3 ${done ? 'bg-green-50 border-green-200' : 'bg-indigo-50 border-indigo-200'}`}>
-              <div className="text-2xl">{done ? '🎉' : '🎯'}</div>
+        {/* Oturum mola hatırlatma (sayaç gizli, sadece mola uyarısı gelir) */}
+        {session.showReminder && (
+          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-white border-2 border-amber-300 px-5 py-3 rounded-2xl shadow-2xl max-w-sm anim-fade">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{session.showReminder === 'gentle' ? '⏰' : '🧘'}</span>
               <div className="flex-1">
-                <div className={`font-bold text-sm ${done ? 'text-green-700' : 'text-indigo-700'}`}>{done ? 'Günlük hedefini tamamladın!' : `Bugünkü hedef: ${dailyGoal} oyun`}</div>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="flex-1 h-2 bg-white rounded-full overflow-hidden">
-                    <div className={`h-full rounded-full transition-all duration-500 ${done ? 'bg-green-400' : 'bg-indigo-400'}`} style={{width:`${pct}%`}}/>
-                  </div>
-                  <span className="text-xs font-bold text-gray-500">{todayPlays}/{dailyGoal}</span>
+                <div className="font-bold text-gray-700 text-sm">
+                  {session.showReminder === 'gentle' ? 'Harika gidiyorsun!' : 'Mola zamanı!'}
+                </div>
+                <div className="text-xs text-gray-500">
+                  {session.showReminder === 'gentle'
+                    ? 'Biraz daha oynayabilirsin.'
+                    : 'Kısa bir mola verimini artırır.'}
                 </div>
               </div>
+              <button onClick={session.dismissReminder} className="px-4 py-2 bg-amber-100 text-amber-700 rounded-xl text-sm font-bold hover:bg-amber-200 active:scale-95 transition-all">Tamam</button>
             </div>
-          );
-        })()}
+          </div>
+        )}
 
-        {/* Accordion Kategoriler */}
+        {/* ═══════ ÜST BAR — Sadeleştirilmiş (max 4 element) ═══════ */}
+        <div className="flex items-center justify-between mb-2 bg-white rounded-2xl shadow-md px-3 py-2.5 shrink-0">
+          {/* Sol: Avatar + İsim + Seviye */}
+          <button onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+            className="flex items-center gap-2.5 hover:opacity-80 transition-opacity">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">
+              {selectedAvatar ? selectedAvatar.emoji : user.name.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div className="font-bold text-gray-800 text-sm leading-tight">{user.name}</div>
+              <div className="text-xs text-indigo-500 font-medium flex items-center gap-1">
+                <span>{level.emoji}</span>
+                <span>{level.title}</span>
+              </div>
+            </div>
+          </button>
+
+          {/* Sağ: 3 ana buton (büyük dokunma hedefleri) */}
+          <div className="flex items-center gap-2">
+            <button onClick={() => setView('report')}
+              className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg hover:bg-indigo-100 active:scale-95 transition-all" title="Rapor">
+              {"📊"}
+            </button>
+            <button onClick={() => setShowSettings(!showSettings)}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg active:scale-95 transition-all ${showSettings ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`} title="Ayarlar">
+              {"⚙️"}
+            </button>
+            <button onClick={handleLogout}
+              className="w-10 h-10 bg-gray-100 text-gray-500 rounded-xl flex items-center justify-center text-lg hover:bg-gray-200 active:scale-95 transition-all" title="Çıkış">
+              {"🚪"}
+            </button>
+          </div>
+        </div>
+
+        {/* ═══════ AYARLAR PANELİ — Progressive disclosure ═══════ */}
+        {showSettings && (
+          <div className="shrink-0 mb-2 bg-white rounded-2xl shadow-lg border border-gray-200 p-3 anim-fade">
+            <div className="grid grid-cols-2 gap-2">
+              <button onClick={toggleSes}
+                className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm transition-all ${sesAcik ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-500 border border-gray-200'}`}>
+                <span className="text-xl">{sesAcik ? '🔊' : '🔇'}</span>
+                <span>Ses {sesAcik ? 'Açık' : 'Kapalı'}</span>
+              </button>
+              <button onClick={toggleYazi}
+                className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm transition-all ${buyukYazi ? 'bg-orange-50 text-orange-700 border border-orange-200' : 'bg-gray-50 text-gray-500 border border-gray-200'}`}>
+                <span className="text-xl">{buyukYazi ? 'A+' : 'A'}</span>
+                <span>Büyük Yazı</span>
+              </button>
+              <button onClick={toggleRahat}
+                className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm transition-all ${rahatMod ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-gray-50 text-gray-500 border border-gray-200'}`}>
+                <span className="text-xl">{"🐢"}</span>
+                <span>Rahat Mod</span>
+              </button>
+              <button onClick={() => setView('admin')}
+                className="flex items-center gap-2 p-3 rounded-xl font-medium text-sm bg-gray-50 text-gray-500 border border-gray-200 transition-all hover:bg-gray-100">
+                <span className="text-xl">{"🔐"}</span>
+                <span>Yönetici</span>
+              </button>
+            </div>
+            {/* Ruh hali — ayarlar içinde */}
+            <div className="mt-2 pt-2 border-t border-gray-100">
+              <div className="text-xs text-gray-500 mb-1.5 font-medium">Bugün nasıl hissediyorsun?</div>
+              <div className="flex gap-2 justify-center">
+                {MOOD_OPTIONS.map(m => (
+                  <button key={m.value} onClick={() => handleMoodSelect(m.value)}
+                    className={`flex flex-col items-center px-4 py-2 rounded-xl transition-all ${mood === m.value ? 'bg-pink-100 ring-2 ring-pink-400 scale-105' : 'bg-gray-50 hover:bg-gray-100'}`}>
+                    <span className="text-2xl">{m.emoji}</span>
+                    <span className="text-[10px] text-gray-500 mt-0.5">{m.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Avatar seçici */}
+        {showAvatarPicker && (
+          <div className="shrink-0 mb-2 bg-white rounded-2xl shadow-lg border border-indigo-200 p-3 anim-fade">
+            <div className="text-xs font-bold text-gray-700 mb-2">{"🎭"} Avatar Seç</div>
+            <div className="flex gap-2 flex-wrap justify-center">
+              {AVATARS.map(a => (
+                <button key={a.id} onClick={() => handleAvatarSelect(a.id)}
+                  className={`flex flex-col items-center p-2.5 rounded-xl transition-all ${avatarId === a.id ? 'bg-indigo-100 ring-2 ring-indigo-400 scale-105' : 'bg-gray-50 hover:bg-gray-100'}`}>
+                  <span className="text-2xl">{a.emoji}</span>
+                  <span className="text-[9px] text-gray-500 font-medium">{a.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ═══════ KOMPAKT İLERLEME ÇUBUĞU — Tek satır ═══════ */}
+        <div className="shrink-0 mb-2 bg-white rounded-2xl shadow-sm p-3">
+          {/* XP Seviye Çubuğu */}
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-base">{level.emoji}</span>
+            <div className="flex-1">
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 transition-all duration-700" style={{ width: `${level.progressToNext}%` }} />
+              </div>
+            </div>
+            {level.nextLevel && <span className="text-[10px] text-gray-400 font-medium">{level.nextLevel.emoji}</span>}
+          </div>
+          {/* Streak + Yıldız + Günlük hedef — Görsel göstergeler */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1" title={`${streak.count} gün seri`}>
+              <span className="text-sm">{"🔥"}</span>
+              <span className="text-xs font-bold text-orange-600">{streak.count}</span>
+            </div>
+            <div className="flex items-center gap-1" title={`${totalStars} yıldız`}>
+              <span className="text-sm">{"⭐"}</span>
+              <span className="text-xs font-bold text-yellow-600">{totalStars}</span>
+            </div>
+            <div className="flex items-center gap-1" title={`${played} oyun keşfedildi`}>
+              <div className="w-12 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full rounded-full bg-indigo-400 transition-all" style={{ width: `${playedPct}%` }} />
+              </div>
+            </div>
+            <div className="flex items-center gap-0.5" title={`Bugün ${todayPlays}/${dailyGoal} oyun`}>
+              {[1,2,3].map(i => (
+                <div key={i} className={`w-2.5 h-2.5 rounded-full transition-all ${i <= todayPlays ? 'bg-green-400' : 'bg-gray-200'}`} />
+              ))}
+              {dailyDone && <span className="text-xs ml-0.5">{"✓"}</span>}
+            </div>
+            {earned.length > 0 && (
+              <div className="flex items-center gap-0.5" title={`${earned.length} rozet`}>
+                <span className="text-sm">{"🏆"}</span>
+                <span className="text-xs font-bold text-amber-600">{earned.length}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* ═══════ KATEGORİLER — Ana içerik, hemen erişilebilir ═══════ */}
         <div className="flex-1 min-h-0 overflow-y-auto scroll-area">
-          <div className="space-y-1.5 pb-32">
+          <div className="space-y-2 pb-32">
             {CATEGORIES.map(cat => {
               const isOpen = expandedCat === cat.id;
               const catGames = Object.entries(GAMES).filter(([, g]) => g.cat === cat.id);
@@ -221,62 +365,78 @@ const App = () => {
               const catStars = catGames.reduce((s, [id]) => s + (progress[id]?.stars || 0), 0);
 
               return (
-                <div key={cat.id} className="rounded-xl overflow-hidden shadow-lg">
+                <div key={cat.id} className="rounded-2xl overflow-hidden shadow-lg">
                   <button onClick={() => toggleCat(cat.id)}
-                    className={`w-full py-3 px-4 bg-gradient-to-r ${cat.color.gradient} text-white font-bold text-sm flex items-center gap-2 hover:opacity-95 transition-all`}>
-                    <span className="text-xl">{cat.emoji}</span>
+                    className={`w-full py-3.5 px-4 bg-gradient-to-r ${cat.color.gradient} text-white font-bold text-sm flex items-center gap-3 hover:opacity-95 transition-all active:scale-[0.99]`}>
+                    <span className="text-2xl">{cat.emoji}</span>
                     <div className="flex-1 text-left">
-                      <div className="leading-tight">{cat.name}</div>
-                      <div className="text-[11px] opacity-90 font-medium">{cat.desc}</div>
+                      <div className="text-base leading-tight">{cat.name}</div>
+                      <div className="text-xs opacity-90 font-medium">{cat.desc}</div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      {catPlayed > 0 && <span className="bg-white/20 px-1.5 py-0.5 rounded-full text-[10px]">{catPlayed}/{catGames.length}</span>}
-                      {catStars > 0 && <span className="text-[10px]">{'⭐'}{catStars}</span>}
-                      <span className={`transition-transform duration-300 text-base ${isOpen ? 'rotate-180' : ''}`}>{'▾'}</span>
+                    <div className="flex items-center gap-2">
+                      {catPlayed > 0 && (
+                        <div className="flex gap-0.5">
+                          {catGames.map(([id], i) => (
+                            <div key={i} className={`w-1.5 h-4 rounded-full ${progress[id]?.stars > 0 ? 'bg-white' : 'bg-white/30'}`} />
+                          ))}
+                        </div>
+                      )}
+                      <span className={`transition-transform duration-300 text-lg ${isOpen ? 'rotate-180' : ''}`}>{'▾'}</span>
                     </div>
                   </button>
 
                   {isOpen && (
-                    <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-xl`}>
+                    <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-2xl`}>
                       {catGames.map(([id, g]) => {
                         const gp = progress[id];
                         return (
-                          <React.Fragment key={id}>
-                            <div className="mx-1.5 mb-0.5">
-                              <button onClick={() => setCurrentGame(id)}
-                                className="w-full py-2 px-3 bg-white/80 hover:bg-white hover:shadow-md rounded-lg flex items-center gap-2 transition-all">
-                                <span className="text-lg">{g.emoji}</span>
-                                <span className="flex-1 text-left font-semibold text-gray-800 text-sm">{g.name}</span>
-                                {gp && <div className="flex gap-0.5">{[1,2,3].map(i => <span key={i} className="text-xs">{i <= (gp.stars || 0) ? '⭐' : '☆'}</span>)}</div>}
-                                <span className="text-gray-300 text-sm">{'›'}</span>
-                              </button>
-                            </div>
-                          </React.Fragment>
+                          <div key={id} className="mx-2 mb-1 first:mt-1">
+                            <button onClick={() => setCurrentGame(id)}
+                              className="w-full py-3 px-3.5 bg-white/80 hover:bg-white hover:shadow-md rounded-xl flex items-center gap-3 transition-all active:scale-[0.98]">
+                              <span className="text-xl">{g.emoji}</span>
+                              <span className="flex-1 text-left font-semibold text-gray-800 text-sm">{g.name}</span>
+                              {gp ? (
+                                <div className="flex gap-0.5">{[1,2,3].map(i => <span key={i} className="text-sm">{i <= (gp.stars || 0) ? '⭐' : '☆'}</span>)}</div>
+                              ) : (
+                                <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">Yeni</span>
+                              )}
+                              <span className="text-gray-300 text-lg">{'›'}</span>
+                            </button>
+                          </div>
                         );
                       })}
-                      <div className="h-1"/>
+                      <div className="h-1.5"/>
                     </div>
                   )}
                 </div>
               );
             })}
 
-            {/* Etkinlik Kitapçığı */}
-            <div className="mt-4 mb-3">
-              <button onClick={handleDownloadPDF}
-                className="w-full bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 border-2 border-amber-200 rounded-xl p-2.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all group">
-                <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-md group-hover:scale-110 transition-transform">{"📝"}</div>
-                <div className="flex-1 text-left">
-                  <div className="font-bold text-gray-800 text-sm">Kâğıt-Kalem Etkinlik Kitapçığı</div>
-                  <div className="text-[10px] text-gray-500">27 etkinlik · 5 kategori · Yazdır & çöz</div>
-                </div>
-                <div className="px-2.5 py-1 bg-amber-500 text-white rounded-lg text-xs font-bold shadow group-hover:bg-amber-600 transition-colors">{"📥"} İndir</div>
-              </button>
-            </div>
+            {/* Tarama Modu */}
+            <button onClick={() => setView('screening')}
+              className="w-full bg-white border-2 border-teal-200 rounded-2xl p-3.5 flex items-center gap-3 hover:shadow-lg hover:border-teal-300 transition-all active:scale-[0.98]">
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-xl flex items-center justify-center text-white text-2xl shadow-md">{"🔍"}</div>
+              <div className="flex-1 text-left">
+                <div className="font-bold text-gray-800">Hızlı Tarama</div>
+                <div className="text-xs text-gray-500">Diskalkuli risk değerlendirmesi</div>
+              </div>
+              <span className="text-gray-300 text-lg">{'›'}</span>
+            </button>
 
-            <div className="text-center pt-2 pb-2">
-              <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
-              <p className="text-[10px] text-gray-300">v15.0 • {Object.keys(GAMES).length} Oyun</p>
+            {/* Etkinlik Kitapçığı */}
+            <button onClick={handleDownloadPDF}
+              className="w-full bg-white border-2 border-amber-200 rounded-2xl p-3.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all active:scale-[0.98]">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl shadow-md">{"📝"}</div>
+              <div className="flex-1 text-left">
+                <div className="font-bold text-gray-800">Etkinlik Kitapçığı</div>
+                <div className="text-xs text-gray-500">Kâğıt-kalem etkinlikleri</div>
+              </div>
+              <span className="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold">{"📥"}</span>
+            </button>
+
+            <div className="text-center pt-3 pb-2">
+              <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu {' \u2022 '} Prof. Dr. Sinan Olkun</p>
+              <p className="text-[10px] text-gray-300">v16.1 {' \u2022 '} {total} Oyun {' \u2022 '} {CATEGORIES.length} Kategori</p>
               <p className="text-[10px] text-gray-300 mt-0.5">www.diskalkuli.com</p>
             </div>
           </div>

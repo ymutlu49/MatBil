@@ -4,3 +4,7 @@ export { calcMastery, prereqsMet, recommendNext } from './mastery';
 export { checkBadges } from './badges';
 export { downloadEtkinlikPDF } from './pdf';
 export { useAdaptive } from './adaptive';
+export { useSessionTimer, getWeeklyStats, saveSessionData } from './sessionTimer';
+export { getGrowthMessage, gentleEncourage, MOOD_OPTIONS, getAnxietyAdjustments, saveMoodLog, getMoodHistory } from './anxiety';
+export { playCountSound, playStepSound, playMagnitudeSound, playSuccessMelody, playEncourageSound, speakTurkish } from './multisensory';
+export { getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, LEVELS, getLevelUpMessage } from './avatar';

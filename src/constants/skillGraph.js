@@ -12,6 +12,9 @@ export const SKILL_GRAPH = {
   shapeRecog: { name: 'Şekil Tanıma', games: ['D1','D2'], prereqs: [] },
   spatialRel: { name: 'Uzamsal İlişkiler', games: ['D3','D4','D5','D6'], prereqs: ['shapeRecog'] },
   transcoding: { name: 'Kodlar Arası Çeviri', games: ['C3','C5'], prereqs: ['symbolRecog','magnitude'] },
+  workingMemory: { name: 'Çalışma Belleği', games: ['F1'], prereqs: ['subitizing'] },
+  inhibition: { name: 'İnhibisyon/Stroop', games: ['F2'], prereqs: ['magnitude'] },
+  cogFlex: { name: 'Bilişsel Esneklik', games: ['F3'], prereqs: ['counting','addition'] },
 };
 
 export const CHAPTER_MAP = {
@@ -80,5 +83,17 @@ export const CHAPTER_MAP = {
     childTheory: 'Toplama, çıkarma ve paylaştırma! Bu oyunlarda sayıları parçalara ayırmayı, bir araya getirmeyi ve sayı doğrusu üzerinde yürümeyi öğreniyorsun.',
     childWeakMsg: 'Toplama ve çıkarma yaparken nesnelerle (parmaklar, küpler) denemek işe yarar. Bir sayıyı parçalara ayırmayı dene: mesela 7 = 3 + 4 veya 5 + 2. Her seferinde farklı parçalar bulabilir misin?',
     childStrongMsg: 'Aritmetikte çok iyisin! Şimdi farklı stratejiler deneyebilirsin: onluğa tamamlama, ikiye katlama veya zıplaya zıplaya sayma gibi. Hangisi sana daha kolay geliyor?'
+  },
+  F: {
+    chapters: [
+      'Bölüm 9: Bilişsel Beceriler — Çalışma Belleği, İnhibisyon ve Bilişsel Esneklik'
+    ],
+    theory: 'Matematik performansı yalnızca sayısal becerilere değil, alan-genel bilişsel becerilere de bağlıdır. Çalışma belleği (bilgiyi geçici olarak tutma ve işleme), inhibisyon (alakasız bilgiyi baskılama, Stroop etkisi) ve bilişsel esneklik (görevler arası geçiş yapma) diskalkülide tutarlı biçimde bozulan üç yürütücü işlevdir. Soltanlou ve ark. (2022) yürütücü işlev eğitiminin aritmetik becerileri önemli ölçüde iyileştirdiğini göstermiştir.',
+    weakMsg: 'Bilişsel beceriler desteklenmelidir. Çalışma belleği eğitimi (N-geri görevi), inhibisyon eğitimi (Stroop tipi görevler) ve görev değiştirme alıştırmaları ile yürütücü işlevler güçlendirilebilir. Bu beceriler matematik öğreniminin temelini oluşturur.',
+    strongMsg: 'Bilişsel beceriler güçlü. Daha karmaşık çok adımlı problemler ve hızlı görev değiştirme alıştırmaları ile ileri düzey bilişsel esneklik desteklenebilir.',
+    refs: 'Soltanlou ve ark. (2022); Alagoz & Kucian (2022); Miyake ve ark. (2000); Diamond (2013)',
+    childTheory: 'Bu oyunlarda beynini güçlendiriyorsun! Sayıları hatırlama, dikkatini toplama ve kuralları hızlıca değiştirme — bunlar matematikte sana süper güç veriyor!',
+    childWeakMsg: 'Beyin egzersizleri pratikle gelişir. Hatırlama oyunlarını yavaş yavaş zorlaştır. Her gün biraz pratik yapmak beynini güçlendirir!',
+    childStrongMsg: 'Harika bir beyin gücün var! Sayıları hatırlama ve dikkatini yönlendirmede çok iyisin. Daha zor seviyelere hazırsın!'
   }
 };

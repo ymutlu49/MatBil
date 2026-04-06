@@ -32,4 +32,7 @@ export const HELP_MAP = {
   'Sayı Ayrıştırma': { goal: 'Kavramsal Sanbil (Conceptual Subitizing)', tip: 'Büyük kümeleri küçük alt gruplara böl! 8 noktayı 5+3 veya 4+4 olarak görmeyi dene. MacDonald-Wilkins modelinde bu en üst sanbil düzeyidir.' },
   'Geri Sayma': { goal: 'Geriye Sayma (Ordinalite)', tip: 'Sayı doğrusunda geriye doğru git. Her adımda bir önceki sayıyı düşün. Geri sayma, çıkarma işleminin temelidir.' },
   'Çarpma Kavramı': { goal: 'Tekrarlı Toplama (Çarpma Temeli)', tip: 'Eşit grupları say! 3 grup 4 nesne = 4+4+4 = 12. Çarpma, tekrarlı toplamanın kısa yoludur.' },
+  'Sayısal Bellek': { goal: 'Çalışma Belleği (N-Geri Görevi)', tip: 'Gösterilen sayıyı hatırla ve bir/iki öncekiyle karşılaştır. Çalışma belleği matematik becerisinin temelidir (Soltanlou ve ark., 2022).' },
+  'Sayısal Stroop': { goal: 'İnhibisyon (Sayısal Stroop Etkisi)', tip: 'Sayının boyutuna aldanma! Fiziksel büyüklük değil, sayısal değer önemli. Otomatik tepkiyi baskıla ve doğru değere odaklan.' },
+  'Görev Değiştirme': { goal: 'Bilişsel Esneklik (Task Switching)', tip: 'Kural değişiyor! Toplama ve çıkarma arasında hızlıca geçiş yap. Geçiş maliyetini azaltmak için kuralı her seferinde oku.' },
 };

@@ -39,6 +39,10 @@ const CikarmaStratejileri = lazy(() => import('../components/games/category-e/Ci
 const GeriSayma = lazy(() => import('../components/games/category-e/GeriSayma'));
 const CarpmaKavrami = lazy(() => import('../components/games/category-e/CarpmaKavrami'));
 
+const SayisalBellek = lazy(() => import('../components/games/category-f/SayisalBellek'));
+const SayisalStroop = lazy(() => import('../components/games/category-f/SayisalStroop'));
+const GorevDegistirme = lazy(() => import('../components/games/category-f/GorevDegistirme'));
+
 export const GAMES = {
   A1: { comp: NoktaAvcisi, name: 'Nokta Avcısı', emoji: '🎯', cat: 'A', levels: ['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)'], instr: 'Ekranda noktalar kısa süreligiğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!' },
   A2: { comp: ParmakSansi, name: 'Kaç Parmak?', emoji: '🖐️', cat: 'A', levels: ['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)'], instr: 'Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!' },
@@ -52,7 +56,7 @@ export const GAMES = {
   B2: { comp: SayiDogrusu, name: 'Sayı Doğrusu', emoji: '📏', cat: 'B', levels: ['Seviye 1 (0-10)','Seviye 2 (0-100)','Seviye 3 (0-1000)'], instr: 'Sayı doğrusu üzerinde bir ok gösterilecek. Okun gösterdiği sayıyı seçenekler arasından bul!' },
   B3: { comp: ReferansNoktasi, name: 'Yakınlık Tahmini', emoji: '🎯', cat: 'B', levels: ['Seviye 1 (0-5-10)','Seviye 2 (0-10-20)','Seviye 3 (0-25-50)','Seviye 4 (0-50-100)'], instr: 'Bir sayı gösterilecek. Bu sayı, verilen iki referans noktasından hangisine daha yakın? Doğru olanı seç!' },
   B4: { comp: OlcmeTahmini, name: 'Ölçme Tahmini', emoji: '📐', cat: 'B', levels: ['Uzunluk Kolay','Uzunluk İleri','Kütle/Hacim Kolay','Kütle/Hacim İleri'], instr: 'Bir referans nesne ve onun ölçüsü gösterilecek. Hedef nesnenin ölçüsünü karşılaştırarak tahmin et!' },
-  B5: { comp: HesaplamaliTahmin, name: 'Hesaplamalı Tahmin', emoji: '🧮', cat: 'B', levels: ['2 bsm. toplama','Toplama-çıkarma','3 basamaklı','Çarpma tahmini'], instr: 'Bir işlem gösterilecek. Sonucu tam hesaplamadan, yuvarlayarak en yakın seçeneği tahmin et!' },
+  B5: { comp: HesaplamaliTahmin, name: 'Hesaplamalı Tahmin', emoji: '🧮', cat: 'B', levels: ['Nesne ölçüleri','Yüzde ve kesir','Hız-zaman-oran','Oran-orantı, alan'], instr: 'Günlük hayattan tahmin soruları! Tam hesaplamadan, yaklaşık düşünerek en iyi tahmini seç.' },
   C1: { comp: SayiSembolEslestirme, name: 'Sayı-Sembol Eşleştirme', emoji: '🔗', cat: 'C', levels: ['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)'], instr: 'Sayıyı farklı temsillerle eşleştir: rakam, nokta, sözcük, çetele, parmak ve onluk çerçeve!' },
   C2: { comp: SayiKarsilastirma, name: 'Büyük-Küçük', emoji: '⚖️', cat: 'C', levels: ['0-10 (Stroop)','0-10 (çoklu temsil)','0-100 (karışık)','0-100 (3 sayı)'], instr: 'Hangisi daha çok? Sayısal Stroop etkisiyle boyutuna aldanma, değere odaklan!' },
   C3: { comp: CokluGosterim, name: 'Çoklu Gösterim', emoji: '🔮', cat: 'C', levels: ['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)'], instr: 'Bir sayının farklı temsillerini tanı: rakam, sözcük, nokta, çetele, parmak, onluk çerçeve ve nesne!' },
@@ -73,4 +77,7 @@ export const GAMES = {
   E7: { comp: CikarmaStratejileri, name: 'Çıkarma Stratejileri', emoji: '➖', cat: 'E', levels: ['Basit (1-10)','Onluktan çıkarma','Eksik çıkan','İki basamaklı'], instr: 'Çıkarma işlemlerini farklı stratejilerle çöz! Geriye sayma, onluktan çıkarma ve tamamlama stratejilerini öğren.' },
   E8: { comp: GeriSayma, name: 'Geri Sayma', emoji: '⏪', cat: 'E', levels: ['10\'dan geriye','20\'den geriye','İkişer geriye','Beşer geriye'], instr: 'Geriye doğru say! Eksik sayıyı bul. Geri sayma, çıkarma becerisinin temelidir.' },
   E9: { comp: CarpmaKavrami, name: 'Çarpma Kavramı', emoji: '✖️', cat: 'E', levels: ['Grupları say','Kaç grup?','Tekrarlı toplama','Eksik çarpan'], instr: 'Çarpmayı tekrarlı toplama olarak öğren! Eşit grupları say ve toplamı bul.' },
+  F1: { comp: SayisalBellek, name: 'Sayısal Bellek', emoji: '🧠', cat: 'F', levels: ['1-geri (1-5)','1-geri (1-9)','2-geri (1-5)','2-geri (1-9)'], instr: 'Gösterilen sayı, N öncekiyle aynı mı? Çalışma belleğini test et!' },
+  F2: { comp: SayisalStroop, name: 'Sayısal Stroop', emoji: '⚡', cat: 'F', levels: ['Kolay (uyumlu)','Orta (karışık)','Zor (uyumsuz ağırlıklı)','Uzman'], instr: 'Hangi sayı daha büyük? Boyutuna aldanma, sayısal değere odaklan!' },
+  F3: { comp: GorevDegistirme, name: 'Görev Değiştirme', emoji: '🔀', cat: 'F', levels: ['+1/-1 (yavaş)','±2 (orta)','Karışık (hızlı)','3 işlem (uzman)'], instr: 'Kural değişiyor! Bazen topla, bazen çıkar. Hızlı geçiş yap!' },
 };

@@ -6,4 +6,5 @@ export const CATEGORIES = [
   { id: 'C', name: 'Sembolik İşleme', emoji: '🔢', color: COLORS.C, desc: 'Sayı sembolleri ve basamak değeri' },
   { id: 'D', name: 'Geometri (Van Hiele)', emoji: '📐', color: COLORS.D, desc: 'Şekil tanıma, özellikler ve uzaysal düşünme' },
   { id: 'B', name: 'Tahmin (Estimation)', emoji: '🎲', color: COLORS.B, desc: 'Miktar, ölçü ve hesap tahmini' },
+  { id: 'F', name: 'Bilişsel Beceriler', emoji: '🧠', color: COLORS.F, desc: 'Çalışma belleği, inhibisyon ve bilişsel esneklik' },
 ];

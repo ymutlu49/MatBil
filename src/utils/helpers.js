@@ -52,11 +52,14 @@ export const vibrate = (pattern) => {
 };
 
 const encourageMessages = [
-  'Tekrar dene!',
   'Yaklaştın!',
   'Bir daha dene!',
   'Neredeyse!',
-  'Vazgeçme!',
+  'Güzel deneme!',
+  'İyi düşündün!',
+  'Öğreniyorsun!',
+  'Harika çaba!',
+  'Devam et!',
 ];
 
 export const encourage = () => {
