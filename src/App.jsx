@@ -8,12 +8,15 @@ import { GAMES } from './constants/games';
 import { CATEGORIES } from './constants/categories';
 import { COLORS } from './constants/colors';
 import { BADGES } from './constants/badges';
-import LoginScreen from './components/screens/LoginScreen';
+import RoleSelectScreen from './components/screens/RoleSelectScreen';
+import TeacherDashboard from './components/screens/TeacherDashboard';
+import ParentDashboard from './components/screens/ParentDashboard';
 import ReportScreen from './components/screens/ReportScreen';
 import PDFReportView from './components/screens/PDFReportView';
 import AdminPanel from './components/screens/AdminPanel';
 import Onboarding from './components/screens/Onboarding';
 import ScreeningMode from './components/screens/ScreeningMode';
+import { migrateExistingUsers } from './utils/auth';
 
 /**
  * Ana Uygulama - v16.1 UI/UX İyileştirmeleri
@@ -84,6 +87,7 @@ const App = () => {
 
   useEffect(() => {
     try {
+      migrateExistingUsers();
       const last = localStorage.getItem('matbil_current_user');
       if (last) setUser(JSON.parse(last));
     } catch {}
@@ -153,7 +157,9 @@ const App = () => {
     if (user) saveMoodLog(user.id, m);
   };
 
-  if (!user) return <LoginScreen onLogin={handleLogin} />;
+  if (!user) return <RoleSelectScreen onLogin={handleLogin} />;
+  if (user.role === 'teacher') return <TeacherDashboard user={user} onLogout={handleLogout} />;
+  if (user.role === 'parent') return <ParentDashboard user={user} onLogout={handleLogout} />;
   if (showOnboarding) return <Onboarding onComplete={completeOnboarding} />;
   if (view === 'report') return <ReportScreen user={user} progress={progress} onBack={() => setView('home')} onPDF={() => setView('pdf')} />;
   if (view === 'pdf') return <PDFReportView user={user} progress={progress} onBack={() => setView('home')} />;
