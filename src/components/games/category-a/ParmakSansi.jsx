@@ -97,7 +97,7 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
         <Hand fingers={Math.min(fc,5)}/>
         {fc>5&&<Hand fingers={fc-5} mirror/>}
       </div>
-      {ua!==null?(<Feedback isCorrect={ua===fc} answer={fc} hint={ua===fc ? `Süper! ${fc} parmak vardı.` : `${fc} parmak açıktı. Elde 5, iki elde 10 parmak olduğunu hatırla!`}/>):(<div className="grid grid-cols-5 gap-2">{Array.from({length:cfg[lv].max},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg hover:scale-105 active:scale-95 transition-transform`}>{n}</button>))}</div>)}
+      {ua!==null?(<Feedback isCorrect={ua===fc} answer={fc} hint={ua===fc ? `Süper! ${fc} parmak vardı.` : `${fc} parmak açıktı. Elde 5, iki elde 10 parmak olduğunu hatırla!`}/>):(<div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">{Array.from({length:cfg[lv].max},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>))}</div>)}
 
       </div>    </div>
   );

@@ -173,7 +173,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
         )}
         {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
       </div>
-      {!show && !fading && ua===null && <div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform`}>{n}</button>))}</div>}
+      {!show && !fading && ua===null && <div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>))}</div>}
 
       </div>    </div>
   );

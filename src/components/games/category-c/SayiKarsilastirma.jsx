@@ -82,7 +82,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
             className={`rounded-2xl flex items-center justify-center shadow-xl border-4 transition-all p-5 min-w-[110px] min-h-[110px] ${
               ua!==null
                 ? (n===p?.answer ? 'bg-green-100 border-green-500' : ua===n ? 'bg-red-100 border-red-500' : 'bg-gray-50 border-gray-300')
-                : 'bg-white border-blue-300 hover:scale-105 hover:border-blue-500'
+                : 'bg-white border-blue-300 hover:shadow-xl hover:border-blue-500 active:scale-95 transition-all'
             }`}>
             {renderRep(n, p?.repType, p?.sizes?.[i])}
           </button>

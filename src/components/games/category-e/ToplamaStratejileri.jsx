@@ -52,7 +52,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="text-3xl font-bold text-purple-700 text-center">{p?.question}</div>
       </div>
 
-      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.correctAnswer?'text-green-500':'text-orange-500'}`}>{ua===p?.correctAnswer?'✓ Doğru!':`${encourage()} Cevap: ${p?.correctAnswer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'💡'} {p?.a} + {p?.b} = {p?.answer}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>))}</div>)}
+      {ua!==null?(<div className="text-center"><div className={`text-2xl font-bold mb-2 ${ua===p?.correctAnswer?'text-green-500':'text-orange-500'}`}>{ua===p?.correctAnswer?'✓ Doğru!':`${encourage()} Cevap: ${p?.correctAnswer}`}</div><div className="bg-amber-50 p-3 rounded-xl text-sm text-amber-700">{'💡'} {p?.a} + {p?.b} = {p?.answer}</div></div>):(<div className="grid grid-cols-2 gap-3">{p?.options?.map((o,i)=>(<button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{o}</button>))}</div>)}
 
       </div>    </div>
   );

@@ -53,7 +53,7 @@ const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
         </div>
         <div style={{height:32}}/>
       </div>
-      {ua!==null?(<div className="text-center anim-fade"><Feedback isCorrect={ua===p?.answer} answer={p?.answer} hint={`${p?.number}: ${p?.ref1}'e ${Math.abs(p?.number-p?.ref1)} uzaklıkta, ${p?.ref2}'ye ${Math.abs(p?.number-p?.ref2)} uzaklıkta → ${p?.answer}`}/></div>):(<div className="flex gap-4"><button onClick={()=>handle(p?.ref1)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref1}</button><button onClick={()=>handle(p?.ref2)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg active:scale-95 transition-transform`}>{p?.ref2}</button></div>)}
+      {ua!==null?(<div className="text-center anim-fade"><Feedback isCorrect={ua===p?.answer} answer={p?.answer} hint={`${p?.number}: ${p?.ref1}'e ${Math.abs(p?.number-p?.ref1)} uzaklıkta, ${p?.ref2}'ye ${Math.abs(p?.number-p?.ref2)} uzaklıkta → ${p?.answer}`}/></div>):(<div className="flex gap-4"><button onClick={()=>handle(p?.ref1)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{p?.ref1}</button><button onClick={()=>handle(p?.ref2)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{p?.ref2}</button></div>)}
 
       </div>    </div>
   );

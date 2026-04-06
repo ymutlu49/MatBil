@@ -39,7 +39,7 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =>
       <div className="w-56 h-40 bg-white rounded-2xl shadow-xl flex items-center justify-center mb-3 border-4 border-green-200">
         {show?<div className="flex gap-2 flex-wrap justify-center p-4">{Array.from({length:oc},(_,i)=>(<span key={i} className="text-4xl">{scene.obj[i%scene.obj.length]}</span>))}</div>:ua===null?<span className="text-4xl">{'❓'}</span>:<Feedback isCorrect={ua===oc} answer={oc} hint={ua===oc ? `Harika! ${oc} tane ${scene.name.toLowerCase()} nesnesi vardı.` : `${oc} tane vardı. Bir bakışta anlamaya çalış!`}/>}
       </div>
-      {!show&&ua===null&&<div className="grid grid-cols-5 gap-2">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`w-14 h-14 ${colors?.button} text-white rounded-xl font-bold text-xl hover:scale-105 transition-transform`}>{n}</button>))}</div>}
+      {!show&&ua===null&&<div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>))}</div>}
 
       </div>    </div>
   );

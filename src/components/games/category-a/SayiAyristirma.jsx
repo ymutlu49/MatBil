@@ -160,7 +160,7 @@ const SayiAyristirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) 
         ):p?.type==='total'?(
           <div className="grid grid-cols-2 gap-3">
             {p?.options?.map((o,i)=>(
-              <button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-xl font-bold text-2xl shadow-lg`}>{o}</button>
+              <button key={i} onClick={()=>handle(o)} className={`px-8 py-4 ${colors?.button} text-white rounded-2xl font-bold text-2xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{o}</button>
             ))}
           </div>
         ):(

@@ -125,7 +125,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
               <button onClick={()=>step(1)} disabled={pos>=p?.max}
                 className={`w-16 h-16 rounded-2xl font-bold text-2xl shadow-lg transition-all active:scale-90 ${pos<p?.max?'bg-emerald-400 text-white hover:bg-emerald-500':'bg-gray-200 text-gray-400'}`}>→</button>
             </div>
-            <button onClick={submit} className={`px-8 py-3 ${colors?.button} text-white rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-transform`}>✓ Burası!</button>
+            <button onClick={submit} className={`px-8 py-3 ${colors?.button} text-white rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl active:scale-95 transition-all`}>✓ Burası!</button>
           </div>
         ) : (
           <div className="text-center anim-fade">
