@@ -1,5 +1,5 @@
 export const SKILL_GRAPH = {
-  subitizing: { name: 'Sanbil', games: ['A1','A2','A5','A6','A7','A8'], prereqs: [] },
+  subitizing: { name: 'Sanbil', games: ['A1','A2','A5','A7','A8'], prereqs: [] },
   counting: { name: 'Sayma', games: ['A3','A4','E8'], prereqs: ['subitizing'] },
   magnitude: { name: 'Büyüklük Algısı', games: ['C2','B3'], prereqs: ['subitizing'] },
   symbolRecog: { name: 'Sembol Tanıma', games: ['C1','C5'], prereqs: [] },

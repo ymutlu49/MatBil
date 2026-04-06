@@ -4,7 +4,7 @@ export const HELP_MAP = {
   'Hafıza Oyunu': { goal: 'Sayısal Çalışma Belleği', tip: 'Kartların konumlarını hatırla. Aynı sayıları eşleştir.' },
   'Gruplama Ustası': { goal: 'Kavramsal Sanbil', tip: 'Çerçevelerdeki dolu kutuları grupla. 5lik ve 10luk yapıları kullan.' },
   'Günlük Sanbil': { goal: 'Günlük Yaşam Sanbili', tip: 'Meyve, çiçek, oyuncak gibi nesneleri saymadan tanı. Günlük nesnelerle pratik yap!' },
-  'Parmak Köprüsü': { goal: 'Bedenleşmiş Sayı Hissi (Embodied Cognition)', tip: 'Parmaklarını kullanarak sayıları hisset. Parmak-sayı ilişkisi matematik becerisinin temelidir (Moeller ve ark., 2011).' },
+
   'Tahmin Kavanozları': { goal: 'Nicelik Tahmini (ANS)', tip: 'Kümeyi bir bütün olarak gör. Referans noktası kullanarak tahmin et.' },
   'Sayı Doğrusu': { goal: 'Zihinsel Sayı Doğrusu', tip: 'Sayının aralıktaki oransal konumunu düşün. Yarıyı referans al.' },
   'Yakınlık Tahmini': { goal: 'Sayısal Büyüklük Karşılaştırma', tip: 'Her iki referansa uzaklığı zihninde karşılaştır.' },

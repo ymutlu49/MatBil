@@ -60,7 +60,7 @@ const RoleSelectScreen = ({ onLogin }) => {
         {/* Footer */}
         <div className="text-center">
           <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu {"\u2022"} Prof. Dr. Sinan Olkun</p>
-          <p className="text-[10px] text-gray-300 mt-0.5">v16.1 {"\u2022"} 36 Oyun {"\u2022"} 6 Kategori</p>
+          <p className="text-[10px] text-gray-300 mt-0.5">v16.1 {"\u2022"} 35 Oyun {"\u2022"} 6 Kategori</p>
         </div>
       </div>
     </div>
