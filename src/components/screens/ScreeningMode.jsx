@@ -360,46 +360,72 @@ const ScreeningMode = ({ onBack, onComplete, user }) => {
   }
 
   // ---- TESTING ----
-  const totalTrials = SCREENING_TESTS.reduce((s, t) => s + t.trials, 0);
-  const completedTrials = SCREENING_TESTS.slice(0, testIndex).reduce((s, t) => s + t.trials, 0) + trialIndex;
-  const overallPct = (completedTrials / totalTrials) * 100;
+  // İlerleme hesaplamaları — tutarlı gösterim
+  const trialInTest = trialIndex + 1;                    // mevcut alt testteki soru no
+  const trialInTestTotal = currentTest.trials;           // mevcut alt test toplam soru
+  const testPct = (trialInTest / trialInTestTotal) * 100; // alt test ilerleme %
+  const testStepPct = ((testIndex) / SCREENING_TESTS.length) * 100; // alt testler arası ilerleme
 
   return (
-    <div className="h-screen bg-gradient-to-b from-teal-50 via-cyan-50 to-blue-50 flex flex-col items-center p-3 overflow-hidden">
-      {/* Üst bar */}
-      <div className="w-full max-w-md shrink-0 bg-white rounded-xl p-2.5 mb-2 shadow-md border border-teal-200">
-        <div className="flex items-center justify-between mb-1.5">
+    <div className="h-screen bg-gradient-to-b from-slate-50 via-teal-50/30 to-cyan-50/30 flex flex-col items-center p-3 overflow-hidden">
+      {/* ═══ ÜST BAR — Tutarlı ilerleme ═══ */}
+      <div className="w-full max-w-md shrink-0 bg-white rounded-2xl p-3 mb-3 shadow-lg border border-gray-100">
+        {/* Alt test adımları */}
+        <div className="flex items-center gap-1 mb-2.5">
+          {SCREENING_TESTS.map((t, i) => (
+            <div key={t.id} className="flex-1 flex flex-col items-center">
+              <div className={`w-full h-1.5 rounded-full transition-all duration-500 ${
+                i < testIndex ? 'bg-teal-500' : i === testIndex ? 'bg-gradient-to-r from-teal-400 to-cyan-400' : 'bg-gray-200'
+              }`} />
+              <span className={`text-[9px] mt-1 font-medium ${i === testIndex ? 'text-teal-600' : i < testIndex ? 'text-teal-400' : 'text-gray-400'}`}>
+                {t.emoji}
+              </span>
+            </div>
+          ))}
+        </div>
+        {/* Mevcut test bilgisi */}
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-lg">{currentTest.emoji}</span>
-            <span className="font-bold text-teal-700 text-sm">{currentTest.name}</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-cyan-500 rounded-lg flex items-center justify-center text-white text-sm font-bold">{testIndex + 1}</div>
+            <div>
+              <div className="font-bold text-gray-800 text-sm leading-tight">{currentTest.name}</div>
+              <div className="text-[10px] text-gray-400">{currentTest.desc}</div>
+            </div>
           </div>
-          <div className="text-xs text-gray-500">{trialIndex + 1}/{currentTest.trials}</div>
+          <div className="text-right">
+            <div className="text-sm font-bold text-teal-600">{trialInTest}/{trialInTestTotal}</div>
+            <div className="text-[10px] text-gray-400">soru</div>
+          </div>
         </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 transition-all duration-500" style={{ width: `${overallPct}%` }} />
+        {/* Alt test ilerleme çubuğu — soru sayısıyla tutarlı */}
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mt-2">
+          <div className="h-full rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 transition-all duration-500" style={{ width: `${testPct}%` }} />
         </div>
-        <div className="text-[10px] text-gray-400 mt-0.5 text-right">Alt test {testIndex + 1}/4</div>
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center min-h-0 w-full max-w-md">
-        {/* Sanbil */}
+        {/* ═══ SANBİL ═══ */}
         {puzzle?.type === 'subitizing' && (
-          <div>
-            <div className="relative bg-white rounded-2xl shadow-lg border-2 border-gray-100 mb-4" style={{ width: 200, height: 200 }}>
+          <div className="flex flex-col items-center">
+            {showDots && <div className="text-xs text-gray-400 mb-2 font-medium">Noktaları say!</div>}
+            <div className="relative bg-white rounded-2xl shadow-xl border-2 border-gray-100 mb-5" style={{ width: 220, height: 220 }}>
               {showDots ? puzzle.dots.map((d, i) => (
-                <div key={i} className="absolute w-5 h-5 bg-teal-500 rounded-full" style={{ left: `${d.x}%`, top: `${d.y}%`, transform: 'translate(-50%,-50%)' }} />
+                <div key={i} className="absolute w-5 h-5 bg-teal-500 rounded-full shadow-sm" style={{ left: `${d.x}%`, top: `${d.y}%`, transform: 'translate(-50%,-50%)' }} />
               )) : (
-                <div className="flex items-center justify-center h-full text-4xl text-gray-200">{"?"}</div>
+                <div className="flex flex-col items-center justify-center h-full">
+                  <div className="text-5xl text-gray-200 mb-1">{"?"}</div>
+                  <div className="text-sm text-gray-400 font-medium">Kaç taneydi?</div>
+                </div>
               )}
             </div>
             {!showDots && (
-              <div className="grid grid-cols-2 gap-2.5 w-64">
+              <div className="grid grid-cols-2 gap-3 w-72">
                 {puzzle.options.map((opt, i) => (
                   <button key={i} onClick={() => handleAnswer(opt)} disabled={answered !== null}
-                    className={`py-4 rounded-xl font-bold text-xl transition-all ${
+                    className={`py-5 rounded-2xl font-bold text-2xl transition-all ${
                       answered !== null
-                        ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300' : answered?.correct === false && opt !== puzzle.answer ? 'bg-gray-50 text-gray-300' : 'bg-gray-50 text-gray-300'
-                        : 'bg-white shadow-md border-2 border-gray-100 hover:border-teal-300 active:scale-95'
+                        ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300 shadow-md' : 'bg-gray-50 text-gray-300 border-2 border-gray-100'
+                        : 'bg-white shadow-lg border-2 border-gray-100 hover:border-teal-400 hover:shadow-xl active:scale-95'
                     }`}>{opt}</button>
                 ))}
               </div>
@@ -407,95 +433,99 @@ const ScreeningMode = ({ onBack, onComplete, user }) => {
           </div>
         )}
 
-        {/* ANS */}
+        {/* ═══ ANS ═══ */}
         {puzzle?.type === 'ans' && (
-          <div>
-            <div className="text-base font-bold text-gray-600 mb-3 text-center">Hangisinde daha çok?</div>
-            <div className="flex gap-4 mb-3">
+          <div className="flex flex-col items-center">
+            <div className="text-base font-bold text-gray-700 mb-4">Hangisinde daha çok?</div>
+            <div className="flex gap-5 mb-4 items-center">
               <button onClick={() => handleAnswer('left')} disabled={answered !== null}
-                className={`relative rounded-2xl border-2 shadow-lg transition-all ${
-                  answered !== null ? (puzzle.answer === 'left' ? 'border-green-400 bg-green-50' : 'border-gray-200 opacity-50') : 'border-gray-200 bg-white hover:border-teal-300 active:scale-95'
-                }`} style={{ width: 140, height: 140 }}>
+                className={`relative rounded-2xl border-2 shadow-xl transition-all ${
+                  answered !== null ? (puzzle.answer === 'left' ? 'border-green-400 bg-green-50 ring-2 ring-green-200' : 'border-gray-200 opacity-40') : 'border-gray-200 bg-white hover:border-teal-400 hover:shadow-2xl active:scale-95'
+                }`} style={{ width: 150, height: 150 }}>
                 {puzzle.dotsLeft.map((d, i) => (
-                  <div key={i} className="absolute bg-teal-500 rounded-full" style={{ left: `${d.x}%`, top: `${d.y}%`, width: d.size * 2, height: d.size * 2, transform: 'translate(-50%,-50%)' }} />
+                  <div key={i} className="absolute bg-teal-500 rounded-full shadow-sm" style={{ left: `${d.x}%`, top: `${d.y}%`, width: d.size * 2, height: d.size * 2, transform: 'translate(-50%,-50%)' }} />
                 ))}
               </button>
-              <div className="flex items-center"><span className="text-xl font-bold text-gray-300">VS</span></div>
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 font-bold text-xs">VS</div>
               <button onClick={() => handleAnswer('right')} disabled={answered !== null}
-                className={`relative rounded-2xl border-2 shadow-lg transition-all ${
-                  answered !== null ? (puzzle.answer === 'right' ? 'border-green-400 bg-green-50' : 'border-gray-200 opacity-50') : 'border-gray-200 bg-white hover:border-cyan-300 active:scale-95'
-                }`} style={{ width: 140, height: 140 }}>
+                className={`relative rounded-2xl border-2 shadow-xl transition-all ${
+                  answered !== null ? (puzzle.answer === 'right' ? 'border-green-400 bg-green-50 ring-2 ring-green-200' : 'border-gray-200 opacity-40') : 'border-gray-200 bg-white hover:border-cyan-400 hover:shadow-2xl active:scale-95'
+                }`} style={{ width: 150, height: 150 }}>
                 {puzzle.dotsRight.map((d, i) => (
-                  <div key={i} className="absolute bg-cyan-500 rounded-full" style={{ left: `${d.x}%`, top: `${d.y}%`, width: d.size * 2, height: d.size * 2, transform: 'translate(-50%,-50%)' }} />
+                  <div key={i} className="absolute bg-cyan-500 rounded-full shadow-sm" style={{ left: `${d.x}%`, top: `${d.y}%`, width: d.size * 2, height: d.size * 2, transform: 'translate(-50%,-50%)' }} />
                 ))}
               </button>
             </div>
           </div>
         )}
 
-        {/* Number Line */}
+        {/* ═══ SAYI DOĞRUSU ═══ */}
         {puzzle?.type === 'numberline' && (
-          <div className="w-full max-w-xs">
-            <div className="mb-6">
-              <div className="relative h-3 bg-gray-200 rounded-full mx-4">
-                <div className="absolute top-1/2 -translate-y-1/2 w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[12px] border-t-teal-500" style={{ left: `${puzzle.pct}%`, transform: 'translateX(-50%)' }} />
-                <div className="absolute -bottom-5 left-0 text-xs font-bold text-gray-500">{puzzle.range.min}</div>
-                <div className="absolute -bottom-5 right-0 text-xs font-bold text-gray-500">{puzzle.range.max}</div>
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-xs text-gray-400">{Math.round((puzzle.range.max - puzzle.range.min) / 2)}</div>
+          <div className="w-full max-w-xs flex flex-col items-center">
+            <div className="text-base font-bold text-gray-700 mb-6">Okun gösterdiği sayı hangisi?</div>
+            <div className="w-full mb-10 px-2">
+              <div className="relative h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full shadow-inner">
+                {/* Ok */}
+                <div className="absolute -top-5" style={{ left: `${puzzle.pct}%`, transform: 'translateX(-50%)' }}>
+                  <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[14px] border-t-teal-500 drop-shadow-md" />
+                </div>
+                {/* Başlangıç-bitiş etiketleri */}
+                <div className="absolute -bottom-6 left-0 text-sm font-bold text-gray-600">{puzzle.range.min}</div>
+                <div className="absolute -bottom-6 right-0 text-sm font-bold text-gray-600">{puzzle.range.max}</div>
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-400">{Math.round((puzzle.range.max + puzzle.range.min) / 2)}</div>
               </div>
             </div>
-            <div className="text-center text-base font-bold text-gray-600 mb-4 mt-8">Okun gösterdiği sayı hangisi?</div>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-2 gap-3 w-72">
               {puzzle.options.map((opt, i) => (
                 <button key={i} onClick={() => handleAnswer(opt)} disabled={answered !== null}
-                  className={`py-4 rounded-xl font-bold text-xl transition-all ${
+                  className={`py-5 rounded-2xl font-bold text-2xl transition-all ${
                     answered !== null
-                      ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300' : 'bg-gray-50 text-gray-300'
-                      : 'bg-white shadow-md border-2 border-gray-100 hover:border-teal-300 active:scale-95'
+                      ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300 shadow-md' : 'bg-gray-50 text-gray-300 border-2 border-gray-100'
+                      : 'bg-white shadow-lg border-2 border-gray-100 hover:border-teal-400 hover:shadow-xl active:scale-95'
                   }`}>{opt}</button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Symbol Mapping */}
+        {/* ═══ SEMBOL EŞLEŞTİRME ═══ */}
         {puzzle?.type === 'symbolMapping' && (
-          <div>
-            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-6 mb-4 text-center min-w-[200px]">
+          <div className="flex flex-col items-center">
+            <div className="text-base font-bold text-gray-700 mb-4">Bu kaç?</div>
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-100 p-8 mb-5 text-center min-w-[220px]">
               {puzzle.mode === 'dots' && (
-                <div className="flex flex-wrap justify-center gap-2">
+                <div className="flex flex-wrap justify-center gap-2.5">
                   {Array.from({ length: puzzle.num }, (_, i) => (
-                    <div key={i} className="w-6 h-6 bg-teal-500 rounded-full" />
+                    <div key={i} className="w-7 h-7 bg-teal-500 rounded-full shadow-sm" />
                   ))}
                 </div>
               )}
               {puzzle.mode === 'fingers' && (
-                <div className="text-5xl">
-                  {puzzle.num <= 5 ? '🖐️' : '🖐️🖐️'}
-                  <div className="text-lg text-gray-500 mt-1">{puzzle.num} parmak</div>
+                <div>
+                  <div className="text-5xl">{puzzle.num <= 5 ? '🖐️' : '🖐️🖐️'}</div>
+                  <div className="text-sm text-gray-500 mt-2 font-medium">{puzzle.num} parmak</div>
                 </div>
               )}
               {puzzle.mode === 'word' && (
                 <div className="text-3xl font-bold text-teal-700">{puzzle.word}</div>
               )}
             </div>
-            <div className="text-center text-sm font-bold text-gray-600 mb-3">Bu kaç?</div>
-            <div className="grid grid-cols-2 gap-2.5 w-64">
+            <div className="grid grid-cols-2 gap-3 w-72">
               {puzzle.options.map((opt, i) => (
                 <button key={i} onClick={() => handleAnswer(opt)} disabled={answered !== null}
-                  className={`py-4 rounded-xl font-bold text-xl transition-all ${
+                  className={`py-5 rounded-2xl font-bold text-2xl transition-all ${
                     answered !== null
-                      ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300' : 'bg-gray-50 text-gray-300'
-                      : 'bg-white shadow-md border-2 border-gray-100 hover:border-teal-300 active:scale-95'
+                      ? opt === puzzle.answer ? 'bg-green-100 text-green-600 border-2 border-green-300 shadow-md' : 'bg-gray-50 text-gray-300 border-2 border-gray-100'
+                      : 'bg-white shadow-lg border-2 border-gray-100 hover:border-teal-400 hover:shadow-xl active:scale-95'
                   }`}>{opt}</button>
               ))}
             </div>
           </div>
         )}
 
-        {/* Feedback */}
+        {/* Geri bildirim */}
         {answered !== null && (
-          <div className={`mt-3 text-center text-lg font-bold ${answered.correct ? 'text-green-500' : 'text-orange-500'}`}>
+          <div className={`mt-4 w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold shadow-md ${answered.correct ? 'bg-green-100 text-green-500' : 'bg-orange-100 text-orange-500'}`}>
             {answered.correct ? '✓' : '✗'}
           </div>
         )}
