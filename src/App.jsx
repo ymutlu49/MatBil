@@ -4,7 +4,8 @@ import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, downloadEtkinlikP
   MOOD_OPTIONS, saveMoodLog,
   getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, getLevelUpMessage,
   getOverallBookProgress, getMasteredChapterCount, detectNewChapterMastery, getAllChaptersProgress,
-  getPremiumInfo, grandfatherExistingUsers, shouldShowPremiumBadge, isGameAccessible
+  getPremiumInfo, grandfatherExistingUsers, shouldShowPremiumBadge, isGameAccessible,
+  runMigrations
 } from './utils';
 import { GAMES } from './constants/games';
 import { CATEGORIES } from './constants/categories';
@@ -105,6 +106,8 @@ const App = () => {
 
   useEffect(() => {
     try {
+      // Şema migration'ı EN BAŞTA — diğer migration'lar eski format beklerse önce normalize et
+      runMigrations();
       migrateExistingUsers();
       // Freemium migration: daha önce uygulamayı kullanan herkes premium sayılır
       grandfatherExistingUsers();
@@ -273,12 +276,12 @@ const App = () => {
       if (s.currentGame) {
         setCurrentGame(null);
         try { history.pushState({ app: 'matbil' }, ''); } catch {}
-        return;
+        return false; // tüketildi, native kapanmasın
       }
       if (s.view && s.view !== 'home') {
         setView('home');
         try { history.pushState({ app: 'matbil' }, ''); } catch {}
-        return;
+        return false;
       }
       if (s.showTheoryIntro || s.showTheoryReflection || s.showRedeemModal || s.showAvatarPicker || s.showSettings) {
         setShowTheoryIntro(null);
@@ -287,13 +290,33 @@ const App = () => {
         setShowAvatarPicker(false);
         setShowSettings(false);
         try { history.pushState({ app: 'matbil' }, ''); } catch {}
-        return;
+        return false;
       }
-      // Ana menüde → tarayıcı/native kendi davranışını yapsın
+      // Ana menüde → native kapansın (true)
+      return true;
     };
     try { history.pushState({ app: 'matbil' }, ''); } catch {}
-    window.addEventListener('popstate', handleBack);
-    return () => window.removeEventListener('popstate', handleBack);
+    const onPopState = () => handleBack();
+    window.addEventListener('popstate', onPopState);
+
+    // Capacitor native back button — dinamik import (web'de sessizce geç)
+    let capListener = null;
+    (async () => {
+      try {
+        const { App: CapApp } = await import('@capacitor/app');
+        capListener = await CapApp.addListener('backButton', () => {
+          const canExit = handleBack();
+          if (canExit) CapApp.exitApp();
+        });
+      } catch {
+        // Capacitor yok (web ortamı) — sorun değil, popstate yeterli
+      }
+    })();
+
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+      if (capListener && typeof capListener.remove === 'function') capListener.remove();
+    };
   }, []);
 
   // Öğretmenin öğrenci adına oyun oynama modu
@@ -316,8 +339,14 @@ const App = () => {
     setExpandedCat(null);
   };
 
-  // KVKK onayı ilk açılışta zorunlu — rol seçiminden önce gösterilir
-  if (showKvkk) return <KvkkConsentScreen onAccept={handleKvkkAccept} onDecline={handleKvkkDecline} />;
+  // KVKK onayı ilk açılışta zorunlu — rol seçiminden önce gösterilir.
+  // Ayarlar'dan re-read için de kullanılır (showAgain modu = kapat butonu).
+  const kvkkAlreadyAccepted = (() => { try { return localStorage.getItem('matbil_kvkk_accepted') === '1'; } catch { return false; } })();
+  if (showKvkk) return <KvkkConsentScreen
+    onAccept={handleKvkkAccept}
+    onDecline={kvkkAlreadyAccepted ? () => setShowKvkk(false) : handleKvkkDecline}
+    showAgain={kvkkAlreadyAccepted}
+  />;
   if (!user) return <RoleSelectScreen onLogin={handleLogin} />;
   if (user.role === 'teacher' && !playingStudent) return <TeacherDashboard user={user} onLogout={handleLogout} onPlayAsStudent={handlePlayAsStudent} />;
   if (user.role === 'parent') return <ParentDashboard user={user} onLogout={handleLogout} />;
@@ -556,6 +585,25 @@ const App = () => {
                 className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm transition-all col-span-2 ${premiumInfo?.active ? 'bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100' : 'bg-gray-50 text-gray-500 border border-gray-200 hover:bg-gray-100'}`}>
                 <span className="text-xl">{premiumInfo?.active ? '🔓' : '🔑'}</span>
                 <span>{premiumInfo?.active ? 'Kitap Kodu • Aktif' : 'Kitap Kodu'}</span>
+              </button>
+              {/* KVKK & Veri hakları (KVKK md. 11) */}
+              <button onClick={() => setShowKvkk(true)}
+                className="flex items-center gap-2 p-3 rounded-xl font-medium text-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-all col-span-2">
+                <span className="text-xl">{"🛡️"}</span>
+                <span>KVKK Aydınlatma Metni</span>
+              </button>
+              <button onClick={() => {
+                const ok = window.confirm('Tüm ilerleme ve profil verileriniz silinecek. Bu işlem geri alınamaz.\n\nDevam edilsin mi?');
+                if (!ok) return;
+                const ok2 = window.confirm('Emin misiniz? Son uyarı: tüm oyun skorları, kullanıcı kayıtları ve ayarlar kalıcı olarak silinecek.');
+                if (!ok2) return;
+                try { localStorage.clear(); sessionStorage.clear(); } catch {}
+                alert('Tüm veriler silindi. Uygulama yeniden yüklenecek.');
+                window.location.reload();
+              }}
+                className="flex items-center gap-2 p-3 rounded-xl font-medium text-sm bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-all col-span-2">
+                <span className="text-xl">{"🗑️"}</span>
+                <span>Verimi Sil (KVKK md. 11)</span>
               </button>
             </div>
             {/* Ruh hali — ayarlar içinde */}

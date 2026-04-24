@@ -13,3 +13,4 @@ export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, sh
 export { useNoRepeat, pickNoRepeat } from './noRepeat';
 export { hashPin, verifyPin, generateId } from './auth';
 export { useSafeTimeout } from './useSafeTimeout';
+export { runMigrations, getCurrentSchemaVersion, CURRENT_SCHEMA_VERSION } from './schemaMigration';
