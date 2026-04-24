@@ -27,7 +27,7 @@ export const GAME_CHAPTER_MAP = {
   // ─── Kategori A: Sanbil ve Hızlı Sayma ───
   A1: { primary: 4, secondary: [1], skill: 'subitizing' },   // Nokta Avcısı - Sanbil
   A2: { primary: 4, secondary: [1], skill: 'subitizing' },   // Kaç Parmak? - Parmak-sayı
-  A3: { primary: 9, secondary: [1, 4], skill: 'workingMemory' }, // Hafıza - Çalışma belleği
+  A3: { primary: 8, secondary: [1, 4], skill: 'workingMemory' }, // Hafıza - Çalışma belleği (Böl 8)
   A4: { primary: 4, secondary: [1], skill: 'subitizing' },   // Gruplama Ustası - Kavramsal sanbil
   A5: { primary: 4, secondary: [1], skill: 'subitizing' },   // Günlük Sanbil
   A6: { primary: 4, secondary: [1], skill: 'counting' },     // Parmak Köprüsü
@@ -43,7 +43,7 @@ export const GAME_CHAPTER_MAP = {
 
   // ─── Kategori C: Sembolik Sayı İşleme ───
   C1: { primary: 3, secondary: [2], skill: 'symbolRecog' },  // Sayı-Sembol Eşleştirme
-  C2: { primary: 3, secondary: [2, 9], skill: 'magnitude' }, // Büyük-Küçük (Stroop)
+  C2: { primary: 3, secondary: [2, 8], skill: 'magnitude' }, // Büyük-Küçük (Stroop) - Böl 8 bilişsel ilkeler
   C3: { primary: 2, secondary: [3], skill: 'transcoding' },  // Çoklu Gösterim - ÜKM
   C4: { primary: 3, secondary: [2], skill: 'placeValue' },   // Basamak Değeri
   C5: { primary: 2, secondary: [3], skill: 'transcoding' },  // Kod Çevirici - ÜKM
@@ -67,10 +67,10 @@ export const GAME_CHAPTER_MAP = {
   E8: { primary: 1, secondary: [4], skill: 'counting' },       // Geri Sayma
   E9: { primary: 4, secondary: [1], skill: 'multiplication' }, // Çarpma Kavramı
 
-  // ─── Kategori F: Yürütücü İşlevler ───
-  F1: { primary: 9, secondary: [], skill: 'workingMemory' },   // Sayısal Bellek
-  F2: { primary: 9, secondary: [], skill: 'inhibition' },      // Sayısal Stroop
-  F3: { primary: 9, secondary: [], skill: 'cogFlex' },         // Görev Değiştirme
+  // ─── Kategori F: Yürütücü İşlevler (Bilişsel İlkeler — Böl 8) ───
+  F1: { primary: 8, secondary: [], skill: 'workingMemory' },   // Sayısal Bellek
+  F2: { primary: 8, secondary: [], skill: 'inhibition' },      // Sayısal Stroop
+  F3: { primary: 8, secondary: [], skill: 'cogFlex' },         // Görev Değiştirme
 };
 
 /**
@@ -159,9 +159,9 @@ export const CHAPTER_MAP = {
   },
   F: {
     chapters: [
-      'Bölüm 9: Bilişsel Beceriler — Çalışma Belleği, İnhibisyon ve Bilişsel Esneklik'
+      'Bölüm 8: Bilişsel İlkelerden Evrensel Öğrenme Tasarımına — Geometride Pedagojik Uyarlamalar'
     ],
-    theory: 'Matematik performansı yalnızca sayısal becerilere değil, alan-genel bilişsel becerilere de bağlıdır. Çalışma belleği (bilgiyi geçici olarak tutma ve işleme), inhibisyon (alakasız bilgiyi baskılama, Stroop etkisi) ve bilişsel esneklik (görevler arası geçiş yapma) diskalkulide tutarlı biçimde bozulan üç yürütücü işlevdir. Soltanlou ve ark. (2022) yürütücü işlev eğitiminin aritmetik becerileri önemli ölçüde iyileştirdiğini göstermiştir.',
+    theory: 'Matematik performansı yalnızca sayısal becerilere değil, alan-genel bilişsel becerilere de bağlıdır. Çalışma belleği (bilgiyi geçici olarak tutma ve işleme), inhibisyon (alakasız bilgiyi baskılama, Stroop etkisi) ve bilişsel esneklik (görevler arası geçiş yapma) diskalkulide tutarlı biçimde bozulan üç yürütücü işlevdir. Bu bilişsel ilkeler, Evrensel Öğrenme Tasarımı (UDL) çerçevesinde pedagojik uyarlamaların temelini oluşturur. Soltanlou ve ark. (2022) yürütücü işlev eğitiminin aritmetik becerileri önemli ölçüde iyileştirdiğini göstermiştir.',
     weakMsg: 'Bilişsel beceriler desteklenmelidir. Çalışma belleği eğitimi (N-geri görevi), inhibisyon eğitimi (Stroop tipi görevler) ve görev değiştirme alıştırmaları ile yürütücü işlevler güçlendirilebilir. Bu beceriler matematik öğreniminin temelini oluşturur.',
     strongMsg: 'Bilişsel beceriler güçlü. Daha karmaşık çok adımlı problemler ve hızlı görev değiştirme alıştırmaları ile ileri düzey bilişsel esneklik desteklenebilir.',
     refs: 'Soltanlou ve ark. (2022); Alagöz & Kucian (2022); Miyake ve ark. (2000); Diamond (2013)',

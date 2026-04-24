@@ -16,13 +16,12 @@ export const BADGES = [
   { id: 'kitap_ch2', name: 'ÜKM Öğrencisi', emoji: '🧠', desc: 'Bölüm 2: Üçlü Kodlama Modeli - Tüm oyunlarda en az 2 yıldız', cat: 'chapter', chapterNum: 2, minStars: 2 },
   { id: 'kitap_ch3', name: 'Sembol Uzmanı', emoji: '🔢', desc: 'Bölüm 3: Sembolik Sayı İşleme - Tüm oyunlarda en az 2 yıldız', cat: 'chapter', chapterNum: 3, minStars: 2 },
   { id: 'kitap_ch4', name: 'Sanbil Dedektifi', emoji: '👁️', desc: 'Bölüm 4: Sanbil Becerisi - Tüm oyunlarda en az 2 yıldız', cat: 'chapter', chapterNum: 4, minStars: 2 },
-  { id: 'kitap_ch5', name: 'Tahmin Ustası', emoji: '🎯', desc: 'Bölüm 5: Tahmin Becerisi - Tüm oyunlarda en az 2 yıldız', cat: 'chapter', chapterNum: 5, minStars: 2 },
+  { id: 'kitap_ch5', name: 'Tahmin Ustası', emoji: '🎯', desc: 'Bölüm 5: Kesinlikten Esnekliğe (Tahmin) - Tüm oyunlarda en az 2 yıldız', cat: 'chapter', chapterNum: 5, minStars: 2 },
   { id: 'kitap_ch6', name: 'Geometri Gezgini', emoji: '📐', desc: 'Bölüm 6: Geometri Çekirdek Bilgisi - Tüm oyunlarda en az 1 yıldız', cat: 'chapter', chapterNum: 6, minStars: 1 },
   { id: 'kitap_ch7', name: 'Van Hiele Gezgini', emoji: '🔺', desc: 'Bölüm 7: Sezgiden İspata - Tüm oyunlarda en az 1 yıldız', cat: 'chapter', chapterNum: 7, minStars: 1 },
-  { id: 'kitap_ch8', name: 'Uzamsal Dedektif', emoji: '🎓', desc: 'Bölüm 8: Pedagojik Uyarlamalar - Tüm oyunlarda en az 1 yıldız', cat: 'chapter', chapterNum: 8, minStars: 1 },
-  { id: 'kitap_ch9', name: 'Beyin Savaşçısı', emoji: '⚡', desc: 'Bölüm 9: Bilişsel Beceriler - Tüm oyunlarda en az 1 yıldız', cat: 'chapter', chapterNum: 9, minStars: 1 },
+  { id: 'kitap_ch8', name: 'Bilişsel Pedagog', emoji: '🎓', desc: 'Bölüm 8: Bilişsel İlkelerden Evrensel Öğrenme Tasarımına - Tüm oyunlarda en az 1 yıldız', cat: 'chapter', chapterNum: 8, minStars: 1 },
 
-  // Ana kitap rozeti - tüm bölümler
-  { id: 'kitap_ustasi', name: 'Kitap Ustası', emoji: '📚', desc: 'Tüm 9 kitap bölümünde ustalaştın!', cat: 'book_master', minChapters: 9 },
+  // Ana kitap rozeti - tüm 8 bölüm
+  { id: 'kitap_ustasi', name: 'Kitap Ustası', emoji: '📚', desc: 'Tüm 8 kitap bölümünde ustalaştın!', cat: 'book_master', minChapters: 8 },
   { id: 'kitap_kasifi', name: 'Kitap Kaşifi', emoji: '📖', desc: 'Kitabın en az 3 bölümünü tamamla', cat: 'book_explorer', minChapters: 3 },
 ];

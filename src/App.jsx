@@ -668,9 +668,9 @@ const App = () => {
                 </div>
                 <span className="text-gray-300 text-lg">{'›'}</span>
               </div>
-              {/* 9 bölüm mini ilerleme göstergesi */}
+              {/* 8 bölüm mini ilerleme göstergesi */}
               <div className="mt-2.5 flex gap-1">
-                {[1,2,3,4,5,6,7,8,9].map(n => {
+                {[1,2,3,4,5,6,7,8].map(n => {
                   const cp = allChapters[n];
                   const pct = cp?.pct || 0;
                   const bg = cp?.isMastered ? 'bg-amber-400' : pct >= 50 ? 'bg-amber-300' : pct > 0 ? 'bg-amber-200' : 'bg-gray-100';

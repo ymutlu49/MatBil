@@ -1,8 +1,13 @@
 import { getGamesForChapter, GAME_CHAPTER_MAP } from '../constants/skillGraph';
 
 /**
+ * Toplam kitap bölüm sayısı (sabit; kitap 8 bölüm).
+ */
+export const TOTAL_CHAPTERS = 8;
+
+/**
  * Bir kitap bölümünün tamamlanma istatistiklerini hesaplar.
- * @param {number} chapterNum - Kitap bölüm numarası (1-9)
+ * @param {number} chapterNum - Kitap bölüm numarası (1-8)
  * @param {object} progress - Kullanıcı ilerleme objesi
  * @returns {object} { played, total, stars, maxStars, pct, isMastered }
  */
@@ -25,7 +30,7 @@ export const getChapterProgress = (chapterNum, progress) => {
  */
 export const getAllChaptersProgress = (progress) => {
   const result = {};
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= TOTAL_CHAPTERS; i++) {
     result[i] = getChapterProgress(i, progress);
   }
   return result;

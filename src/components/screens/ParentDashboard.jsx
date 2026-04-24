@@ -126,7 +126,7 @@ const ParentDashboard = ({ user, onLogout }) => {
                 <div className="flex items-center gap-2">
                   {masteredChapters > 0 && (
                     <div className="text-[10px] bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-bold border border-yellow-200">
-                      {"🏆"} {masteredChapters}/9
+                      {"🏆"} {masteredChapters}/8
                     </div>
                   )}
                   <div className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-bold border border-amber-200">
@@ -158,7 +158,7 @@ const ParentDashboard = ({ user, onLogout }) => {
               </div>
               <div className="mt-3 pt-2 border-t border-gray-100 bg-amber-50/40 -mx-4 -mb-4 px-4 py-2 rounded-b-2xl">
                 <div className="text-[10px] text-amber-700 leading-relaxed">
-                  {"📖"} Çocuğunuz "Matematiksel Bilişin Temelleri" kitabının 9 bölümünü oyunlar aracılığıyla keşfediyor. Her bölüm bilimsel araştırmalara dayanır.
+                  {"📖"} Çocuğunuz "Matematiksel Bilişin Temelleri" kitabının 8 bölümünü oyunlar aracılığıyla keşfediyor. Her bölüm bilimsel araştırmalara dayanır.
                 </div>
               </div>
             </div>

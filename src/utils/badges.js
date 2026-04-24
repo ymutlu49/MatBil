@@ -40,22 +40,10 @@ export const checkBadges = (progress, GAMES) => {
         const allDone = chapterGameIds.every(id => (progress[id]?.stars || 0) >= b.minStars);
         if (allDone) earned.push(b);
       }
-    } else if (b.cat === 'book_master') {
-      // Tüm bölümlerde ustalık (80%+)
+    } else if (b.cat === 'book_master' || b.cat === 'book_explorer') {
+      // Tüm/belirli sayıda bölümde ustalık (80%+), kitap 8 bölüm
       let masteredCount = 0;
-      for (let n = 1; n <= 9; n++) {
-        const chapterGameIds = getGamesForChapter(n);
-        if (chapterGameIds.length === 0) continue;
-        const totalStars = chapterGameIds.reduce((s, id) => s + (progress[id]?.stars || 0), 0);
-        const maxStars = chapterGameIds.length * 3;
-        const pct = maxStars > 0 ? (totalStars / maxStars) * 100 : 0;
-        if (pct >= 80) masteredCount++;
-      }
-      if (masteredCount >= b.minChapters) earned.push(b);
-    } else if (b.cat === 'book_explorer') {
-      // Belirli sayıda bölüm tamamlama
-      let masteredCount = 0;
-      for (let n = 1; n <= 9; n++) {
+      for (let n = 1; n <= 8; n++) {
         const chapterGameIds = getGamesForChapter(n);
         if (chapterGameIds.length === 0) continue;
         const totalStars = chapterGameIds.reduce((s, id) => s + (progress[id]?.stars || 0), 0);
