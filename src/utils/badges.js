@@ -1,4 +1,5 @@
 import { BADGES } from '../constants/badges';
+import { getGamesForChapter } from '../constants/skillGraph';
 
 export const checkBadges = (progress, GAMES) => {
   const earned = [];
@@ -32,6 +33,37 @@ export const checkBadges = (progress, GAMES) => {
         if (g.attempts > 0 && GAMES[id]) catsPlayed.add(GAMES[id].cat);
       });
       if (catsPlayed.size >= b.minCats) earned.push(b);
+    } else if (b.cat === 'chapter') {
+      // Kitap bölümü rozeti - bölümdeki tüm oyunlarda minStars
+      const chapterGameIds = getGamesForChapter(b.chapterNum);
+      if (chapterGameIds.length > 0) {
+        const allDone = chapterGameIds.every(id => (progress[id]?.stars || 0) >= b.minStars);
+        if (allDone) earned.push(b);
+      }
+    } else if (b.cat === 'book_master') {
+      // Tüm bölümlerde ustalık (80%+)
+      let masteredCount = 0;
+      for (let n = 1; n <= 9; n++) {
+        const chapterGameIds = getGamesForChapter(n);
+        if (chapterGameIds.length === 0) continue;
+        const totalStars = chapterGameIds.reduce((s, id) => s + (progress[id]?.stars || 0), 0);
+        const maxStars = chapterGameIds.length * 3;
+        const pct = maxStars > 0 ? (totalStars / maxStars) * 100 : 0;
+        if (pct >= 80) masteredCount++;
+      }
+      if (masteredCount >= b.minChapters) earned.push(b);
+    } else if (b.cat === 'book_explorer') {
+      // Belirli sayıda bölüm tamamlama
+      let masteredCount = 0;
+      for (let n = 1; n <= 9; n++) {
+        const chapterGameIds = getGamesForChapter(n);
+        if (chapterGameIds.length === 0) continue;
+        const totalStars = chapterGameIds.reduce((s, id) => s + (progress[id]?.stars || 0), 0);
+        const maxStars = chapterGameIds.length * 3;
+        const pct = maxStars > 0 ? (totalStars / maxStars) * 100 : 0;
+        if (pct >= 80) masteredCount++;
+      }
+      if (masteredCount >= b.minChapters) earned.push(b);
     } else {
       const catGames = games.filter(([, g]) => g.cat === b.cat);
       const allDone = catGames.every(([id]) => (progress[id]?.stars || 0) >= b.minStars);

@@ -8,3 +8,5 @@ export { useSessionTimer, getWeeklyStats, saveSessionData } from './sessionTimer
 export { getGrowthMessage, gentleEncourage, MOOD_OPTIONS, getAnxietyAdjustments, saveMoodLog, getMoodHistory } from './anxiety';
 export { playCountSound, playStepSound, playMagnitudeSound, playSuccessMelody, playEncourageSound, speakTurkish } from './multisensory';
 export { getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, LEVELS, getLevelUpMessage } from './avatar';
+export { getChapterProgress, getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress, detectNewChapterMastery } from './chapterProgress';
+export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, grandfatherExistingUsers, __devSetPremium } from './entitlement';

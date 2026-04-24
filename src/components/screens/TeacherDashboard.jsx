@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { getClasses, saveClass, removeClass, getClassStudents, addStudentToClass, removeStudentFromClass, generateId, getTeachers, changeTeacherPin } from '../../utils/auth';
 import { getProgress } from '../../utils/progress';
 import { GAMES } from '../../constants/games';
+import { CHAPTER_MAP } from '../../constants/skillGraph';
+import { BOOK_CHAPTERS } from './BookChapters';
 import ReportScreen from './ReportScreen';
 
 /**
  * Öğretmen Paneli
  * Sınıf yönetimi, öğrenci ekleme/çıkarma, raporlar
  */
-const TeacherDashboard = ({ user, onLogout }) => {
+const TeacherDashboard = ({ user, onLogout, onPlayAsStudent }) => {
   const [tab, setTab] = useState('classes'); // classes | students | report | settings
   const [classes, setClasses] = useState([]);
   const [selectedClassId, setSelectedClassId] = useState(null);
@@ -126,6 +128,7 @@ const TeacherDashboard = ({ user, onLogout }) => {
           {[
             { id: 'classes', label: '🏫 Sınıflar', },
             { id: 'students', label: '👨‍🎓 Öğrenciler' },
+            { id: 'chapters', label: '📚 Bölümler' },
             { id: 'settings', label: '⚙️ Ayarlar' },
           ].map(t => (
             <button key={t.id} onClick={() => setTab(t.id)}
@@ -244,6 +247,11 @@ const TeacherDashboard = ({ user, onLogout }) => {
                               {s.age && `${s.age} yaş · `}{"⭐"}{stars} · {played} oyun
                             </div>
                           </div>
+                          <button onClick={() => onPlayAsStudent(s)}
+                            className="px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-lg text-xs font-medium hover:bg-emerald-100"
+                            title="Oyun oyna">
+                            {"🎮"}
+                          </button>
                           <button onClick={() => setReportStudent(s)}
                             className="px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-medium hover:bg-indigo-100">
                             {"📊"}
@@ -266,6 +274,138 @@ const TeacherDashboard = ({ user, onLogout }) => {
                   <button onClick={() => setTab('classes')} className="mt-2 text-indigo-600 text-sm font-medium">Sınıf oluştur {"→"}</button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ─── BÖLÜMLER SEKMESİ — Kitap bölüm bazlı analiz + Isı haritası ─── */}
+          {tab === 'chapters' && selectedClass && (
+            <div className="space-y-3">
+              {/* Sınıf ısı haritası */}
+              {students.length > 0 && (
+                <div className="bg-white rounded-2xl shadow-sm p-4 overflow-x-auto">
+                  <div className="text-sm font-bold text-gray-700 mb-3">{"🗺️"} Sınıf Bölüm Isı Haritası</div>
+                  <div className="min-w-[500px]">
+                    <table className="w-full text-[10px]">
+                      <thead>
+                        <tr>
+                          <th className="text-left py-1 px-1 font-bold text-gray-600 sticky left-0 bg-white">Öğrenci</th>
+                          {BOOK_CHAPTERS.map(ch => (
+                            <th key={ch.num} className="text-center py-1 px-1 font-bold text-gray-500" title={ch.title}>
+                              <div>B{ch.num}</div>
+                              <div className="text-[8px] font-normal">{ch.emoji}</div>
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {students.map(s => {
+                          const sp = getProgress(s.id);
+                          return (
+                            <tr key={s.id} className="border-t border-gray-50">
+                              <td className="py-1.5 px-1 font-medium text-gray-700 sticky left-0 bg-white whitespace-nowrap">{s.name}</td>
+                              {BOOK_CHAPTERS.map(ch => {
+                                const chGames = [];
+                                ch.categories.forEach(catId => {
+                                  Object.entries(GAMES).forEach(([id, g]) => {
+                                    if (g.cat === catId && !chGames.find(e => e === id)) chGames.push(id);
+                                  });
+                                });
+                                const played = chGames.filter(id => sp[id]).length;
+                                const total = chGames.length;
+                                const avgStars = total > 0 ? chGames.reduce((sum, id) => sum + (sp[id]?.stars || 0), 0) / total : 0;
+                                const pct = played > 0 ? Math.round((avgStars / 3) * 100) : 0;
+                                const bg = played === 0 ? 'bg-gray-100' :
+                                  pct >= 70 ? 'bg-green-200 text-green-800' :
+                                  pct >= 40 ? 'bg-amber-200 text-amber-800' :
+                                  'bg-red-200 text-red-800';
+                                return (
+                                  <td key={ch.num} className="py-1.5 px-1 text-center">
+                                    <div className={`rounded-md px-1 py-0.5 font-bold ${bg}`}>
+                                      {played === 0 ? '-' : `${pct}%`}
+                                    </div>
+                                  </td>
+                                );
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="flex gap-3 mt-2 text-[9px] text-gray-400">
+                    <span className="flex items-center gap-1"><div className="w-3 h-2 bg-green-200 rounded" /> %70+</span>
+                    <span className="flex items-center gap-1"><div className="w-3 h-2 bg-amber-200 rounded" /> %40-69</span>
+                    <span className="flex items-center gap-1"><div className="w-3 h-2 bg-red-200 rounded" /> %0-39</span>
+                    <span className="flex items-center gap-1"><div className="w-3 h-2 bg-gray-100 rounded" /> Oynanmadı</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Bölüm bazlı performans */}
+              {BOOK_CHAPTERS.map(ch => {
+                const chGames = [];
+                ch.categories.forEach(catId => {
+                  Object.entries(GAMES).forEach(([id, g]) => {
+                    if (g.cat === catId && !chGames.find(e => e === id)) chGames.push(id);
+                  });
+                });
+                // Sınıf ortalaması
+                let classAvgStars = 0;
+                let classPlayed = 0;
+                students.forEach(s => {
+                  const sp = getProgress(s.id);
+                  chGames.forEach(id => {
+                    if (sp[id]) { classAvgStars += sp[id].stars || 0; classPlayed++; }
+                  });
+                });
+                const avgPct = classPlayed > 0 ? Math.round((classAvgStars / (classPlayed * 3)) * 100) : 0;
+                const attemptedStudents = students.filter(s => {
+                  const sp = getProgress(s.id);
+                  return chGames.some(id => sp[id]);
+                }).length;
+                const theory = ch.categories.map(c => CHAPTER_MAP[c]).filter(Boolean)[0];
+
+                return (
+                  <div key={ch.num} className="bg-white rounded-2xl shadow-sm p-3">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className={`w-9 h-9 bg-gradient-to-br ${ch.color} rounded-xl flex items-center justify-center text-white font-bold text-sm`}>{ch.num}</div>
+                      <div className="flex-1">
+                        <div className="font-bold text-gray-800 text-sm">{ch.title}</div>
+                        <div className="text-[10px] text-gray-400">{ch.subtitle}</div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`text-sm font-bold ${avgPct >= 70 ? 'text-green-600' : avgPct >= 40 ? 'text-amber-600' : avgPct > 0 ? 'text-red-500' : 'text-gray-400'}`}>
+                          {avgPct > 0 ? `%${avgPct}` : '-'}
+                        </div>
+                        <div className="text-[9px] text-gray-400">{attemptedStudents}/{students.length} öğrenci</div>
+                      </div>
+                    </div>
+                    {/* Ilerleme cubugu */}
+                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden mb-2">
+                      <div className={`h-full rounded-full transition-all ${avgPct >= 70 ? 'bg-green-400' : avgPct >= 40 ? 'bg-amber-400' : 'bg-red-400'}`} style={{ width: `${avgPct}%` }} />
+                    </div>
+                    {/* Müdahale önerileri */}
+                    {theory && avgPct > 0 && avgPct < 60 && (
+                      <div className="bg-red-50 rounded-lg p-2 text-[10px] text-red-700 leading-relaxed">
+                        <span className="font-bold">{"⚠️"} Öneri:</span> {theory.weakMsg.substring(0, 200)}...
+                      </div>
+                    )}
+                    {theory && avgPct >= 60 && (
+                      <div className="bg-green-50 rounded-lg p-2 text-[10px] text-green-700 leading-relaxed">
+                        <span className="font-bold">{"✓"} Durum:</span> {theory.strongMsg.substring(0, 150)}...
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {tab === 'chapters' && !selectedClass && (
+            <div className="text-center py-8">
+              <div className="text-3xl mb-2">{"📚"}</div>
+              <div className="text-gray-500 text-sm">Bölüm analizini görmek için bir sınıf seçin.</div>
+              <button onClick={() => setTab('classes')} className="mt-2 text-indigo-600 text-sm font-medium">Sınıf seçin {"→"}</button>
             </div>
           )}
 

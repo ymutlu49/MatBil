@@ -1,0 +1,19 @@
+{
+  "name": "matbil-code-api",
+  "version": "1.0.0",
+  "description": "MatBil kitap kodu doğrulama API'si",
+  "main": "code-api.js",
+  "private": true,
+  "scripts": {
+    "start": "node code-api.js",
+    "dev": "node --watch code-api.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0"
+  }
+}

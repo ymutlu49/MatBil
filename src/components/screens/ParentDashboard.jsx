@@ -4,6 +4,8 @@ import { getProgress } from '../../utils/progress';
 import { GAMES } from '../../constants/games';
 import { CATEGORIES } from '../../constants/categories';
 import { getXPFromProgress, getLevelFromXP } from '../../utils/avatar';
+import { getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress } from '../../utils/chapterProgress';
+import { BOOK_CHAPTERS } from './BookChapters';
 
 /**
  * Veli Paneli — Salt Okunur
@@ -33,6 +35,9 @@ const ParentDashboard = ({ user, onLogout }) => {
   const totalGames = Object.keys(GAMES).length;
   const totalAttempts = Object.values(progress).reduce((s, g) => s + (g.attempts || 0), 0);
   const level = selectedChild ? getLevelFromXP(getXPFromProgress(progress)) : null;
+  const chaptersProgress = selectedChild ? getAllChaptersProgress(progress) : {};
+  const masteredChapters = selectedChild ? getMasteredChapterCount(progress) : 0;
+  const bookPct = selectedChild ? getOverallBookProgress(progress) : 0;
 
   return (
     <div className="h-screen bg-gradient-to-b from-purple-50 via-fuchsia-50 to-pink-50 flex flex-col overflow-hidden">
@@ -112,6 +117,50 @@ const ParentDashboard = ({ user, onLogout }) => {
                 <div className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500 transition-all" style={{ width: `${Math.round((played / totalGames) * 100)}%` }} />
               </div>
               <div className="text-xs text-gray-500 text-right">{played} / {totalGames} oyun keşfedildi</div>
+            </div>
+
+            {/* Kitap Bölümleri İlerleme */}
+            <div className="bg-white rounded-2xl shadow-sm p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-sm font-bold text-gray-700">{"📚"} Kitap Bölümleri</div>
+                <div className="flex items-center gap-2">
+                  {masteredChapters > 0 && (
+                    <div className="text-[10px] bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full font-bold border border-yellow-200">
+                      {"🏆"} {masteredChapters}/9
+                    </div>
+                  )}
+                  <div className="text-xs text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-bold border border-amber-200">
+                    %{bookPct}
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                {BOOK_CHAPTERS.map(ch => {
+                  const cp = chaptersProgress[ch.num] || { pct: 0, played: 0, total: 0, isMastered: false };
+                  return (
+                    <div key={ch.num} className="flex items-center gap-2">
+                      <div className={`relative w-7 h-7 rounded-lg bg-gradient-to-br ${ch.color} flex items-center justify-center text-white font-bold text-[10px] shrink-0`}>
+                        {ch.num}
+                        {cp.isMastered && <div className="absolute -top-1 -right-1 text-[8px]">{"🏆"}</div>}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="text-[11px] font-medium text-gray-700 truncate">{ch.title}</div>
+                          <div className="text-[10px] text-gray-500 shrink-0">{cp.played}/{cp.total}</div>
+                        </div>
+                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mt-0.5">
+                          <div className={`h-full rounded-full bg-gradient-to-r ${ch.color} transition-all`} style={{ width: `${cp.pct}%` }} />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="mt-3 pt-2 border-t border-gray-100 bg-amber-50/40 -mx-4 -mb-4 px-4 py-2 rounded-b-2xl">
+                <div className="text-[10px] text-amber-700 leading-relaxed">
+                  {"📖"} Çocuğunuz "Matematiksel Bilişin Temelleri" kitabının 9 bölümünü oyunlar aracılığıyla keşfediyor. Her bölüm bilimsel araştırmalara dayanır.
+                </div>
+              </div>
             </div>
 
             {/* Kategori Bazlı */}

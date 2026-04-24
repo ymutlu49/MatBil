@@ -7,6 +7,16 @@ import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
+/**
+ * Nokta Avcısı - Sanbil (Subitizing)
+ *
+ * Pedagojik tasarım:
+ * - Seviye 1-2: ALGISAL sanbil (1-5 nokta) — saymadan bir bakışta tanıma, kanonik zar deseni
+ * - Seviye 3-4: KAVRAMSAL sanbil (4-10 nokta) — kanonik alt gruplara ayırarak tanıma
+ *
+ * Referanslar: MacDonald & Wilkins (2016); Clements (1999); Kaufman ve ark. (1949).
+ * Algısal sınır: ~4-5 nesne; kavramsal sanbil için 12 sınırı (Clements & Sarama).
+ */
 const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs, setGs] = useState('menu');
@@ -15,15 +25,17 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   const [rd, setRd] = useState(0);
   const [dc, setDc] = useState(0);
   const [dots, setDots] = useState([]);
-  const [show, setShow] = useState(false);
-  const [fading, setFading] = useState(false);
   const [correctFlash, setCorrectFlash] = useState(false);
   const [ua, setUa] = useState(null);
   const last = useRef([]);
-  const cfg = { 1: { min: 1, max: 4, t: 2000 }, 2: { min: 2, max: 5, t: 1500 }, 3: { min: 3, max: 7, t: 1200 }, 4: { min: 4, max: 9, t: 1000 } };
+  // Algısal: L1-L2 (max 5) | Kavramsal: L3-L4 (max 10, kanonik gruplu)
+  const cfg = { 1: { min: 1, max: 3 }, 2: { min: 2, max: 5 }, 3: { min: 4, max: 7 }, 4: { min: 6, max: 10 } };
   const dCols = ['#EF4444', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'];
 
-  // Kanonik dizilimler (zar deseni, % pozisyon)
+  // Seviye türü: 1-2 algısal, 3-4 kavramsal
+  const isPerceptualLevel = (l) => l <= 2;
+
+  // Kanonik dizilimler (zar deseni, % pozisyon) — algısal sanbil için
   const canonical = {
     1: [[50,50]],
     2: [[30,30],[70,70]],
@@ -32,8 +44,15 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     5: [[30,25],[70,25],[50,50],[30,75],[70,75]],
   };
 
-  // 6-9 icin gruplu dizilimler: 2 veya 3 alt grup
+  // 4-10 icin gruplu dizilimler: kanonik alt-gruplar (kavramsal sanbil)
   const groupLayouts = {
+    4: [
+      {groups:[[2,2]], pos:[[[25,35],[25,65]], [[75,35],[75,65]]]},
+    ],
+    5: [
+      {groups:[[3,2]], pos:[[[22,25],[22,50],[22,75]], [[78,35],[78,65]]]},
+      {groups:[[2,3]], pos:[[[22,35],[22,65]], [[78,25],[78,50],[78,75]]]},
+    ],
     6: [
       {groups:[[3,3]], pos:[[[20,25],[20,50],[20,75]], [[75,25],[75,50],[75,75]]]},
       {groups:[[3,3]], pos:[[[25,25],[50,25],[75,25]], [[25,70],[50,70],[75,70]]]},
@@ -47,34 +66,27 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     8: [
       {groups:[[4,4]], pos:[[[22,20],[22,42],[22,64],[22,86]], [[78,20],[78,42],[78,64],[78,86]]]},
       {groups:[[3,3,2]], pos:[[[18,25],[18,50],[18,75]], [[50,25],[50,50],[50,75]], [[82,35],[82,65]]]},
-      {groups:[[5,3]], pos:[[[20,18],[20,40],[20,62],[20,84],[20,96]].slice(0,5), [[75,25],[75,50],[75,75]]]},
+      {groups:[[5,3]], pos:[[[20,15],[20,33],[20,51],[20,69],[20,87]], [[75,25],[75,50],[75,75]]]},
     ],
     9: [
       {groups:[[5,4]], pos:[[[20,15],[20,35],[20,55],[20,75],[20,92]], [[78,22],[78,42],[78,62],[78,82]]]},
       {groups:[[3,3,3]], pos:[[[18,25],[18,50],[18,75]], [[50,25],[50,50],[50,75]], [[82,25],[82,50],[82,75]]]},
       {groups:[[4,3,2]], pos:[[[15,20],[15,42],[15,64],[15,86]], [[50,25],[50,50],[50,75]], [[85,35],[85,65]]]},
     ],
+    10: [
+      // Onluk çerçeve (5x2 kanonik, Clements & Sarama)
+      {groups:[[5,5]], pos:[[[16,25],[36,25],[56,25],[76,25],[92,25]], [[16,70],[36,70],[56,70],[76,70],[92,70]]]},
+      {groups:[[5,5]], pos:[[[20,15],[20,33],[20,51],[20,69],[20,87]], [[80,15],[80,33],[80,51],[80,69],[80,87]]]},
+      {groups:[[4,3,3]], pos:[[[15,18],[15,38],[15,58],[15,78]], [[50,25],[50,50],[50,75]], [[85,25],[85,50],[85,75]]]},
+    ],
   };
 
-  const genDots = (count) => {
+  const genDots = (count, level) => {
     const col1 = dCols[Math.floor(Math.random()*dCols.length)];
-    // Kanonik vs Non-kanonik rastgele secim (MacDonald-Wilkins modeli)
-    const useRandom = Math.random() < 0.4; // %40 non-kanonik desen
 
-    if(count <= 5) {
-      if(useRandom) {
-        // Non-kanonik: rastgele pozisyonlar (kavramsal sanbili zorlayan desen)
-        const usedPos = [];
-        const rndDots = Array.from({length:count}, () => {
-          let x,y,ok;
-          do { x=15+Math.random()*70; y=15+Math.random()*70; ok=usedPos.every(p=>Math.hypot(p[0]-x,p[1]-y)>18); } while(!ok && usedPos.length>0);
-          usedPos.push([x,y]);
-          return { x, y, c: col1 };
-        });
-        return { type:'random', groups:[{ dots: rndDots }]};
-      }
-      // Kanonik dizilim + kucuk rastgele sapma
-      const pattern = canonical[count];
+    // L1-L2 (ALGISAL): her zaman kanonik zar deseni, max 5 nokta
+    if(isPerceptualLevel(level)) {
+      const pattern = canonical[Math.min(count, 5)];
       return { type:'canonical', groups:[{
         dots: pattern.map(([x,y]) => ({
           x: x + (Math.random()*6-3),
@@ -84,11 +96,10 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
       }]};
     }
 
-    // 6-9: Gruplu dizilim sec
+    // L3-L4 (KAVRAMSAL): her zaman kanonik gruplu dizilim
     const layouts = groupLayouts[count];
     const layout = layouts[Math.floor(Math.random()*layouts.length)];
     const groupColors = [col1];
-    // Her gruba farkli renk
     let ci=0;
     while(groupColors.length < layout.pos.length){
       ci++;
@@ -112,16 +123,8 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
 
   const startR = useCallback((l,r) => {
     const cf=cfg[l]; const c=getC(cf);
-    setDc(c); setDots(genDots(c)); setShow(true); setFading(false); setCorrectFlash(false); setUa(null); setRd(r);
-    const hideTime = Math.round((rahatMod ? cf.t * 1.5 : cf.t) / adaptive.diff);
-    setTimeout(()=>{
-      setFading(true);
-      setTimeout(()=>{
-        setShow(false);
-        setFading(false);
-      }, 500);
-    }, hideTime);
-  },[rahatMod]);
+    setDc(c); setDots(genDots(c, l)); setCorrectFlash(false); setUa(null); setRd(r);
+  },[]);
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG = (l) => { setLv(l); setSc(0); last.current=[]; adaptive.reset(); setGs('playing'); startR(l,1); };
@@ -136,8 +139,8 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     setTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200);
   };
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktalar kısa süre gösterilecek. Saymadan, bakarak kaç tane olduğunu bul!" levels={['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction="Ekranda noktalar kısa süreliğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktaları saymadan, bakarak kaç tane olduğunu bul! L1-L2 algısal (1-5), L3-L4 kavramsal (kanonik gruplar)." levels={['⭐ Algısal (1-3)','⭐⭐ Algısal (2-5)','⭐⭐⭐ Kavramsal (4-7)','⭐⭐⭐⭐ Kavramsal (6-10)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction={isPerceptualLevel(lv) ? 'Noktalar kanonik (zar) deseninde gösterilecek. Saymadan, bir bakışta tanı!' : 'Noktalar kanonik alt gruplara bölünmüş olarak gösterilecek. Grupları hızlıca say ve topla (örn. 5+3=8).'} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   // Compute a flat index for staggered animation delays
@@ -146,36 +149,41 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Nokta Avcısı" colors={colors} hideRound={rahatMod}/>
-      <div className="flex-1 flex flex-col items-center justify-center min-h-0">
-      <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative mb-3 border-4 ${colors?.border} ${correctFlash ? 'anim-correct-pulse' : ''}`}>
-        {(show || fading) && dots?.groups?.map((grp,gi)=>(
-          grp.dots.map((d,di)=>{
-            const idx = dotIndex++;
-            return (
-              <div
-                key={`${gi}-${di}`}
-                className={`absolute w-10 h-10 rounded-full shadow-lg ${fading ? 'anim-dot-out' : 'anim-dot-in'}`}
-                style={{
-                  left:`${d.x}%`,
-                  top:`${d.y}%`,
-                  backgroundColor:d.c,
-                  animationDelay: fading ? '0ms' : `${idx * 50}ms`,
-                }}
-              />
-            );
-          })
-        ))}
-        {!show && !fading && ua===null && (
-          <div className="absolute inset-0 flex flex-col items-center">
-            <span className="text-4xl mb-1">{'🤔'}</span>
-            <span className={`text-lg font-bold ${colors?.text} animate-bounce`}>Kaç taneydi?</span>
+      <div className="flex-1 flex flex-col items-center justify-center min-h-0 gap-3">
+
+        {/* Nokta alanı — her zaman görünür */}
+        <div className={`w-56 h-56 bg-white rounded-3xl shadow-xl relative border-4 ${colors?.border} ${correctFlash ? 'anim-correct-pulse' : ''} shrink-0`} key={rd}>
+          {ua === null && dots?.groups?.map((grp,gi)=>(
+            grp.dots.map((d,di)=>{
+              const idx = dotIndex++;
+              return (
+                <div
+                  key={`${gi}-${di}`}
+                  className="absolute w-10 h-10 rounded-full shadow-lg anim-dot-in"
+                  style={{
+                    left:`${d.x}%`,
+                    top:`${d.y}%`,
+                    backgroundColor:d.c,
+                    animationDelay: `${idx * 50}ms`,
+                  }}
+                />
+              );
+            })
+          ))}
+          {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='grouped' ? 'Renkli grupları toplayarak düşün!' : 'Zar desenini bir bakışta tanı!'}`}/>}
+        </div>
+
+        {/* Sayı butonları — noktalarla aynı anda görünür */}
+        {ua===null && (
+          <div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">
+            {Array.from({length:10},(_,i)=>i+1).map(n=>(
+              <button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>
+            ))}
           </div>
         )}
-        {ua!==null && <Feedback isCorrect={ua===dc} answer={dc} hint={ua===dc ? `Harika! ${dc} tane vardı.` : `${dc} tane vardı. ${dots?.type==='random' ? 'Rastgele dizilimde grupla düşün: kaçlı gruplar görüyorsun?' : 'Bildiğin desenleri ara: zar, domino gibi!'}`}/>}
-      </div>
-      {!show && !fading && ua===null && <div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">{Array.from({length:9},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>))}</div>}
 
-      </div>    </div>
+      </div>
+    </div>
   );
 };
 

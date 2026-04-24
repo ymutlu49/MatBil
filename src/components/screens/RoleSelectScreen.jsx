@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import TeacherLoginScreen from './TeacherLoginScreen';
 import StudentSelectScreen from './StudentSelectScreen';
 import ParentLoginScreen from './ParentLoginScreen';
+import AdminLoginScreen from './AdminLoginScreen';
 
 /**
  * Rol Seçim Ekranı
- * İlk ekran: Öğretmen / Öğrenci / Veli
+ * İlk ekran: Öğretmen / Öğrenci / Veli + (gizli) Yazar
  */
 const RoleSelectScreen = ({ onLogin }) => {
   const [selectedRole, setSelectedRole] = useState(null);
@@ -13,6 +14,7 @@ const RoleSelectScreen = ({ onLogin }) => {
   if (selectedRole === 'teacher') return <TeacherLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
   if (selectedRole === 'student') return <StudentSelectScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
   if (selectedRole === 'parent') return <ParentLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
+  if (selectedRole === 'admin') return <AdminLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
 
   return (
     <div className="h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50 flex flex-col items-center justify-center p-4">
@@ -61,6 +63,13 @@ const RoleSelectScreen = ({ onLogin }) => {
         <div className="text-center">
           <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu {"\u2022"} Prof. Dr. Sinan Olkun</p>
           <p className="text-[10px] text-gray-300 mt-0.5">v16.1 {"\u2022"} 35 Oyun {"\u2022"} 6 Kategori</p>
+          {/* Yazar girişi — yetkili kullanıcılar için dikkat çekmeyen giriş noktası */}
+          <button
+            onClick={() => setSelectedRole('admin')}
+            className="mt-3 text-[10px] text-amber-600/70 hover:text-amber-700 underline underline-offset-2 transition-colors"
+          >
+            Yazar Girişi
+          </button>
         </div>
       </div>
     </div>

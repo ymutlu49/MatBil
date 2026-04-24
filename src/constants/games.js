@@ -6,6 +6,7 @@ const ParmakSansi = lazy(() => import('../components/games/category-a/ParmakSans
 const HafizaOyunu = lazy(() => import('../components/games/category-a/HafizaOyunu'));
 const GruplamaUstasi = lazy(() => import('../components/games/category-a/GruplamaUstasi'));
 const GunlukSanbil = lazy(() => import('../components/games/category-a/GunlukSanbil'));
+const ParmakKoprusu = lazy(() => import('../components/games/category-a/ParmakKoprusu'));
 
 const NoktaKarsilastirma = lazy(() => import('../components/games/category-a/NoktaKarsilastirma'));
 const SayiAyristirma = lazy(() => import('../components/games/category-a/SayiAyristirma'));
@@ -44,11 +45,12 @@ const SayisalStroop = lazy(() => import('../components/games/category-f/SayisalS
 const GorevDegistirme = lazy(() => import('../components/games/category-f/GorevDegistirme'));
 
 export const GAMES = {
-  A1: { comp: NoktaAvcisi, name: 'Nokta Avcısı', emoji: '🎯', cat: 'A', levels: ['⭐ Seviye 1 (1-4, 2sn)','⭐⭐ Seviye 2 (2-5, 1.5sn)','⭐⭐⭐ Seviye 3 (3-7, 1.2sn)','⭐⭐⭐⭐ Seviye 4 (4-9, 1sn)'], instr: 'Ekranda noktalar kısa süreligiğine görünüp kaybolacak. Kaç nokta olduğunu saymadan, bir bakışta bulmaya çalış!' },
+  A1: { comp: NoktaAvcisi, name: 'Nokta Avcısı', emoji: '🎯', cat: 'A', levels: ['⭐ Algısal (1-3)','⭐⭐ Algısal (2-5)','⭐⭐⭐ Kavramsal (4-7)','⭐⭐⭐⭐ Kavramsal (6-10)'], instr: 'L1-L2: Algısal sanbil — kanonik zar deseni, saymadan tanı. L3-L4: Kavramsal sanbil — kanonik alt gruplara ayırarak tanı.' },
   A2: { comp: ParmakSansi, name: 'Kaç Parmak?', emoji: '🖐️', cat: 'A', levels: ['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)'], instr: 'Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!' },
   A3: { comp: HafizaOyunu, name: 'Hafıza Oyunu', emoji: '🧠', cat: 'A', levels: ['Kolay (1-4)','Orta (5-9)','Zor (1-9)'], instr: 'Kartları ikişer ikişer çevir. Aynı sayıyı gösteren iki kartı bulursan eşleşir ve açık kalır. Tüm çiftleri bulmaya çalış!' },
   A4: { comp: GruplamaUstasi, name: 'Gruplama Ustası', emoji: '📦', cat: 'A', levels: ['Beşlik (1 kart)','Beşlik (2 kart)','Onluk (1 kart)','Karışık'], instr: 'Beşlik veya onluk çerçeveler gösterilecek. Dolu kutuları sayarak toplamın kaç olduğunu bul!' },
-  A5: { comp: GunlukSanbil, name: 'Günlük Sanbil', emoji: '🏠', cat: 'A', levels: ['Seviye 1 (2-5, 3sn)','Seviye 2 (2-6, 2.5sn)','Seviye 3 (2-7, 2sn)','Seviye 4 (2-8, 1.5sn)'], instr: 'Meyve, çiçek veya oyuncak gibi nesneler kısa süreligiğine görünüp kaybolacak. Kaç tane olduğunu saymadan bul!' },
+  A5: { comp: GunlukSanbil, name: 'Günlük Sanbil', emoji: '🏠', cat: 'A', levels: ['Seviye 1 (1-3 yavaş)','Seviye 2 (2-4 orta)','Seviye 3 (2-5 hızlı)','Seviye 4 (1-5 çok hızlı)'], instr: 'Algısal sanbil: 1-5 nesne kısa süre gösterilir. Saymadan bir bakışta tanı! Zorluk gösterim süresiyle artar.' },
+  A6: { comp: ParmakKoprusu, name: 'Parmak Köprüsü', emoji: '🖐️', cat: 'A', levels: ['Seviye 1 (1-5)','Seviye 2 (2-7)','Seviye 3 (3-9)','Seviye 4 (1-10)'], instr: 'Bir sayı gösterilecek. Dokunmatik cihazda ekrana o kadar parmakla dokun! Masaüstünde doğru eli seç. Parmak-sayı bağlantısını güçlendir.' },
   A7: { comp: NoktaKarsilastirma, name: 'Nokta Karşılaştırma', emoji: '👀', cat: 'A', levels: ['Kolay','Orta','Zor','Uzman'], instr: 'İki nokta kümesinden hangisinde daha çok var? Saymadan, bir bakışta karar ver! Yaklaşık Sayı Sistemi (YSS) hassasiyetini ölçer.' },
   A8: { comp: SayiAyristirma, name: 'Sayı Ayrıştırma', emoji: '🔀', cat: 'A', levels: ['Seviye 1 (5-6)','Seviye 2 (6-8)','Seviye 3 (Gruplama)','Seviye 4 (Strateji)'], instr: 'Noktaları alt gruplara ayır! Kavramsal sanbil becerisini geliştir. Büyük kümeleri küçük parçalara böl.' },
   B1: { comp: TahminKavanozlari, name: 'Tahmin Kavanozları', emoji: '🫙', cat: 'B', levels: ['Seviye 1 (5-15)','Seviye 2 (10-25)','Seviye 3 (15-35)','Seviye 4 (20-50)'], instr: 'Kavanozdaki bilyelere bak ve kaç tane olduğunu tahmin et. Artı/eksi butonlarıyla sayını ayarla ve gönder! Yakın tahminler de puan kazandırır.' },

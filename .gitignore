@@ -2,3 +2,28 @@ node_modules
 dist
 .DS_Store
 *.local
+
+# Ortam değişkenleri
+.env
+.env.local
+.env.production
+
+# Capacitor / Android
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/keystore.properties
+android/.idea/
+android/captures/
+*.keystore
+*.jks
+
+# Backend (server/)
+server/node_modules/
+server/matbil-codes.db
+server/.env
+
+# IDE
+.vscode/
+.idea/

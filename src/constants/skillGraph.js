@@ -1,6 +1,6 @@
 export const SKILL_GRAPH = {
   subitizing: { name: 'Sanbil', games: ['A1','A2','A5','A7','A8'], prereqs: [] },
-  counting: { name: 'Sayma', games: ['A3','A4','E8'], prereqs: ['subitizing'] },
+  counting: { name: 'Sayma', games: ['A3','A4','A6','E8'], prereqs: ['subitizing'] },
   magnitude: { name: 'Büyüklük Algısı', games: ['C2','B3'], prereqs: ['subitizing'] },
   symbolRecog: { name: 'Sembol Tanıma', games: ['C1','C5'], prereqs: [] },
   placeValue: { name: 'Basamak Değeri', games: ['C4'], prereqs: ['symbolRecog','counting'] },
@@ -15,6 +15,79 @@ export const SKILL_GRAPH = {
   workingMemory: { name: 'Çalışma Belleği', games: ['F1'], prereqs: ['subitizing'] },
   inhibition: { name: 'İnhibisyon/Stroop', games: ['F2'], prereqs: ['magnitude'] },
   cogFlex: { name: 'Bilişsel Esneklik', games: ['F3'], prereqs: ['counting','addition'] },
+};
+
+/**
+ * GAME_CHAPTER_MAP - Her oyun için spesifik kitap bölümü eşlemesi
+ * Bölüm numaraları BookChapters.jsx'teki BOOK_CHAPTERS listesine karşılık gelir.
+ * primary: Oyunun birincil bölümü (teori referansı)
+ * secondary: Destekleyici bölümler (ek okuma)
+ */
+export const GAME_CHAPTER_MAP = {
+  // ─── Kategori A: Sanbil ve Hızlı Sayma ───
+  A1: { primary: 4, secondary: [1], skill: 'subitizing' },   // Nokta Avcısı - Sanbil
+  A2: { primary: 4, secondary: [1], skill: 'subitizing' },   // Kaç Parmak? - Parmak-sayı
+  A3: { primary: 9, secondary: [1, 4], skill: 'workingMemory' }, // Hafıza - Çalışma belleği
+  A4: { primary: 4, secondary: [1], skill: 'subitizing' },   // Gruplama Ustası - Kavramsal sanbil
+  A5: { primary: 4, secondary: [1], skill: 'subitizing' },   // Günlük Sanbil
+  A6: { primary: 4, secondary: [1], skill: 'counting' },     // Parmak Köprüsü
+  A7: { primary: 1, secondary: [5], skill: 'subitizing' },   // Nokta Karşılaştırma - YSS
+  A8: { primary: 4, secondary: [1], skill: 'subitizing' },   // Sayı Ayrıştırma - Kavramsal sanbil
+
+  // ─── Kategori B: Tahmin ve Büyüklük Algısı ───
+  B1: { primary: 5, secondary: [1], skill: 'estimation' },   // Tahmin Kavanozları
+  B2: { primary: 5, secondary: [1], skill: 'estimation' },   // Sayı Doğrusu
+  B3: { primary: 5, secondary: [1], skill: 'magnitude' },    // Yakınlık Tahmini
+  B4: { primary: 5, secondary: [1], skill: 'estimation' },   // Ölçme Tahmini
+  B5: { primary: 5, secondary: [1], skill: 'estimation' },   // Hesaplamalı Tahmin
+
+  // ─── Kategori C: Sembolik Sayı İşleme ───
+  C1: { primary: 3, secondary: [2], skill: 'symbolRecog' },  // Sayı-Sembol Eşleştirme
+  C2: { primary: 3, secondary: [2, 9], skill: 'magnitude' }, // Büyük-Küçük (Stroop)
+  C3: { primary: 2, secondary: [3], skill: 'transcoding' },  // Çoklu Gösterim - ÜKM
+  C4: { primary: 3, secondary: [2], skill: 'placeValue' },   // Basamak Değeri
+  C5: { primary: 2, secondary: [3], skill: 'transcoding' },  // Kod Çevirici - ÜKM
+
+  // ─── Kategori D: Geometri ve Uzamsal Biliş ───
+  D1: { primary: 6, secondary: [7, 8], skill: 'shapeRecog' },  // Şekli Tanıma - Van Hiele 0
+  D2: { primary: 7, secondary: [6, 8], skill: 'shapeRecog' },  // Eleman ve Özellikler - Van Hiele 1
+  D3: { primary: 7, secondary: [6, 8], skill: 'spatialRel' },  // İlişkiler - Van Hiele 2
+  D4: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Yön ve Mesafe - Büyük uzay
+  D5: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Zihinsel Döndürme
+  D6: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Simetri Aynası
+
+  // ─── Kategori E: Aritmetik ve Sayı İşlemleri ───
+  E1: { primary: 1, secondary: [4], skill: 'counting' },       // Komşu Sayılar - Ordinalite
+  E2: { primary: 4, secondary: [1], skill: 'addition' },       // Parça-Bütün
+  E3: { primary: 4, secondary: [1], skill: 'addition' },       // Toplama Stratejileri
+  E4: { primary: 4, secondary: [1], skill: 'division' },       // Bölüşme Zamanı
+  E5: { primary: 1, secondary: [4], skill: 'addition' },       // Sayı Yürüyüşü
+  E6: { primary: 4, secondary: [1], skill: 'addition' },       // Sayı Bağları
+  E7: { primary: 4, secondary: [1], skill: 'subtraction' },    // Çıkarma Stratejileri
+  E8: { primary: 1, secondary: [4], skill: 'counting' },       // Geri Sayma
+  E9: { primary: 4, secondary: [1], skill: 'multiplication' }, // Çarpma Kavramı
+
+  // ─── Kategori F: Yürütücü İşlevler ───
+  F1: { primary: 9, secondary: [], skill: 'workingMemory' },   // Sayısal Bellek
+  F2: { primary: 9, secondary: [], skill: 'inhibition' },      // Sayısal Stroop
+  F3: { primary: 9, secondary: [], skill: 'cogFlex' },         // Görev Değiştirme
+};
+
+/**
+ * Tek bir kitap bölümüne ait tüm oyunları döndürür.
+ * BookChapters.jsx ve TeacherDashboard için kullanılır.
+ */
+export const getGamesForChapter = (chapterNum) => {
+  return Object.entries(GAME_CHAPTER_MAP)
+    .filter(([, map]) => map.primary === chapterNum || map.secondary?.includes(chapterNum))
+    .map(([gameId]) => gameId);
+};
+
+/**
+ * Tek bir oyunun birincil bölüm numarasını döndürür.
+ */
+export const getChapterForGame = (gameId) => {
+  return GAME_CHAPTER_MAP[gameId]?.primary || null;
 };
 
 export const CHAPTER_MAP = {
@@ -40,7 +113,7 @@ export const CHAPTER_MAP = {
     weakMsg: 'Tahmin becerisi desteklenmelidir. YSS hassasiyetini güçlendirmek için: (1) Günlük yaşamdan somut tahmin etkinlikleri (kavanoz tahmini, mesafe tahmini), (2) Sayı doğrusu üzerinde konum tahminleri, (3) Referans noktası stratejileri (yarı, çeyrek), (4) İşlemsel tahmin çalışmaları (yuvarlama + karşılaştırma). Weber oranına duyarlılığı artıracak kademeli zorluk artışı uygulanmalıdır.',
     strongMsg: 'Tahmin becerisi iyi düzeyde. Farklı bağlamlarda (ölçümsel, niceliksel, işlemsel) tahmin çalışmalarıyla esneklik artırılabilir. Tahmin-doğrulama döngüsü ile üst-bilişsel (metakognitif) farkındalık desteklenebilir.',
     refs: 'Booth & Siegler (2006); Halberda ve ark. (2008); Siegler & Booth (2004); Sowder (1992); Andrews ve ark. (2022); Star & Rittle-Johnson (2009)',
-    childTheory: 'Bu oyunlarda "yaklaşık olarak kaç tane?" sorusunu yanıtlıyorsun. Tam sayısını bilmene gerek yok — tahmin etmen yeterli! Tahmin etmek beyninizi matematikte daha güçlü yapıyor.',
+    childTheory: 'Bu oyunlarda "yaklaşık olarak kaç tane?" sorusunu yanıtlıyorsun. Tam sayısını bilmene gerek yok — tahmin etmen yeterli! Tahmin etmek beynini matematikte daha güçlü yapıyor.',
     childWeakMsg: 'Tahmin yapmak pratikle gelişir. İpucu: önce küçük bir grubu say, sonra büyük grubun kaç katı olduğunu düşün. Her gün etrafındaki şeyleri tahmin etmeyi dene!',
     childStrongMsg: 'Tahminlerin çok iyi! Sayıların büyüklüğünü iyi hissediyorsun. Şimdi daha büyük sayılarla ve farklı ölçülerle (uzunluk, ağırlık) tahmin yapmayı deneyebilirsin.'
   },
@@ -79,7 +152,7 @@ export const CHAPTER_MAP = {
     theory: 'Temel aritmetik beceriler, sanbil ve sayı hissi temeline inşa edilir. Parça-bütün ilişkisi, toplama stratejileri (onluğa tamamlama, ikiye katlama, parçalara ayırma), eşit paylaştırma ve sayı komşuluğu (ordinalite), çekirdek bilgi sistemlerinin sembolik aritmetiğe dönüşümüdür. İşlemsel esneklik — farklı çözüm yolları arasında etkili seçim yapabilme — güçlü sayı hissinin en önemli göstergesidir. Somut-Temsili-Soyut (CRA) pedagojik çerçevesi, ÜKM\'nin üç kodunu sınıf içi uygulamaya dönüştüren en etkili yaklaşımdır.',
     weakMsg: 'Temel aritmetik işlemler pekiştirilmelidir. CRA çerçevesinde: (1) Somut düzey — manipülatif ve nesnelerle parça-bütün ilişkisi, (2) Temsili düzey — onluk çerçeve, sayı doğrusu ve diyagramlarla görselleştirme, (3) Soyut düzey — sembolik işlem ve esnek strateji kullanımı. Sayı komşulukları ve sıralama (ordinalite) çalışmalarıyla sayı doğrusu temsili güçlendirilmelidir.',
     strongMsg: 'Aritmetik beceriler sağlam temele oturuyor. İleri düzey problem çözme, esnek strateji kullanımı ve çok adımlı işlemlerle beceriler genişletilebilir. Tahmin-doğrulama döngüsüyle sonuç kontrolü alışkanlığı kazandırılabilir.',
-    refs: 'Gelman & Gallistel (1978); Baroody (2006); Butterworth ve ark. (2011); Geary (2011); Jordan ve ark. (2010); Lyons ve ark. (2014)',
+    refs: 'Gelman & Gallistel (1978); Baroody (2006); Butterworth ve ark. (2011); Geary (2011); Jordan ve ark. (2010); Link ve ark. (2013); Lyons ve ark. (2014)',
     childTheory: 'Toplama, çıkarma ve paylaştırma! Bu oyunlarda sayıları parçalara ayırmayı, bir araya getirmeyi ve sayı doğrusu üzerinde yürümeyi öğreniyorsun.',
     childWeakMsg: 'Toplama ve çıkarma yaparken nesnelerle (parmaklar, küpler) denemek işe yarar. Bir sayıyı parçalara ayırmayı dene: mesela 7 = 3 + 4 veya 5 + 2. Her seferinde farklı parçalar bulabilir misin?',
     childStrongMsg: 'Aritmetikte çok iyisin! Şimdi farklı stratejiler deneyebilirsin: onluğa tamamlama, ikiye katlama veya zıplaya zıplaya sayma gibi. Hangisi sana daha kolay geliyor?'
@@ -88,10 +161,10 @@ export const CHAPTER_MAP = {
     chapters: [
       'Bölüm 9: Bilişsel Beceriler — Çalışma Belleği, İnhibisyon ve Bilişsel Esneklik'
     ],
-    theory: 'Matematik performansı yalnızca sayısal becerilere değil, alan-genel bilişsel becerilere de bağlıdır. Çalışma belleği (bilgiyi geçici olarak tutma ve işleme), inhibisyon (alakasız bilgiyi baskılama, Stroop etkisi) ve bilişsel esneklik (görevler arası geçiş yapma) diskalkülide tutarlı biçimde bozulan üç yürütücü işlevdir. Soltanlou ve ark. (2022) yürütücü işlev eğitiminin aritmetik becerileri önemli ölçüde iyileştirdiğini göstermiştir.',
+    theory: 'Matematik performansı yalnızca sayısal becerilere değil, alan-genel bilişsel becerilere de bağlıdır. Çalışma belleği (bilgiyi geçici olarak tutma ve işleme), inhibisyon (alakasız bilgiyi baskılama, Stroop etkisi) ve bilişsel esneklik (görevler arası geçiş yapma) diskalkulide tutarlı biçimde bozulan üç yürütücü işlevdir. Soltanlou ve ark. (2022) yürütücü işlev eğitiminin aritmetik becerileri önemli ölçüde iyileştirdiğini göstermiştir.',
     weakMsg: 'Bilişsel beceriler desteklenmelidir. Çalışma belleği eğitimi (N-geri görevi), inhibisyon eğitimi (Stroop tipi görevler) ve görev değiştirme alıştırmaları ile yürütücü işlevler güçlendirilebilir. Bu beceriler matematik öğreniminin temelini oluşturur.',
     strongMsg: 'Bilişsel beceriler güçlü. Daha karmaşık çok adımlı problemler ve hızlı görev değiştirme alıştırmaları ile ileri düzey bilişsel esneklik desteklenebilir.',
-    refs: 'Soltanlou ve ark. (2022); Alagoz & Kucian (2022); Miyake ve ark. (2000); Diamond (2013)',
+    refs: 'Soltanlou ve ark. (2022); Alagöz & Kucian (2022); Miyake ve ark. (2000); Diamond (2013)',
     childTheory: 'Bu oyunlarda beynini güçlendiriyorsun! Sayıları hatırlama, dikkatini toplama ve kuralları hızlıca değiştirme — bunlar matematikte sana süper güç veriyor!',
     childWeakMsg: 'Beyin egzersizleri pratikle gelişir. Hatırlama oyunlarını yavaş yavaş zorlaştır. Her gün biraz pratik yapmak beynini güçlendirir!',
     childStrongMsg: 'Harika bir beyin gücün var! Sayıları hatırlama ve dikkatini yönlendirmede çok iyisin. Daha zor seviyelere hazırsın!'
