@@ -16,9 +16,22 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // Sessiz hata günlüğü — gelecekte bir hata raporlama servisi eklenebilir
     try {
       console.error('[MatBil ErrorBoundary]', error, errorInfo);
+    } catch {}
+    // Son N hatayı localStorage'a yaz — Sentry entegrasyonu eklenene kadar debug için
+    try {
+      const log = JSON.parse(localStorage.getItem('matbil_error_log') || '[]');
+      log.push({
+        at: new Date().toISOString(),
+        message: String(error?.message || error),
+        stack: String(error?.stack || '').slice(0, 1500),
+        componentStack: String(errorInfo?.componentStack || '').slice(0, 1500),
+        userAgent: navigator.userAgent?.slice(0, 200),
+      });
+      // Yalnız son 10 kayıt
+      const trimmed = log.slice(-10);
+      localStorage.setItem('matbil_error_log', JSON.stringify(trimmed));
     } catch {}
   }
 

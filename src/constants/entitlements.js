@@ -40,12 +40,20 @@ export const FREE_FEATURES = {
 // Şu an için lokal format doğrulaması, Faz 5'te backend havuzu eklenecek
 export const CODE_PATTERN = /^MTB-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 
-// Demo/test kodları — Backend yoksa (VITE_CODE_API_URL tanımlı değilse) lokal fallback
-// Production'da backend havuzuna geçilir. Dev'de bu kodlarla test edilebilir.
-export const DEMO_CODES = new Set([
-  'MTB-DEMO-2025-BOOK',
-  'MTB-TEST-0000-0001',
-]);
+// Demo/test kodları — YALNIZCA dev build'de etkin. Production build'de (import.meta.env.PROD)
+// otomatik boşaltılır ki aktivasyon backend'siz kimseye ücretsiz premium verilmesin.
+const IS_DEV = (() => {
+  try { return !import.meta.env?.PROD; } catch { return false; }
+})();
+
+export const DEMO_CODES = new Set(
+  IS_DEV
+    ? ['MTB-DEMO-2025-BOOK', 'MTB-TEST-0000-0001']
+    : []
+);
+
+// Dev build mi? UI'de uyarı göstermek için dışa aktarılır.
+export const IS_DEV_BUILD = IS_DEV;
 
 // Backend API URL'i — .env dosyasında VITE_CODE_API_URL olarak tanımlanmalı
 // Tanımlı değilse lokal DEMO_CODES kullanılır (dev modu)
@@ -57,17 +65,22 @@ export const CODE_API_URL = (() => {
   }
 })();
 
-// Cihaz tanımlayıcısı — aynı kodun farklı cihazlarda yeniden kullanımı için
+// Cihaz tanımlayıcısı — crypto.getRandomValues ile kriptografik güçte ID
 // Backend bu ID'yi takip eder, max cihaz sayısına göre kodu onaylar
 export const getOrCreateDeviceId = () => {
   try {
     let id = localStorage.getItem('matbil_device_id');
     if (!id) {
-      id = 'dev_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now().toString(36);
+      // Math.random yerine kriptografik rastgele — tahmin edilemez
+      const arr = new Uint8Array(16);
+      (crypto.getRandomValues ? crypto : globalThis.crypto).getRandomValues(arr);
+      const hex = Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      id = `dev_${hex}`;
       localStorage.setItem('matbil_device_id', id);
     }
     return id;
   } catch {
+    // Crypto yoksa fallback (çok eski tarayıcı)
     return 'anon_' + Math.random().toString(36).substring(2, 11);
   }
 };

@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { GAMES } from '../../constants/games';
 import { CATEGORIES } from '../../constants/categories';
 import { CHAPTER_MAP } from '../../constants/skillGraph';
-import { getUsers, getProgress, getPremiumInfo } from '../../utils';
+import { getUsers, getProgress, getPremiumInfo, hashPin, writePremiumState } from '../../utils';
+
+// SHA-256(plaintext + salt) — plaintext kaynakta değil
+const ADMIN_PW_HASH = '85ced32324b79bea99393b52aa5403e62c385d49fbacbdedefa3b48595d5ad53';
 
 const AdminPanel = ({ onBack }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [pw, setPw] = useState('');
   const [pwError, setPwError] = useState(false);
-  const ADMIN_PW = 'matbil2025';
+  const [busy, setBusy] = useState(false);
   const [allUsers, setAllUsers] = useState([]);
   const [allData, setAllData] = useState([]);
   const [premiumActivated, setPremiumActivated] = useState(false);
@@ -19,9 +22,7 @@ const AdminPanel = ({ onBack }) => {
     try {
       const existing = getPremiumInfo();
       if (!existing.active) {
-        localStorage.setItem('matbil_premium', '1');
-        localStorage.setItem('matbil_premium_code', 'ADMIN-AUTHOR');
-        localStorage.setItem('matbil_premium_at', new Date().toISOString());
+        writePremiumState('ADMIN-AUTHOR');
         // Grandfather migration bayrağını da set et, tek seferlik kontrolü bypass et
         localStorage.setItem('matbil_freemium_migrated', '1');
         setPremiumActivated(true);
@@ -29,9 +30,16 @@ const AdminPanel = ({ onBack }) => {
     } catch {}
   };
 
-  const tryLogin = () => {
-    if (pw === ADMIN_PW) handleAuthSuccess();
-    else setPwError(true);
+  const tryLogin = async () => {
+    if (busy || !pw) return;
+    setBusy(true);
+    try {
+      const hash = await hashPin(pw);
+      if (hash === ADMIN_PW_HASH) handleAuthSuccess();
+      else { setPwError(true); setBusy(false); }
+    } catch {
+      setPwError(true); setBusy(false);
+    }
   };
 
   useEffect(() => {

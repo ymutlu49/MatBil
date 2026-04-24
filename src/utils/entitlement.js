@@ -1,4 +1,4 @@
-import { PREMIUM_REQUIRED, FREE_GAME_IDS, FREE_FEATURES, CODE_PATTERN, DEMO_CODES, CODE_API_URL, getOrCreateDeviceId } from '../constants/entitlements';
+import { PREMIUM_REQUIRED, FREE_GAME_IDS, FREE_FEATURES, CODE_PATTERN, DEMO_CODES, CODE_API_URL, IS_DEV_BUILD, getOrCreateDeviceId } from '../constants/entitlements';
 
 /**
  * Entitlement yönetimi — freemium aktivasyon katmanı.
@@ -13,20 +13,105 @@ import { PREMIUM_REQUIRED, FREE_GAME_IDS, FREE_FEATURES, CODE_PATTERN, DEMO_CODE
  *  - matbil_premium      : '1' | '0' | null   (premium durumu)
  *  - matbil_premium_code : string (ne ile açıldı - izleme amaçlı)
  *  - matbil_premium_at   : ISO date (açıldığı an)
+ *  - matbil_premium_sig  : imza (cihaz+kod+zaman türevi, manipülasyonu zorlaştırır)
  */
 
 const PREMIUM_KEY = 'matbil_premium';
 const CODE_KEY = 'matbil_premium_code';
 const AT_KEY = 'matbil_premium_at';
+const SIG_KEY = 'matbil_premium_sig';
+
+// Uygulama sırrı — APK'dan çıkarılabilir ama trivial localStorage manipülasyonunu engeller.
+// Gerçek güvenlik için server-side validation gerekli; bu, "casual bypass" koruması.
+const APP_SECRET = 'mbs_v16_4f9k2xp7v3';
+
+/**
+ * Senkron integrity stamp (hash tabanlı).
+ * Gerçek HMAC değil (Web Crypto async); ancak trivial localStorage bypass'ı engelliyor.
+ */
+const makeStamp = (deviceId, code, at) => {
+  const payload = `${APP_SECRET}|${deviceId || ''}|${code || ''}|${at || ''}`;
+  // Basit DJB2-like hash, 32-bit
+  let h = 5381;
+  for (let i = 0; i < payload.length; i++) h = ((h << 5) + h + payload.charCodeAt(i)) | 0;
+  // APP_SECRET ters yönde bir kez daha karıştır
+  for (let i = APP_SECRET.length - 1; i >= 0; i--) h = ((h * 31) + APP_SECRET.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+};
+
+const verifyStamp = () => {
+  try {
+    const code = localStorage.getItem(CODE_KEY) || '';
+    const at = localStorage.getItem(AT_KEY) || '';
+    const sig = localStorage.getItem(SIG_KEY) || '';
+    if (!sig) return false;
+    const deviceId = getOrCreateDeviceId();
+    return makeStamp(deviceId, code, at) === sig;
+  } catch { return false; }
+};
+
+export const writePremiumState = (code) => {
+  try {
+    const at = new Date().toISOString();
+    const deviceId = getOrCreateDeviceId();
+    localStorage.setItem(PREMIUM_KEY, '1');
+    localStorage.setItem(CODE_KEY, code);
+    localStorage.setItem(AT_KEY, at);
+    localStorage.setItem(SIG_KEY, makeStamp(deviceId, code, at));
+  } catch {}
+};
 
 /**
  * Kullanıcı premium mü?
  * Master switch kapalıysa her zaman true (kilitleme yok, mevcut davranış).
+ * İmza eksik/geçersizse trivial localStorage manipülasyonu reddedilir.
  */
 export const isPremiumUser = () => {
   if (!PREMIUM_REQUIRED) return true;
   try {
-    return localStorage.getItem(PREMIUM_KEY) === '1';
+    if (localStorage.getItem(PREMIUM_KEY) !== '1') return false;
+    // İmzasız premium = ya gerçek legacy (migration öncesi) ya da bypass girişimi.
+    // Legacy kanıtı: migration bayrağı VEYA mevcut progress/users verisi olmalı.
+    if (!localStorage.getItem(SIG_KEY)) {
+      const keys = Object.keys(localStorage);
+      const migrated = localStorage.getItem('matbil_freemium_migrated') === '1';
+      const hasProgress = keys.some(k => k.startsWith('matbil_progress_'));
+      let hasUsers = false;
+      try {
+        hasUsers = (JSON.parse(localStorage.getItem('matbil_users') || '[]')).length > 0;
+      } catch {}
+      const isLegitLegacy = migrated || hasProgress || hasUsers;
+      if (!isLegitLegacy) {
+        // Bypass girişimi — premium'u temizle
+        try {
+          localStorage.removeItem(PREMIUM_KEY);
+          localStorage.removeItem(CODE_KEY);
+          localStorage.removeItem(AT_KEY);
+          localStorage.removeItem(SIG_KEY);
+        } catch {}
+        return false;
+      }
+      // Gerçek legacy — bir kerelik imzala
+      const code = localStorage.getItem(CODE_KEY) || 'LEGACY';
+      const at = localStorage.getItem(AT_KEY) || new Date().toISOString();
+      try {
+        localStorage.setItem(CODE_KEY, code);
+        localStorage.setItem(AT_KEY, at);
+        localStorage.setItem(SIG_KEY, makeStamp(getOrCreateDeviceId(), code, at));
+      } catch {}
+      return true;
+    }
+    // İmza varsa doğrula — manipüle edilmişse premium'u geri al
+    if (!verifyStamp()) {
+      try {
+        localStorage.removeItem(PREMIUM_KEY);
+        localStorage.removeItem(CODE_KEY);
+        localStorage.removeItem(AT_KEY);
+        localStorage.removeItem(SIG_KEY);
+      } catch {}
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }
@@ -114,17 +199,18 @@ export const redeemCode = async (rawCode) => {
       result = { ok: false, reason: 'network' };
     }
   } else {
-    // Lokal fallback (dev)
-    if (DEMO_CODES.has(code)) result = { ok: true };
-    else result = { ok: false, reason: 'invalid' };
+    // Backend yok: dev build'de DEMO_CODES havuzu, production'da reddet
+    if (!IS_DEV_BUILD) {
+      result = { ok: false, reason: 'server' };
+    } else if (DEMO_CODES.has(code)) {
+      result = { ok: true };
+    } else {
+      result = { ok: false, reason: 'invalid' };
+    }
   }
 
   if (result.ok) {
-    try {
-      localStorage.setItem(PREMIUM_KEY, '1');
-      localStorage.setItem(CODE_KEY, code);
-      localStorage.setItem(AT_KEY, new Date().toISOString());
-    } catch {}
+    writePremiumState(code);
   }
   return result;
 };
@@ -154,6 +240,7 @@ export const revokePremium = () => {
     localStorage.removeItem(PREMIUM_KEY);
     localStorage.removeItem(CODE_KEY);
     localStorage.removeItem(AT_KEY);
+    localStorage.removeItem(SIG_KEY);
   } catch {}
 };
 
@@ -183,9 +270,7 @@ export const grandfatherExistingUsers = () => {
     const hasUsers = keys.includes('matbil_users') && JSON.parse(localStorage.getItem('matbil_users') || '[]').length > 0;
     const hasOnboarded = localStorage.getItem('matbil_onboarded') === '1';
     if (hasProgress || hasUsers || hasOnboarded) {
-      localStorage.setItem(PREMIUM_KEY, '1');
-      localStorage.setItem(CODE_KEY, 'GRANDFATHERED');
-      localStorage.setItem(AT_KEY, new Date().toISOString());
+      writePremiumState('GRANDFATHERED');
     }
   } catch {}
 };
@@ -197,13 +282,12 @@ export const grandfatherExistingUsers = () => {
 export const __devSetPremium = (value) => {
   try {
     if (value) {
-      localStorage.setItem(PREMIUM_KEY, '1');
-      localStorage.setItem(CODE_KEY, 'DEV');
-      localStorage.setItem(AT_KEY, new Date().toISOString());
+      writePremiumState('DEV');
     } else {
       localStorage.removeItem(PREMIUM_KEY);
       localStorage.removeItem(CODE_KEY);
       localStorage.removeItem(AT_KEY);
+      localStorage.removeItem(SIG_KEY);
     }
   } catch {}
 };

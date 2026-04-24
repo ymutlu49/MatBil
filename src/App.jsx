@@ -17,6 +17,7 @@ import ReportScreen from './components/screens/ReportScreen';
 import PDFReportView from './components/screens/PDFReportView';
 import AdminPanel from './components/screens/AdminPanel';
 import Onboarding from './components/screens/Onboarding';
+import KvkkConsentScreen from './components/screens/KvkkConsentScreen';
 import BookChapters from './components/screens/BookChapters';
 import QRCodePage from './components/screens/QRCodePage';
 import TheoryIntro from './components/ui/TheoryIntro';
@@ -41,8 +42,16 @@ import { migrateExistingUsers } from './utils/auth';
 const App = () => {
   const [user, setUser] = useState(null);
   const [currentGame, setCurrentGame] = useState(null);
+  const [showKvkk, setShowKvkk] = useState(() => { try { return localStorage.getItem('matbil_kvkk_accepted') !== '1'; } catch { return true; } });
   const [showOnboarding, setShowOnboarding] = useState(() => { try { return !localStorage.getItem('matbil_onboarded'); } catch { return true; } });
   const completeOnboarding = () => { setShowOnboarding(false); try { localStorage.setItem('matbil_onboarded','1'); } catch {} };
+  const handleKvkkAccept = () => setShowKvkk(false);
+  const handleKvkkDecline = () => {
+    // Kullanıcı onay vermedi — tüm veriyi temizle ve sayfayı kapat/yeniden yükle
+    try { localStorage.clear(); } catch {}
+    alert('Onay vermeden uygulama kullanılamaz. Uygulamayı kapatabilirsiniz.');
+    try { window.close(); } catch {}
+  };
   const [view, setView] = useState('home');
   const [expandedCat, setExpandedCat] = useState(null);
   const [buyukYazi, setBuyukYazi] = useState(() => { try { return localStorage.getItem('matbil_buyuk_yazi') === 'true'; } catch { return false; } });
@@ -103,6 +112,9 @@ const App = () => {
       if (last) setUser(JSON.parse(last));
     } catch {}
   }, []);
+
+  // Android/tarayıcı geri tuşu için ref — tüm modal/ekran state'leri aşağıda tanımlandığında güncellenir
+  const backStateRef = React.useRef({});
 
   // Kitap kodu modalı
   const [showRedeemModal, setShowRedeemModal] = useState(false);
@@ -250,6 +262,40 @@ const App = () => {
   const [showTheoryIntro, setShowTheoryIntro] = useState(null); // gameId
   const [showTheoryReflection, setShowTheoryReflection] = useState(null); // { gameId, stars }
 
+  // Android/tarayıcı geri tuşu: oyundan/alt ekrandan ana menüye dön
+  React.useEffect(() => {
+    backStateRef.current = { currentGame, view, showTheoryIntro, showTheoryReflection, showRedeemModal, showAvatarPicker, showSettings };
+  });
+
+  useEffect(() => {
+    const handleBack = () => {
+      const s = backStateRef.current;
+      if (s.currentGame) {
+        setCurrentGame(null);
+        try { history.pushState({ app: 'matbil' }, ''); } catch {}
+        return;
+      }
+      if (s.view && s.view !== 'home') {
+        setView('home');
+        try { history.pushState({ app: 'matbil' }, ''); } catch {}
+        return;
+      }
+      if (s.showTheoryIntro || s.showTheoryReflection || s.showRedeemModal || s.showAvatarPicker || s.showSettings) {
+        setShowTheoryIntro(null);
+        setShowTheoryReflection(null);
+        setShowRedeemModal(false);
+        setShowAvatarPicker(false);
+        setShowSettings(false);
+        try { history.pushState({ app: 'matbil' }, ''); } catch {}
+        return;
+      }
+      // Ana menüde → tarayıcı/native kendi davranışını yapsın
+    };
+    try { history.pushState({ app: 'matbil' }, ''); } catch {}
+    window.addEventListener('popstate', handleBack);
+    return () => window.removeEventListener('popstate', handleBack);
+  }, []);
+
   // Öğretmenin öğrenci adına oyun oynama modu
   const [playingStudent, setPlayingStudent] = useState(null);
 
@@ -270,6 +316,8 @@ const App = () => {
     setExpandedCat(null);
   };
 
+  // KVKK onayı ilk açılışta zorunlu — rol seçiminden önce gösterilir
+  if (showKvkk) return <KvkkConsentScreen onAccept={handleKvkkAccept} onDecline={handleKvkkDecline} />;
   if (!user) return <RoleSelectScreen onLogin={handleLogin} />;
   if (user.role === 'teacher' && !playingStudent) return <TeacherDashboard user={user} onLogout={handleLogout} onPlayAsStudent={handlePlayAsStudent} />;
   if (user.role === 'parent') return <ParentDashboard user={user} onLogout={handleLogout} />;

@@ -9,5 +9,7 @@ export { getGrowthMessage, gentleEncourage, MOOD_OPTIONS, getAnxietyAdjustments,
 export { playCountSound, playStepSound, playMagnitudeSound, playSuccessMelody, playEncourageSound, speakTurkish } from './multisensory';
 export { getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, LEVELS, getLevelUpMessage } from './avatar';
 export { getChapterProgress, getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress, detectNewChapterMastery, TOTAL_CHAPTERS } from './chapterProgress';
-export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, grandfatherExistingUsers, __devSetPremium } from './entitlement';
+export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, grandfatherExistingUsers, writePremiumState, __devSetPremium } from './entitlement';
 export { useNoRepeat, pickNoRepeat } from './noRepeat';
+export { hashPin, verifyPin, generateId } from './auth';
+export { useSafeTimeout } from './useSafeTimeout';

@@ -24,10 +24,25 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
     return { ...cat, total: catGames.length, played: catPlayed.length, avg: catAvg, stars: catStars, maxStars: catGames.length * 3 };
   });
 
-  // Öğretmen notları
+  // Öğretmen notları — userId (UUID) kullanılır (XSS ve aynı-ad çakışması önlendi)
+  const noteKey = `matbil_note_${user?.id || 'unknown'}`;
   const [viewMode, setViewMode] = useState('teacher'); // 'teacher' | 'child'
-  const [teacherNote, setTeacherNote] = useState(() => { try { return localStorage.getItem(`matbil_note_${user?.name}`) || ''; } catch { return ''; } });
-  const saveNote = (txt) => { setTeacherNote(txt); try { localStorage.setItem(`matbil_note_${user?.name}`, txt); } catch {} };
+  const [teacherNote, setTeacherNote] = useState(() => {
+    try {
+      // Eski ad-tabanlı anahtarı bir kerelik migrate et
+      if (user?.name && user?.id) {
+        const legacyKey = `matbil_note_${user.name}`;
+        const legacy = localStorage.getItem(legacyKey);
+        const current = localStorage.getItem(noteKey);
+        if (legacy && !current) {
+          localStorage.setItem(noteKey, legacy);
+          localStorage.removeItem(legacyKey);
+        }
+      }
+      return localStorage.getItem(noteKey) || '';
+    } catch { return ''; }
+  });
+  const saveNote = (txt) => { setTeacherNote(txt); try { localStorage.setItem(noteKey, txt); } catch {} };
 
   // Son oynanan oyunlar (kronolojik)
   const recentPlays = Object.entries(progress)
