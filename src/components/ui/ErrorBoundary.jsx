@@ -38,17 +38,11 @@ class ErrorBoundary extends React.Component {
       localStorage.setItem('matbil_error_log', JSON.stringify(log.slice(-10)));
     } catch {}
 
-    // 2) VITE_ERROR_REPORT_URL tanımlıysa uzak sunucuya gönder (fire-and-forget)
+    // 2) Telemetri katmanına gönder — Sentry veya custom endpoint
     try {
-      const url = import.meta.env?.VITE_ERROR_REPORT_URL;
-      if (url && typeof fetch === 'function') {
-        fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-          keepalive: true,
-        }).catch(() => {}); // sessiz — ikincil hata user'ı etkilememeli
-      }
+      import('../../utils/telemetry').then(({ reportError }) => {
+        reportError(error, { componentStack: errorInfo?.componentStack, ...payload });
+      }).catch(() => {});
     } catch {}
   }
 
