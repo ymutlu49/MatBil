@@ -61,6 +61,8 @@ Kullanım istatistikleri.
 | `ADMIN_TOKEN` | change-me | Admin erişim tokeni (**mutlaka değiştir**) |
 | `MAX_DEVICES_PER_CODE` | 3 | Bir kod kaç cihazda açılabilir |
 | `ALLOWED_ORIGIN` | `*` | CORS origin (prod: spesifik domain) |
+| `REDEEM_RATE_LIMIT` | 10 | `/redeem` istek/dakika/IP (brute force koruması) |
+| `ADMIN_RATE_LIMIT` | 30 | `/admin/*` istek/dakika/IP |
 
 ## Production Deploy Önerileri
 
@@ -83,7 +85,7 @@ Cloudflare Workers versiyonu için `code-api.js`'i Hono framework'üne taşımak
 ## Güvenlik Kontrolleri (Play Store öncesi)
 
 - [ ] HTTPS zorunlu (ücretsiz sertifika: Cloudflare veya Let's Encrypt)
-- [ ] Rate limiting (100 istek/dk/IP)
+- [x] Rate limiting (10 redeem + 30 admin istek/dk/IP — express-rate-limit)
 - [ ] CORS origin kısıtlaması (uygulama domain'i)
 - [ ] `ADMIN_TOKEN` güçlü bir değere çevrildi
 - [ ] DB dosyası düzenli yedeklenir

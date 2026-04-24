@@ -19,19 +19,36 @@ class ErrorBoundary extends React.Component {
     try {
       console.error('[MatBil ErrorBoundary]', error, errorInfo);
     } catch {}
-    // Son N hatayı localStorage'a yaz — Sentry entegrasyonu eklenene kadar debug için
+
+    // Hata kaydı — her zaman yerel, opsiyonel uzaktan
+    const payload = {
+      at: new Date().toISOString(),
+      message: String(error?.message || error),
+      stack: String(error?.stack || '').slice(0, 1500),
+      componentStack: String(errorInfo?.componentStack || '').slice(0, 1500),
+      userAgent: (typeof navigator !== 'undefined' ? navigator.userAgent : '').slice(0, 200),
+      url: (typeof window !== 'undefined' ? window.location.href : '').slice(0, 300),
+      version: '16.1', // app version
+    };
+
+    // 1) Her zaman localStorage'a yaz (son 10 kayıt)
     try {
       const log = JSON.parse(localStorage.getItem('matbil_error_log') || '[]');
-      log.push({
-        at: new Date().toISOString(),
-        message: String(error?.message || error),
-        stack: String(error?.stack || '').slice(0, 1500),
-        componentStack: String(errorInfo?.componentStack || '').slice(0, 1500),
-        userAgent: navigator.userAgent?.slice(0, 200),
-      });
-      // Yalnız son 10 kayıt
-      const trimmed = log.slice(-10);
-      localStorage.setItem('matbil_error_log', JSON.stringify(trimmed));
+      log.push(payload);
+      localStorage.setItem('matbil_error_log', JSON.stringify(log.slice(-10)));
+    } catch {}
+
+    // 2) VITE_ERROR_REPORT_URL tanımlıysa uzak sunucuya gönder (fire-and-forget)
+    try {
+      const url = import.meta.env?.VITE_ERROR_REPORT_URL;
+      if (url && typeof fetch === 'function') {
+        fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true,
+        }).catch(() => {}); // sessiz — ikincil hata user'ı etkilememeli
+      }
     } catch {}
   }
 

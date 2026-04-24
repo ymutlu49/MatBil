@@ -29,6 +29,7 @@ const Database = require('better-sqlite3');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
@@ -65,8 +66,26 @@ app.use(cors({ origin: process.env.ALLOWED_ORIGIN || '*' }));
 app.use(express.json({ limit: '10kb' }));
 app.use(morgan('tiny'));
 
+// ───── Rate Limiters ─────
+// /redeem: IP başına dakikada 10 istek (brute force koruması)
+const redeemLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: parseInt(process.env.REDEEM_RATE_LIMIT || '10', 10),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, reason: 'rate-limit' },
+});
+// /admin/*: IP başına dakikada 30 istek (admin panel)
+const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: parseInt(process.env.ADMIN_RATE_LIMIT || '30', 10),
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'rate-limit' },
+});
+
 // ───── POST /redeem ─────
-app.post('/redeem', (req, res) => {
+app.post('/redeem', redeemLimiter, (req, res) => {
   const { code, deviceId } = req.body || {};
   if (!code || !deviceId) {
     return res.status(400).json({ ok: false, reason: 'format' });
@@ -105,7 +124,7 @@ app.post('/redeem', (req, res) => {
 });
 
 // ───── Admin: Kod havuzu oluştur ─────
-app.post('/admin/codes', (req, res) => {
+app.post('/admin/codes', adminLimiter, (req, res) => {
   const token = req.headers['x-admin-token'];
   if (token !== ADMIN_TOKEN) return res.status(401).json({ error: 'unauthorized' });
   const { count = 100, batch = 'default', maxDevices = MAX_DEVICES_PER_CODE } = req.body || {};
@@ -128,7 +147,7 @@ app.post('/admin/codes', (req, res) => {
 });
 
 // ───── Admin: İstatistikler ─────
-app.get('/admin/stats', (req, res) => {
+app.get('/admin/stats', adminLimiter, (req, res) => {
   const token = req.headers['x-admin-token'];
   if (token !== ADMIN_TOKEN) return res.status(401).json({ error: 'unauthorized' });
   const totalCodes = db.prepare('SELECT COUNT(*) as c FROM codes').get().c;

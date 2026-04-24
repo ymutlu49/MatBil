@@ -8,6 +8,8 @@
     "build": "vite build",
     "build:mobile": "cross-env VITE_BUILD_TARGET=capacitor vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "cap:add": "cap add android",
     "cap:sync": "npm run build:mobile && cap sync android",
     "cap:open": "cap open android",
@@ -22,11 +24,15 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "cross-env": "^10.1.0",
+    "jsdom": "^25.0.1",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
-    "vite": "^5.1.4"
+    "vite": "^5.1.4",
+    "vitest": "^2.1.9"
   }
 }
