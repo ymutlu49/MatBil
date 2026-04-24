@@ -24,41 +24,69 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
 
   const randNum=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
 
+  // Yeni sayı üretimi — history yeterliyse %30 ihtimalle eşleşme, aksi halde setup
   const genTrial=(l,hist)=>{
     const c=cfg[l];
-    const shouldMatch=hist.length>=c.nBack && Math.random()<0.3;
+    const canAsk = hist.length >= c.nBack;
+    if(!canAsk){
+      // Setup turu: geçmiş yeterli değil, soru sorma
+      return { num: randNum(c.min,c.max), match: false, isSetup: true };
+    }
+    const targetNum = hist[hist.length-c.nBack];
+    const shouldMatch = Math.random()<0.3;
     let num;
     if(shouldMatch){
-      num=hist[hist.length-c.nBack];
+      num = targetNum;
     } else {
       let attempts=0;
       do { num=randNum(c.min,c.max); attempts++; }
-      while(hist.length>=c.nBack && num===hist[hist.length-c.nBack] && attempts<20);
+      while(num===targetNum && attempts<20);
     }
-    const match=hist.length>=c.nBack && num===hist[hist.length-c.nBack];
-    return{num,match};
+    return { num, match: num===targetNum, isSetup: false };
   };
+
+  const [isSetup, setIsSetup] = useState(false);
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{
     setLv(l);setSc(0);setRd(1);setUa(null);adaptive.reset();
+    // Boş geçmişle başla — ilk nBack tur kurulum (soru sorulmaz, oyuncu sayıları hatırlamaya başlar)
     const c=cfg[l];
-    const initialHist=[];
-    for(let i=0;i<c.nBack;i++) initialHist.push(randNum(c.min,c.max));
-    const trial=genTrial(l,initialHist);
-    setHistory([...initialHist,trial.num]);
-    setCurrentNum(trial.num);
-    setIsMatch(trial.match);
+    const num = randNum(c.min,c.max);
+    setHistory([num]);
+    setCurrentNum(num);
+    setIsMatch(false);
+    setIsSetup(c.nBack >= 1); // 1-geri için round 1 setup, 2-geri için round 1-2 setup
     setPhase('show');
     setGs('playing');
   };
 
   useEffect(()=>{
     if(gs==='playing' && phase==='show'){
-      timerRef.current=setTimeout(()=>setPhase('ask'),1500);
+      timerRef.current=setTimeout(()=>{
+        if(isSetup){
+          // Kurulum turu: soru sormadan sonraki tura geç
+          if(rd<TOTAL_ROUNDS){
+            const newRd=rd+1;
+            // Bir sonraki turda geçmiş yeterli mi? (rd+1 >= nBack+1 olunca soru sorulabilir)
+            setRd(newRd);
+            // history'yi fonksiyonel güncelle ve yeni durum hesapla
+            setHistory(prev => {
+              const nextHist = [...prev];
+              const trial = genTrial(lv, nextHist);
+              setCurrentNum(trial.num);
+              setIsMatch(trial.match);
+              setIsSetup(trial.isSetup);
+              return [...nextHist, trial.num];
+            });
+          } else setGs('results');
+        } else {
+          setPhase('ask');
+        }
+      },1500);
       return ()=>clearTimeout(timerRef.current);
     }
-  },[gs,phase,rd]);
+  },[gs,phase,rd,isSetup,lv]);
 
   const handle=(answer)=>{
     const correct=(answer==='evet')===isMatch;
@@ -71,10 +99,14 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
         const newRd=rd+1;
         setRd(newRd);
         setUa(null);
-        const trial=genTrial(lv,history);
-        setHistory(h=>[...h,trial.num]);
-        setCurrentNum(trial.num);
-        setIsMatch(trial.match);
+        // history'yi fonksiyonel güncelle — stale closure riski yok
+        setHistory(prev => {
+          const trial = genTrial(lv, prev);
+          setCurrentNum(trial.num);
+          setIsMatch(trial.match);
+          setIsSetup(trial.isSetup);
+          return [...prev, trial.num];
+        });
         setPhase('show');
       } else setGs('results');
     },1500);
@@ -109,8 +141,10 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
         </div>
 
         {phase==='show' && (
-          <div className="bg-indigo-50 px-4 py-2 rounded-xl text-center">
-            <div className="text-sm text-indigo-600 font-medium">Bu sayıyı hatırla...</div>
+          <div className={`${isSetup?'bg-amber-50':'bg-indigo-50'} px-4 py-2 rounded-xl text-center`}>
+            <div className={`text-sm ${isSetup?'text-amber-600':'text-indigo-600'} font-medium`}>
+              {isSetup ? `🔸 Hazırlık turu — bu sayıyı hatırla (henüz soru yok)` : 'Bu sayıyı hatırla...'}
+            </div>
           </div>
         )}
 

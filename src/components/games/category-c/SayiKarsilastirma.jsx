@@ -16,11 +16,23 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
     if(type==='dots') return <div className="flex flex-wrap justify-center gap-1.5" style={{maxWidth:100}}>{Array.from({length:val},(_,i)=><div key={i} className="w-5 h-5 bg-indigo-500 rounded-full"/>)}</div>;
     if(type==='tally'){
       const groups=Math.floor(val/5), rem=val%5;
-      return <div className="flex gap-2 items-end">{Array.from({length:groups},(_,i)=><span key={i} className="text-3xl font-bold text-indigo-700">{'卜'}</span>)}{rem>0&&<span className="text-2xl text-indigo-700 font-bold">{'|'.repeat(rem)}</span>}</div>;
+      return <div className="flex gap-2 items-end">{Array.from({length:groups},(_,i)=><span key={i} className="text-3xl font-bold text-indigo-700">卌</span>)}{rem>0&&<span className="text-2xl text-indigo-700 font-bold">{'|'.repeat(rem)}</span>}</div>;
     }
     if(type==='fingers'){
       const h1=Math.min(val,5), h2=Math.max(0,val-5);
-      return <div className="flex gap-1">{h1>0&&<span className="text-4xl">{''.repeat(h1===5?1:0)}{h1<5?['','☝️','✌️','',''][h1]:''}</span>}{h2>0&&<span className="text-4xl">{h2===5?'':['','☝️','✌️','',''][h2]}</span>}</div>;
+      const renderHand=(n)=>{
+        if(n===1) return <span className="text-4xl">☝️</span>;
+        if(n===2) return <span className="text-4xl">✌️</span>;
+        if(n===5) return <span className="text-4xl">🖐️</span>;
+        if(n===3||n===4) return (
+          <div className="relative inline-block">
+            <span className="text-4xl">🖐️</span>
+            <span className="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{n}</span>
+          </div>
+        );
+        return null;
+      };
+      return <div className="flex gap-2 items-end">{h1>0&&renderHand(h1)}{h2>0&&renderHand(h2)}</div>;
     }
     return <span className={`font-bold ${size}`}>{val}</span>;
   };

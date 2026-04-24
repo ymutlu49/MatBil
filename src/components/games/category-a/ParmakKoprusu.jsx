@@ -89,7 +89,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     }, 1800);
   };
 
-  const handleTouch = (e) => { e.preventDefault(); if (ua !== null) return; setFingerCount(e.touches.length); };
+  const handleTouch = (e) => { e.preventDefault(); if (ua !== null) return; setFingerCount(Math.min(e.touches.length, 10)); };
   const handleTouchEnd = (e) => { e.preventDefault(); if (ua !== null || fingerCount === 0) return; submitAnswer(fingerCount); };
 
   if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak Köprüsü" emoji="🖐️" description="Doğru sayıda parmak göster! Parmakların sayılarla bağlantısını güçlendir." levels={['Seviye 1 (1-5)', 'Seviye 2 (2-7)', 'Seviye 3 (3-9)', 'Seviye 4 (1-10)']} colors={colors} />;

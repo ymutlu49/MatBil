@@ -37,15 +37,22 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
       hint=`${numKids} çocuk × ${perKid} tane = toplam ${total} ${item.n}`;
     } else if(type==='groupCount'){
       answer=numKids;
-      question=`${total} ${item.n} ${perKid}'${perKid>1?'erli':'li'} gruplara ayrılırsa kaç grup olur?`;
-      hint=`${total} ${item.n} ÷ ${perKid}'li gruplar = ${numKids} grup`;
+      const groupNames={1:'birli',2:'ikili',3:'üçlü',4:'dörtlü',5:'beşli'};
+      const groupName=groupNames[perKid]||`${perKid}'li`;
+      question=`${total} ${item.n} ${groupName} gruplara ayrılırsa kaç grup olur?`;
+      hint=`${total} ${item.n} ÷ ${perKid} = ${numKids} grup`;
     } else {
       answer=perKid;
       question=`${total} ${item.n} ${numKids} eşit gruba ayrılırsa her grupta kaç ${item.n} olur?`;
       hint=`${total} ${item.n} ÷ ${numKids} grup = her grupta ${perKid} tane`;
     }
 
-    const o=[answer];let at=0;while(o.length<4&&at<40){const v=Math.max(1,answer+Math.floor(Math.random()*6)-3);if(!o.includes(v))o.push(v);at++;}while(o.length<4)o.push(o.length+answer);
+    const o=[answer];
+    let at=0;
+    while(o.length<4&&at<40){const v=Math.max(1,answer+Math.floor(Math.random()*6)-3);if(!o.includes(v))o.push(v);at++;}
+    // Garantili filler — o.length+answer duplikesi yerine artan benzersiz değer
+    let fill=Math.max(1,answer-3);
+    while(o.length<4){if(!o.includes(fill))o.push(fill);fill++;if(fill>answer+20)break;}
     return{numKids,perKid,total,item,kidEmojis,type,answer,question,hint,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};

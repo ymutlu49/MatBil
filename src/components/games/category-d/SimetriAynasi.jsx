@@ -30,21 +30,37 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
 
     // Doğru sağ yarı = sol yarının ayna görüntüsü
     const right = left.map(row => [...row].reverse());
+    const rightKey = JSON.stringify(right);
 
-    // Yanlış seçenekler üret
-    const makeWrong = () => {
-      const w = left.map(row => [...row].reverse());
+    // Yanlış seçenekler üret — her biri doğru cevaptan VE diğer çeldiricilerden farklı
+    const makeWrong = (existing) => {
       const changes = l <= 2 ? 1 : 2;
-      for (let i = 0; i < changes; i++) {
-        const r = Math.floor(Math.random() * rows);
-        const c = Math.floor(Math.random() * half);
-        w[r][c] = w[r][c] ? 0 : 1;
+      for (let attempt = 0; attempt < 30; attempt++) {
+        const w = left.map(row => [...row].reverse());
+        const used = new Set();
+        for (let i = 0; i < changes; i++) {
+          let r, c, key, tries = 0;
+          do {
+            r = Math.floor(Math.random() * rows);
+            c = Math.floor(Math.random() * half);
+            key = `${r},${c}`;
+          } while (used.has(key) && ++tries < 20);
+          used.add(key);
+          w[r][c] = w[r][c] ? 0 : 1;
+        }
+        const wKey = JSON.stringify(w);
+        if (wKey !== rightKey && !existing.some(e => JSON.stringify(e.right) === wKey)) return w;
       }
-      return w;
+      // Fallback: tek hücre flip garantili farklı
+      const fb = left.map(row => [...row].reverse());
+      const fr = Math.floor(Math.random() * rows);
+      const fc = Math.floor(Math.random() * half);
+      fb[fr][fc] = fb[fr][fc] ? 0 : 1;
+      return fb;
     };
 
     const opts = [{ right, correct: true }];
-    for (let i = 0; i < 3; i++) opts.push({ right: makeWrong(), correct: false });
+    for (let i = 0; i < 3; i++) opts.push({ right: makeWrong(opts), correct: false });
     return { left, rows, half, opts: shuffle(opts) };
   };
 

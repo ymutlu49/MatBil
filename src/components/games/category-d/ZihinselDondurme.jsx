@@ -11,17 +11,15 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
 
   const patterns = [
     {id:'L',path:'M10,10 L10,60 L35,60 L35,45 L25,45 L25,10 Z',name:'L şekli'},
-    {id:'T',path:'M10,10 L50,10 L50,25 L35,25 L35,60 L25,60 L25,25 L10,25 Z',name:'T şekli'},
-    {id:'Z',path:'M10,10 L30,10 L30,30 L50,30 L50,60 L30,60 L30,40 L10,40 Z',name:'Z şekli'},
     {id:'F',path:'M10,10 L40,10 L40,25 L25,25 L25,35 L35,35 L35,50 L25,50 L25,60 L10,60 Z',name:'F şekli'},
     {id:'P',path:'M10,10 L35,10 L35,35 L25,35 L25,60 L10,60 Z',name:'P şekli'},
-    {id:'Arrow',path:'M30,5 L55,30 L40,30 L40,60 L20,60 L20,30 L5,30 Z',name:'Ok şekli'},
+    {id:'Step',path:'M10,10 L25,10 L25,25 L40,25 L40,40 L55,40 L55,60 L10,60 Z',name:'Basamak şekli'},
   ];
 
   const renderShape=(patternId,rotation,mirror=false,size=60,highlight=false)=>{
     const pat=patterns.find(p=>p.id===patternId)||patterns[0];
-    return (<svg width={size} height={size} viewBox="0 0 60 65">
-      <g transform={`translate(30,32.5) rotate(${rotation}) scale(${mirror?-1:1},1) translate(-30,-32.5)`}>
+    return (<svg width={size} height={size} viewBox="0 0 65 70">
+      <g transform={`translate(32.5,35) rotate(${rotation}) scale(${mirror?-1:1},1) translate(-32.5,-35)`}>
         <path d={pat.path} fill={highlight?'#10B981':'#6366F1'} stroke={highlight?'#059669':'#4338CA'} strokeWidth="2" opacity="0.9"/>
       </g>
     </svg>);
@@ -32,12 +30,14 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
     const baseRot=[0,90,180,270][Math.floor(Math.random()*4)];
     const rots=l<=2?[90,180,270]:[45,90,135,180,225,270,315];
     const correctRot=(baseRot+rots[Math.floor(Math.random()*rots.length)])%360;
+    // Doğru yanıt: saf döndürme (aynalı değil).
+    // Çeldiricilerin TAMAMI aynalı — yoksa farklı açılardaki döndürmeler de geçerli yanıt olurdu.
     const opts=[{rot:correctRot,mirror:false,correct:true}];
     const usedRots=[correctRot];
     for(let i=0;i<3;i++){
       let r; do{r=(baseRot+rots[Math.floor(Math.random()*rots.length)])%360;}while(usedRots.includes(r)&&usedRots.length<rots.length);
       usedRots.push(r);
-      opts.push({rot:r,mirror:l>=2?Math.random()>0.4:Math.random()>0.7,correct:false});
+      opts.push({rot:r,mirror:true,correct:false});
     }
     return {patId:pat.id,baseRot,opts:shuffle(opts),correctIdx:0};
   };
@@ -46,8 +46,8 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(i)=>{const correct=p?.opts[i]?.correct;setUa(i);if(correct)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Zihinsel Döndürme" emoji="" description="Şekli zihninde döndür! Hedef şeklin döndürülmüş halini bul, aynalı olanları ayırt et." levels={['Sv1: Kolay (90° adım)','Sv2: Orta (aynalı var)','Sv3: Zor (45° adım)','Sv4: Uzman']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="" level={lv} instruction="Üstteki şekli zihninde döndür. Alttaki seçeneklerden aynı şeklin döndürülmüş halini bul! Aynalı olanlar YANLIŞ." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Zihinsel Döndürme" emoji="" description="Hedef şekli zihninde döndür ve aynı şekli bul. Çeldiriciler HEP aynalı — aynadaki görüntü farklı bir şekildir!" levels={['Sv1: Kolay (90° adım)','Sv2: Orta (90° adım)','Sv3: Zor (45° adım)','Sv4: Uzman (45° adım)']} colors={colors}/>;
+  if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="" level={lv} instruction="Üstteki şekli zihninde döndür. Aynı şeklin döndürülmüş halini bul! Diğer 3 seçenek AYNADAKİ görüntüsüdür (farklı şekildir) — onlar yanlış." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

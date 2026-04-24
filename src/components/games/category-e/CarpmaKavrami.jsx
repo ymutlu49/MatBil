@@ -31,7 +31,7 @@ const CarpmaKavrami = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
       perGroup=Math.floor(Math.random()*4)+2;
       answer=groups*perGroup;
       question=`${groups} × ${perGroup} = ${Array(groups).fill(perGroup).join(' + ')} = ?`;
-      hint=`${Array(groups).fill(perGroup).join(' + ')} = ${answer}`;
+      hint=`${groups} × ${perGroup} = ${Array(groups).fill(perGroup).join(' + ')} = ${answer} (çarpma = tekrarlı toplama)`;
     } else {
       perGroup=Math.floor(Math.random()*3)+2;
       groups=Math.floor(Math.random()*3)+2;

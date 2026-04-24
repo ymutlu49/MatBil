@@ -64,23 +64,26 @@ const SayiAyristirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) 
       const answerIdx=shuffled.indexOf(correct);
       return{targetNumber:total,arrangements:shuffled,answer:answerIdx,question:`${total} sayısının doğru gruplandırılması hangisi?`,hint:`${total} = ${correct.group1} + ${correct.group2}`,type:'pick',dots:makeDots(correct.group1,correct.group2)};
     }
-    // Level 4
+    // Level 4 — tüm olası (a, total-a) çiftlerini topla, doğrudan farklı çeldiriciler seç
     const total=Math.floor(Math.random()*4)+6;
     const best1=Math.round(total/2);
     const best2=total-best1;
     const correct={group1:best1,group2:best2,total,balanced:true};
-    const arrangements=[correct];
-    let at=0;
-    while(arrangements.length<4&&at<40){
-      const a=Math.floor(Math.random()*(total-1))+1;
-      const b=total-a;
-      if(a!==best1&&a!==best2&&!arrangements.some(x=>x.group1===a)){
-        arrangements.push({group1:a,group2:b,total,balanced:false});
-      }
-      at++;
+    // "en dengeli" olan tüm kombinasyonları (best1,best2) ve (best2,best1) hariç tut
+    const pool=[];
+    for(let a=1;a<total;a++){
+      if(a!==best1 && a!==best2) pool.push({group1:a,group2:total-a,total,balanced:false});
     }
+    const distractors=shuffle(pool).slice(0,3);
+    const arrangements=[correct,...distractors];
+    // Garanti: havuz yeterli değilse (küçük total'lerde), farklı group1'lerle doldur
+    let filler=1;
     while(arrangements.length<4){
-      arrangements.push({group1:1,group2:total-1,total,balanced:false});
+      if(filler!==best1 && filler!==best2 && !arrangements.some(x=>x.group1===filler)){
+        arrangements.push({group1:filler,group2:total-filler,total,balanced:false});
+      }
+      filler++;
+      if(filler>=total) break;
     }
     const shuffled=shuffle(arrangements);
     const answerIdx=shuffled.indexOf(correct);

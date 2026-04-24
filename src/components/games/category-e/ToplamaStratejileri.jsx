@@ -45,15 +45,24 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Toplama Stratejileri" colors={colors}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
 
-      <div className="bg-white p-5 rounded-2xl shadow-xl mb-3 flex items-center gap-3">
-        <div className="flex flex-wrap gap-1 justify-center" style={{maxWidth:70}}>
-          {Array.from({length:p?.a||0},(_,i)=>(<div key={i} className="w-4 h-4 bg-rose-400 rounded-full"/>))}
-        </div>
-        <span className="text-2xl font-bold text-gray-400">+</span>
-        <div className="flex flex-wrap gap-1 justify-center" style={{maxWidth:70}}>
-          {Array.from({length:p?.b||0},(_,i)=>(<div key={i} className="w-4 h-4 bg-blue-400 rounded-full"/>))}
-        </div>
-      </div>
+      {(() => {
+        // Nokta boyutunu ve grid genişliğini sayıya göre uyarla — 15'ten fazla nokta taşmasın
+        const maxN = Math.max(p?.a || 0, p?.b || 0);
+        const dotCls = maxN <= 5 ? 'w-5 h-5' : maxN <= 9 ? 'w-4 h-4' : 'w-3 h-3';
+        const gapCls = maxN <= 9 ? 'gap-1' : 'gap-0.5';
+        const boxW = maxN <= 5 ? 80 : maxN <= 9 ? 100 : 120;
+        return (
+          <div className="bg-white p-5 rounded-2xl shadow-xl mb-3 flex items-center gap-3">
+            <div className={`flex flex-wrap ${gapCls} justify-center`} style={{maxWidth:boxW}}>
+              {Array.from({length:p?.a||0},(_,i)=>(<div key={i} className={`${dotCls} bg-rose-400 rounded-full`}/>))}
+            </div>
+            <span className="text-2xl font-bold text-gray-400">+</span>
+            <div className={`flex flex-wrap ${gapCls} justify-center`} style={{maxWidth:boxW}}>
+              {Array.from({length:p?.b||0},(_,i)=>(<div key={i} className={`${dotCls} bg-blue-400 rounded-full`}/>))}
+            </div>
+          </div>
+        );
+      })()}
 
       <div className="bg-white px-8 py-4 rounded-2xl shadow-xl mb-3 border-4 border-purple-200">
         <div className="text-3xl font-bold text-purple-700 text-center">{p?.question}</div>

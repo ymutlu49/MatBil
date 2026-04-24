@@ -27,9 +27,21 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
       </div>;
     }
     if(type==='fingers'){
-      const fEmoji=(c)=>['','☝️','✌️','🤟','🖖','🖐️'][c]||'';
+      // 1, 2, 5 için tanınır parmak emojileri; 3 ve 4 için el + küçük sayı rozeti
+      const renderHand=(n)=>{
+        if(n===1) return <span className={lg?'text-4xl':'text-3xl'}>☝️</span>;
+        if(n===2) return <span className={lg?'text-4xl':'text-3xl'}>✌️</span>;
+        if(n===5) return <span className={lg?'text-4xl':'text-3xl'}>🖐️</span>;
+        if(n===3||n===4) return (
+          <div className="relative inline-block">
+            <span className={lg?'text-4xl':'text-3xl'}>🖐️</span>
+            <span className="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{n}</span>
+          </div>
+        );
+        return null;
+      };
       const h1=Math.min(val,5),h2=val>5?Math.min(val-5,5):0;
-      return <div className="flex gap-1">{h1>0&&<span className={lg?'text-4xl':'text-3xl'}>{fEmoji(h1)}</span>}{h2>0&&<span className={lg?'text-4xl':'text-3xl'}>{fEmoji(h2)}</span>}</div>;
+      return <div className="flex gap-2 items-end">{h1>0&&renderHand(h1)}{h2>0&&renderHand(h2)}</div>;
     }
     if(type==='objects'){
       const emojis=['⭐','🌸','🍎','🐟','🦋'];

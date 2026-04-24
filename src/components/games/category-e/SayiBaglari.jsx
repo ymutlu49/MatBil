@@ -44,9 +44,9 @@ const SayiBaglari = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     }
     while (o.length < 4) o.push(o.length + 1);
 
-    // Tüm olası parçalamalar (hint için)
+    // Benzersiz parçalama çiftleri (3+5 gösterildiyse 5+3 eklenmez)
     const allBonds = [];
-    for (let i = 1; i < whole; i++) allBonds.push(`${i} + ${whole - i}`);
+    for (let i = 1; i <= Math.floor(whole / 2); i++) allBonds.push(`${i} + ${whole - i}`);
 
     return {
       whole,

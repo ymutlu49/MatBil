@@ -26,13 +26,22 @@ const GeriSayma = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
     for(let i=0;i<5;i++) seq.push(startVal-i*step);
     const mi=Math.floor(Math.random()*5);
     const answer=seq[mi];
+    // Görünür dizi değerlerini çeldiricilerden dışla — aynı sayı iki kez görünmesin
+    const visibleValues=seq.filter((_,i)=>i!==mi);
     const o=[answer];let at=0;
     while(o.length<4&&at<40){
       const d=answer+((Math.random()<0.5?1:-1)*step*(Math.floor(Math.random()*3)+1));
-      if(!o.includes(d)&&d>=0) o.push(d);
+      if(!o.includes(d)&&d>=0&&!visibleValues.includes(d)) o.push(d);
       at++;
     }
-    while(o.length<4) o.push(answer+o.length*step);
+    // Fallback: step dışı küçük delta (hâlâ doluyamadıysa)
+    let fill=1;
+    while(o.length<4){
+      const d=answer+fill;
+      if(!o.includes(d)&&d>=0&&!visibleValues.includes(d)) o.push(d);
+      fill++;
+      if(fill>20) break;
+    }
     return{seq,missingIdx:mi,answer,options:shuffle(o)};
   };
 

@@ -53,21 +53,31 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     return count;
   };
 
+  // Bilye boyutu sayıya göre dinamik — 50 bilye üst üste binmesin
+  const ballSize = (count) => count <= 15 ? 20 : count <= 25 ? 17 : count <= 35 ? 14 : 12;
+
   const genPositions = (count) => {
-    const cols = Math.min(7, Math.ceil(Math.sqrt(count * 1.5)));
+    const bs = ballSize(count);
+    const areaW = 180, areaH = 230;
+    // Grid: bilye çapına göre sütun sayısı
+    const cols = Math.max(3, Math.min(8, Math.floor(areaW / (bs + 2))));
     const rows = Math.ceil(count / cols);
-    const cellW = 140 / cols;
-    const cellH = 190 / rows;
+    const cellW = areaW / cols;
+    const cellH = Math.min(cellW + 2, areaH / rows);
     const pos = [];
     for (let i = 0; i < count; i++) {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const jitterX = (Math.random() - 0.5) * (cellW * 0.3);
-      const jitterY = (Math.random() - 0.5) * (cellH * 0.3);
+      // Taşmayı önlemek için jitter'ı hücre içinde tut (bilye yarıçapı kadar kenar payı)
+      const margin = bs / 2;
+      const maxJ = Math.max(0, cellW / 2 - margin - 1);
+      const jitterX = (Math.random() - 0.5) * maxJ;
+      const jitterY = (Math.random() - 0.5) * maxJ;
       pos.push({
-        x: Math.max(2, Math.min(138, 8 + col * cellW + cellW / 2 + jitterX)),
-        y: Math.max(8, Math.min(198, 190 - (row + 1) * cellH + cellH / 2 + jitterY)),
+        x: col * cellW + cellW / 2 + jitterX,
+        y: areaH - (row + 0.5) * cellH + jitterY,
         col: bCols[i % bCols.length],
+        size: bs,
       });
     }
     return pos;
@@ -94,7 +104,9 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
   const handleSub = () => {
     const guess = parseInt(ug) || 0;
     const d = Math.abs(guess - tc);
-    setSc(s => s + (d === 0 ? 30 : d <= 2 ? 25 : d <= 5 ? 15 : 5) * lv);
+    // Yumuşak puan eğrisi: tam isabet 30, ±2 25, ±5 20, ±10 12, ±15 7, ötesi 3
+    const pts = d === 0 ? 30 : d <= 2 ? 25 : d <= 5 ? 20 : d <= 10 ? 12 : d <= 15 ? 7 : 3;
+    setSc(s => s + pts * lv);
     setSub(true); setVisible(true); setExplained(false);
   };
 
@@ -128,14 +140,14 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
         <div className="relative mb-4">
           {/* Kapak */}
           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-32 h-5 bg-gradient-to-b from-amber-500 to-amber-700 rounded-t-xl border-2 border-amber-800 z-10 shadow-md" />
-          {/* Gövde */}
-          <div className="w-52 h-64 bg-white/90 rounded-2xl border-4 border-amber-400 relative overflow-hidden shadow-xl backdrop-blur-sm">
+          {/* Gövde — 50 bilye için genişletildi */}
+          <div className="w-[220px] h-[280px] bg-white/90 rounded-2xl border-4 border-amber-400 relative overflow-hidden shadow-xl backdrop-blur-sm">
             {/* Cam parlama efekti */}
             <div className="absolute left-1 top-6 w-2 h-[70%] bg-white/40 rounded-full" />
-            <div className="absolute inset-3 top-7">
+            <div className="absolute inset-3 top-7" style={{ width: 196, height: 242 }}>
               {visible ? positions.map((p, i) => (
-                <div key={i} className={`absolute w-5 h-5 ${p.col} rounded-full shadow-md border border-white/50`}
-                  style={{ left: p.x, top: p.y, transform: 'translate(-50%,-50%)' }} />
+                <div key={i} className={`absolute ${p.col} rounded-full shadow-md border border-white/50`}
+                  style={{ left: p.x, top: p.y, width: p.size, height: p.size, transform: 'translate(-50%,-50%)' }} />
               )) : (
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   <span className="text-5xl mb-1">{"❓"}</span>

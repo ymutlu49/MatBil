@@ -41,11 +41,12 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
       question=`${n-1} ile ${n+1} arasındaki sayı hangisidir?`;
       hint=`${n-1}, ${n}, ${n+1}`;
     } else if(type==='twoGap'){
-      const n=Math.floor(Math.random()*(mx-4))+2;
+      // Beş sayılık geniş bağlamda tek boşluk — "between" tipinden bir adım zor
+      const n=Math.floor(Math.random()*(mx-4))+3;
       answer=n;
-      slots=[{v:n-1,show:true},{v:n,show:false},{v:n+1,show:true},{v:n+2,show:false},{v:n+3,show:true}];
-      question=`Dizideki iki boşluğa hangi sayılar gelir?`;
-      hint=`${n-1}, ${n}, ${n+1}, ${n+2}, ${n+3}`;
+      slots=[{v:n-2,show:true},{v:n-1,show:true},{v:n,show:false},{v:n+1,show:true},{v:n+2,show:true}];
+      question=`Beş sayılık dizideki eksik sayıyı bul:`;
+      hint=`${n-2}, ${n-1}, ${n}, ${n+1}, ${n+2}`;
     } else if(type==='sequence'){
       const start=Math.floor(Math.random()*(mx-5))+1;
       const pos=Math.floor(Math.random()*3)+1;
@@ -89,7 +90,7 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
-  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve ritmik say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, iki boşluk)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)']} colors={colors}/>;
+  if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve ritmik say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, geniş bağlam)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Komşu Sayılar" emoji="" level={lv} instruction="Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve ritmik sayma sorularını çöz." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 

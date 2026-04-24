@@ -66,9 +66,10 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9)+1;if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens*10; askHL='onluk';
-        q=`${n} sayısının onluk basamağının değeri kaçtır?`;
-        o=[a,tens,ones,a+10].filter(x=>x>=0);
-        o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*9+1)*10;if(!o.includes(c))o.push(c);at++;}
+        q=`${n} sayısının onluk basamağının DEĞERİ kaçtır? (Onluk × 10)`;
+        // Tüm çeldiriciler 10'un katı olmalı — "rakam vs değer" kafa karışıklığını önle
+        o=[a,a+10,Math.max(10,a-10),(tens===9?20:(tens+2)*10)].filter(x=>x>=10&&x<=90);
+        o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=(Math.floor(Math.random()*9)+1)*10;if(!o.includes(c))o.push(c);at++;}
       }
     } else if(l===2){
       n=Math.floor(Math.random()*90)+11;
@@ -82,8 +83,9 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c)&&c>=0)o.push(c);at++;}
       } else if(type==='valueOnes'){
         a=ones; askHL='birlik';
-        q=`${n} sayısının birlik basamağındaki rakam kaçtır?`;
-        o=[a,tens,a+1,tens*10].filter(x=>x>=0&&x<=99);
+        q=`${n} sayısının birlik basamağındaki RAKAM kaçtır? (0-9 arası)`;
+        // Tüm çeldiriciler tek haneli rakam (0-9) — tens*10 gibi çok haneli yok
+        o=[a,tens,a===9?0:a+1,a===0?1:a-1].filter(x=>x>=0&&x<=9);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens; askHL='onluk'; showNumber=false;
@@ -126,13 +128,15 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
         o=[a];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*5)+1;if(!o.includes(c))o.push(c);at++;}
       } else if(type==='valueHundreds'){
         a=hundreds*100; askHL='yüzlük';
-        q=`${n} sayısının yüzlük basamağının değeri kaçtır?`;
-        o=[a,hundreds,tens*10,n].filter(x=>x>0);
-        o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*4+1)*100;if(!o.includes(c))o.push(c);at++;}
+        q=`${n} sayısının yüzlük basamağının DEĞERİ kaçtır? (Yüzlük × 100)`;
+        // Tüm çeldiriciler 100'ün katı
+        o=[a,a===100?200:a-100,a===900?100:a+100,(hundreds%4+2)*100].filter(x=>x>=100&&x<=900);
+        o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=(Math.floor(Math.random()*9)+1)*100;if(!o.includes(c))o.push(c);at++;}
       } else {
         a=tens; askHL='onluk';
-        q=`${n} sayısının onluk basamağındaki rakam kaçtır?`;
-        o=[a,hundreds,ones,a+1].filter(x=>x>=0);
+        q=`${n} sayısının onluk basamağındaki RAKAM kaçtır? (0-9 arası)`;
+        // Tüm çeldiriciler 0-9 rakam aralığında
+        o=[a,hundreds,ones,a===9?0:a+1].filter(x=>x>=0&&x<=9);
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=Math.floor(Math.random()*10);if(!o.includes(c))o.push(c);at++;}
       }
     }

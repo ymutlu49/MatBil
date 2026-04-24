@@ -40,7 +40,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
 
     const allShapes = [];
     const targetCount = Math.floor(Math.random()*3)+2;
-    const sizes = cfg.sizeVar ? [35,50,65] : [50];
+    const sizes = cfg.sizeVar ? [38,48,58] : [50];
     const rots = cfg.rotVar ? (cfg.diagRot ? [0,30,45,60,90,120,135,150,180,210,225,270,315] : [0,90,180,270]) : [0];
 
     for(let i=0;i<targetCount;i++){
@@ -49,8 +49,8 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
       const col = SHAPE_COLORS_STROKE[Math.floor(Math.random()*SHAPE_COLORS_STROKE.length)];
       let sx=1, sy=1;
       if(cfg.atypical && Math.random()>0.5){
-        if(target==='dikdortgen'){sx=Math.random()>0.5?0.5:1.5;}
-        else if(target==='ucgen'){sy=Math.random()>0.5?0.6:1.4;}
+        if(target==='dikdortgen'){sx=Math.random()>0.5?0.55:1.35;}
+        else if(target==='ucgen'){sy=Math.random()>0.5?0.65:1.3;}
       }
       allShapes.push({type:target,size:sz,rot,color:col,sx,sy,isTarget:true});
     }

@@ -13,9 +13,10 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   const cfg={1:{max:5},2:{max:7},3:{max:10},4:{max:10}};
 
   const Hand=({fingers,mirror=false})=>{
-    // Parmak açıklık durumu: mirror=sağ el, normal=sol el
-    // Sol el: başparmak=0, işaret=1, orta=2, yüzük=3, serçe=4
-    const isOpen=(i)=> mirror ? i < fingers : (4-i) < fingers;
+    // Her iki elde de başparmaktan başlayarak sayılır (Türkçe doğal sayım).
+    // SVG'de i=0 başparmak, i=4 serçe. Mirror=true'da scaleX(-1) görseli çeviriyor,
+    // dolayısıyla her iki elde başparmak her zaman dış kenarda görünüyor.
+    const isOpen=(i)=> i < fingers;
 
     // Parmak SVG path verileri: [x, kapalıY, açıkY, genişlik, eğrilik]
     const fingerData = [

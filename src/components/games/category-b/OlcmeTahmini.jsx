@@ -57,7 +57,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
     {id:14,ref:{name:'Olimpik yüzme havuzu',emoji:'🏊',value:50,unit:'m'},target:{name:'Futbol sahası uzunluğu',emoji:'⚽',value:100,unit:'m'},q:'Bir futbol sahası kaç metre uzunluğundadır?',lv:2,opts:[50,100,200,400],hint:'FIFA standardı: tam 100 metre'},
     {id:15,ref:{name:'1 metre (100 cm)',emoji:'📏',value:1,unit:'m'},target:{name:'Şehir otobüsü uzunluğu',emoji:'🚌',value:12,unit:'m'},q:'Bir şehir otobüsü yaklaşık kaç metre?',lv:2,opts:[6,12,20,30],hint:'Standart solo otobüs: 12 metre'},
     {id:16,ref:{name:'1 metre (100 cm)',emoji:'📏',value:100,unit:'cm'},target:{name:'Okul tahtası genişliği',emoji:'📋',value:120,unit:'cm'},q:'Bir okul tahtasının genişliği yaklaşık kaç cm?',lv:2,opts:[80,120,180,250],hint:'1 metreden biraz fazla'},
-    {id:17,ref:{name:'Standart kapı (200 cm)',emoji:'🚪',value:200,unit:'cm'},target:{name:'Basketbol potası yüksekliği',emoji:'🏀',value:305,unit:'cm'},q:'Basketbol potası yerden kaç cm yüksekliktedir?',lv:2,opts:[200,250,305,400],hint:'FIBA standardı: 3 metre 5 cm'},
+    {id:17,ref:{name:'Standart kapı (200 cm)',emoji:'🚪',value:200,unit:'cm'},target:{name:'Yetişkin erkek boyu (ortalama)',emoji:'🧍',value:175,unit:'cm'},q:'Ortalama bir yetişkin erkek yaklaşık kaç cm boyundadır?',lv:2,opts:[140,175,200,230],hint:'Kapıdan biraz kısa — yaklaşık 1 metre 75 santim'},
 
     // Seviye 3: KÜTLE ve HACİM — Standart ambalajlarla
     // Referanslar: 1kg şeker (kesin), 1L su=1kg (fizik yasası), yumurta L=63g (TSE)
@@ -78,7 +78,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
     {id:34,ref:{name:'1 litre su (1 kg)',emoji:'💧',value:1,unit:'litre'},target:{name:'Küvet (dolu)',emoji:'🛁',value:200,unit:'litre'},q:'Dolu bir küvet yaklaşık kaç litre su alır?',lv:4,opts:[50,200,500,1000],hint:'200 tane 1 litrelik şişe!'},
     {id:35,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Cep telefonu',emoji:'📱',value:200,unit:'g'},q:'Bir cep telefonu yaklaşık kaç gram?',lv:4,opts:[50,200,500,1000],hint:'Yaklaşık şeker paketinin beşte biri'},
     {id:36,ref:{name:'1 litre su şişesi',emoji:'💧',value:1000,unit:'ml'},target:{name:'Damacana',emoji:'💧',value:19,unit:'litre'},q:'Bir damacana kaç litre su alır?',lv:4,opts:[5,10,19,30],hint:'Damacananın üzerinde yazar: 19 litre'},
-    {id:37,ref:{name:'1 kg paket',emoji:'⚖️',value:1,unit:'kg'},target:{name:'1 litre süt',emoji:'🥛',value:1030,unit:'g'},q:'1 litre süt yaklaşık kaç gram?',lv:4,opts:[500,800,1030,1500],hint:'Su 1000g, süt biraz daha ağır: 1030g'},
+    {id:37,ref:{name:'1 litre su (=1000 g)',emoji:'💧',value:1000,unit:'g'},target:{name:'1 litre süt',emoji:'🥛',value:1030,unit:'g'},q:'1 litre süt yaklaşık kaç gram? (Su 1000 g)',lv:4,opts:[1030,1200,1500,2000],hint:'Süt sudan BİRAZ daha ağır — kalsiyum ve yağ içerdiği için: ~1030 g'},
   ];
   const gen=(l,u)=>{const av=comps.filter(c=>c.lv<=l&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>c.lv<=l);const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:shuffle(c.opts)};};
   const prepG=(l)=>{setLv(l);setGs('ready');};

@@ -15,8 +15,14 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
     let a,b,op,answer,max;
     if(l<=2){max=10;a=Math.floor(Math.random()*7)+1;b=Math.floor(Math.random()*Math.min(5,max-a))+1;op='+';answer=a+b;}
     else{max=l===3?15:20;
-      if(Math.random()>0.4){a=Math.floor(Math.random()*(max-3))+2;b=Math.floor(Math.random()*Math.min(5,max-a))+1;op='+';answer=a+b;}
-      else{a=Math.floor(Math.random()*(max-2))+3;b=Math.floor(Math.random()*Math.min(4,a-1))+1;op='-';answer=a-b;}
+      if(Math.random()>0.4){a=Math.floor(Math.random()*(max-3))+2;b=Math.floor(Math.random()*Math.min(max===20?7:5,max-a))+1;op='+';answer=a+b;}
+      else{
+        // Çıkarma: a en az 5 olsun ki anlamlı b aralığı oluşsun; b maks 8 (L4) veya 5 (L3)
+        a=Math.floor(Math.random()*(max-5))+6;
+        const bMax=Math.min(a-1, max===20?8:5);
+        b=Math.floor(Math.random()*bMax)+1;
+        op='-';answer=a-b;
+      }
     }
     return {a,b,op,answer,max};
   };

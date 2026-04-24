@@ -26,8 +26,29 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     if(type==='dots') return <div className="flex flex-wrap justify-center gap-1" style={{maxWidth:sz==='lg'?120:80}}>
       {Array.from({length:val},(_,i)=><div key={i} className={`${sz==='lg'?'w-5 h-5':'w-4 h-4'} bg-indigo-500 rounded-full`}/>)}</div>;
     if(type==='tally'){const g=Math.floor(val/5),r=val%5;return <div className="flex gap-1 items-end">
-      {Array.from({length:g},(_,i)=><span key={i} className="text-2xl font-bold text-indigo-700">{'卜'}</span>)}{r>0&&<span className="text-xl text-indigo-700">{'|'.repeat(r)}</span>}</div>;}
-    if(type==='fingers') return <span className={sz==='lg'?'text-4xl':'text-2xl'}>{'✋'.repeat(Math.floor(val/5))}{'☝️'.repeat(val%5>0?1:0)}{val%5>1?`+${val%5-1}`:''}</span>;
+      {Array.from({length:g},(_,i)=><span key={i} className="text-2xl font-bold text-indigo-700">卌</span>)}{r>0&&<span className="text-xl text-indigo-700 font-bold">{'|'.repeat(r)}</span>}</div>;}
+    if(type==='fingers'){
+      const hands=Math.floor(val/5), rem=val%5;
+      const handEmoji=(n)=>{
+        if(n===1) return '☝️';
+        if(n===2) return '✌️';
+        if(n===5) return '🖐️';
+        return null;
+      };
+      const remEmoji=handEmoji(rem);
+      return (
+        <div className={`flex gap-1 items-end ${sz==='lg'?'text-4xl':'text-2xl'}`}>
+          {Array.from({length:hands},(_,i)=><span key={i}>🖐️</span>)}
+          {rem>0 && (remEmoji
+            ? <span>{remEmoji}</span>
+            : <div className="relative inline-block">
+                <span>🖐️</span>
+                <span className="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{rem}</span>
+              </div>
+          )}
+        </div>
+      );
+    }
     return <span>{val}</span>;
   };
 

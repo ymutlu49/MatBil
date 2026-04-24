@@ -21,9 +21,31 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
       attempts++;
     } while (lastTargets.current.includes(t) && attempts < 12);
     lastTargets.current.push(t); if (lastTargets.current.length > 4) lastTargets.current.shift();
-    setTarget(t);const o=[t];let at=0,sp=l===3?100:3;
-    while(o.length<4&&at<60){const delta=l===3?(Math.floor(Math.random()*4)+1)*50*(Math.random()>0.5?1:-1):(Math.floor(Math.random()*sp)+1)*(Math.random()>0.5?1:-1);const v=Math.max(l===3?50:1,Math.min(c.max,t+delta));if(!o.includes(v))o.push(v);at++;if(at>30)sp++;}
-    while(o.length<4)o.push(o.length*c.step+t);setOpts(shuffle(o));setUa(null);};
+    setTarget(t);
+    // Dağılmış çeldiriciler — seçenekler pattern halinde sıralanmasın
+    const deltas = l===1 ? [2,3,4,5] : l===2 ? [8,15,25,40] : [100,200,350,500];
+    const minV = l===3 ? 50 : 1;
+    const o=[t];
+    const shuffledDeltas = shuffle([...deltas]);
+    for(const d of shuffledDeltas){
+      if(o.length>=4) break;
+      const signs = shuffle([1,-1]);
+      for(const sign of signs){
+        const v=Math.max(minV, Math.min(c.max, t+sign*d));
+        if(!o.includes(v)){o.push(v); break;}
+      }
+    }
+    // Fallback: hâlâ 4'e ulaşmadıysa rastgele delta
+    let at=0;
+    while(o.length<4 && at<40){
+      const maxDelta = l===1?5:l===2?40:500;
+      const delta = Math.floor(Math.random()*maxDelta)+1;
+      const sign = Math.random()>0.5?1:-1;
+      const v=Math.max(minV, Math.min(c.max, t+sign*delta));
+      if(!o.includes(v))o.push(v);
+      at++;
+    }
+    setOpts(shuffle(o));setUa(null);};
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastTargets.current=[];genR(l);setGs('playing');};
   const getFeedback=(ans,tgt,tol)=>{if(ans===tgt)return{cls:'text-green-500',msg:'✓ Doğru!'};const diff=Math.abs(ans-tgt);if(diff<=tol)return{cls:'text-amber-500',msg:` Çok yaklaştın! Yanıt: ${tgt}`};return{cls:'text-orange-500',msg:`${encourage()} Yanıt: ${tgt}`};};

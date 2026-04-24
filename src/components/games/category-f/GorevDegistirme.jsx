@@ -59,13 +59,30 @@ const GorevDegistirme = ({ onBack, colors, onGameComplete, rahatMod, prevBest, s
       hint=`${a} + 1 = ${answer}`;
     }
 
-    const o=[answer];let at=0;
+    // Çeldiriciler: diğer kurallara göre hesaplanan "yanlış uygulama" sonuçları
+    // (çocuk eski kurala takıldıysa yakalanacak çeldiriciler üret)
+    const o=[answer];
+    const candidates=[];
+    if(rule==='Toplama'){ candidates.push(a-b, a+1, a-1); }
+    else if(rule==='Çıkarma'){ candidates.push(a+b, a+1, a-1); }
+    else { candidates.push(a-1, a, a+2); }
+    // Kural dışı çeldiriciler eklenir (eski kural yanıltması)
+    for(const c of candidates){
+      if(o.length>=4) break;
+      if(c>=0 && !o.includes(c)) o.push(c);
+    }
+    // Hala eksikse: ±delta rastgele
+    let at=0;
     while(o.length<4&&at<40){
       const d=answer+((Math.random()<0.5?1:-1)*(Math.floor(Math.random()*4)+1));
       if(!o.includes(d)&&d>=0) o.push(d);
       at++;
     }
-    while(o.length<4) o.push(answer+o.length+1);
+    let filler=answer+1;
+    while(o.length<4){
+      if(!o.includes(filler)&&filler>=0) o.push(filler);
+      filler++;
+    }
 
     return{rule,question,answer,hint,switched,options:shuffle(o)};
   };
