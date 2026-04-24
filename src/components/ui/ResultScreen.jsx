@@ -13,7 +13,7 @@ const Confetti = () => (
   </div>
 );
 
-const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete, level, maxLevel, onNextLevel, prevBest }) => {
+const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete, level, maxLevel, onNextLevel, prevBest, extraContent }) => {
   useEffect(() => { if (onComplete) onComplete(score, level || 1); }, []);
   const maxScore = (TOTAL_ROUNDS * 30 * (level || 1));
   const pct = Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100));
@@ -27,11 +27,11 @@ const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete
   }, []);
 
   return (
-    <div className={`h-screen ${colors?.bg || 'bg-gray-50'} flex flex-col items-center justify-center p-4 overflow-hidden anim-slide-up relative`}
+    <div className={`h-screen ${colors?.bg || 'bg-gray-50'} flex flex-col items-center p-4 overflow-y-auto anim-slide-up relative`}
       role="status" aria-live="polite" aria-label={`Sonuç: ${score} puan, ${stars} yıldız. ${msg}`}>
       {stars === 3 && <Confetti />}
 
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm my-auto py-4">
         <div className="bg-white rounded-3xl shadow-2xl p-6 text-center border border-gray-100 relative overflow-hidden">
           {/* Dekoratif arka plan */}
           <div className={`absolute inset-0 opacity-5 bg-gradient-to-br ${colors?.gradient || 'from-indigo-400 to-purple-500'}`} />
@@ -86,6 +86,13 @@ const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete
             </div>
           </div>
         </div>
+
+        {/* Oyun-özel ek içerik (ör: YSS/ANS Analizi, Weber oranı vb.) */}
+        {extraContent && (
+          <div className="mt-3">
+            {extraContent}
+          </div>
+        )}
       </div>
     </div>
   );

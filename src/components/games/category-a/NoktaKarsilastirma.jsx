@@ -160,34 +160,32 @@ const NoktaKarsilastirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest
 
   if (gs === 'results') {
     const weber = getWeberStats();
-    return (
-      <div>
-        <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />
-        {weber && (
-          <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-lg border border-indigo-200 p-3 max-w-sm w-full mx-4 z-50">
-            <div className="text-xs font-bold text-indigo-600 mb-1">{"🧠"} YSS/ANS Analizi</div>
-            <div className="grid grid-cols-2 gap-1.5 text-xs">
-              <div className="bg-indigo-50 rounded-lg p-1.5">
-                <div className="text-gray-500">Doğruluk</div>
-                <div className="font-bold text-indigo-700">{Math.round(weber.accuracy * 100)}%</div>
-              </div>
-              <div className="bg-indigo-50 rounded-lg p-1.5">
-                <div className="text-gray-500">Ort. Yanıt Süresi</div>
-                <div className="font-bold text-indigo-700">{weber.avgRT}ms</div>
-              </div>
-              <div className="bg-green-50 rounded-lg p-1.5">
-                <div className="text-gray-500">Uyumlu Trial</div>
-                <div className="font-bold text-green-700">{Math.round(weber.congAcc * 100)}%</div>
-              </div>
-              <div className="bg-orange-50 rounded-lg p-1.5">
-                <div className="text-gray-500">Uyumsuz Trial</div>
-                <div className="font-bold text-orange-700">{Math.round(weber.incongAcc * 100)}%</div>
-              </div>
-            </div>
-            <div className="mt-1.5 text-[10px] text-gray-400">Weber hassasiyeti: oran {weber.hardestCorrect.toFixed(2)} | Uyumsuz triallarda düşük doğruluk görsel ipucu etkisine işaret eder.</div>
+    const weberPanel = weber ? (
+      <div className="bg-white rounded-xl shadow-lg border border-indigo-200 p-3">
+        <div className="text-xs font-bold text-indigo-600 mb-1">{"🧠"} YSS/ANS Analizi</div>
+        <div className="grid grid-cols-2 gap-1.5 text-xs">
+          <div className="bg-indigo-50 rounded-lg p-1.5">
+            <div className="text-gray-500">Doğruluk</div>
+            <div className="font-bold text-indigo-700">{Math.round(weber.accuracy * 100)}%</div>
           </div>
-        )}
+          <div className="bg-indigo-50 rounded-lg p-1.5">
+            <div className="text-gray-500">Ort. Yanıt Süresi</div>
+            <div className="font-bold text-indigo-700">{weber.avgRT}ms</div>
+          </div>
+          <div className="bg-green-50 rounded-lg p-1.5">
+            <div className="text-gray-500">Uyumlu Trial</div>
+            <div className="font-bold text-green-700">{Math.round(weber.congAcc * 100)}%</div>
+          </div>
+          <div className="bg-orange-50 rounded-lg p-1.5">
+            <div className="text-gray-500">Uyumsuz Trial</div>
+            <div className="font-bold text-orange-700">{Math.round(weber.incongAcc * 100)}%</div>
+          </div>
+        </div>
+        <div className="mt-1.5 text-[10px] text-gray-400">Weber hassasiyeti: oran {weber.hardestCorrect.toFixed(2)} | Uyumsuz triallarda düşük doğruluk görsel ipucu etkisine işaret eder.</div>
       </div>
+    ) : null;
+    return (
+      <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} extraContent={weberPanel} />
     );
   }
 
