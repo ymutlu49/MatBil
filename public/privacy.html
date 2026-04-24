@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gizlilik Politikası — MatBil</title>
+  <style>
+    body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.7;color:#1f2937;background:#f9fafb}
+    h1{font-size:1.8rem;color:#4338ca;border-bottom:2px solid #c7d2fe;padding-bottom:8px}
+    h2{font-size:1.25rem;color:#6366f1;margin-top:2rem}
+    h3{font-size:1rem;color:#818cf8}
+    code{background:#eef2ff;padding:2px 6px;border-radius:4px;font-size:.92em}
+    ul{padding-left:1.5rem}
+    .lang-toggle{position:fixed;top:16px;right:16px;background:#6366f1;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;font-size:.85rem;font-weight:600;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .meta{color:#6b7280;font-size:.85rem}
+    .block{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin:12px 0}
+    .highlight{background:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;border-radius:4px;margin:1rem 0}
+    a{color:#4f46e5}
+    section#en{display:none}
+    body.en section#tr{display:none}
+    body.en section#en{display:block}
+  </style>
+</head>
+<body>
+  <a href="#" class="lang-toggle" onclick="document.body.classList.toggle('en');return false;">TR / EN</a>
+
+  <!-- ══════ TÜRKÇE ══════ -->
+  <section id="tr">
+    <h1>🛡️ MatBil Gizlilik Politikası</h1>
+    <p class="meta">Sürüm 1.0 • Yürürlük: 2026-04-24 • 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) uyarınca</p>
+
+    <div class="highlight">
+      <b>Özet:</b> MatBil, matematiksel biliş ve diskalkuli eğitimi için geliştirilmiş bir uygulamadır.
+      Topladığımız veriler <b>yalnızca cihazınızda</b> saklanır. Sunucumuza (premium kod doğrulaması hariç)
+      hiçbir kişisel veri gönderilmez. Üçüncü taraflarla paylaşım yapılmaz.
+    </div>
+
+    <div class="block">
+      <h2>1. Veri Sorumlusu</h2>
+      <p>
+        MatBil Matematiksel Biliş Uygulaması akademik/eğitim amaçlı olarak <b>Prof. Dr. Yılmaz Mutlu</b>
+        ve <b>Prof. Dr. Sinan Olkun</b> tarafından geliştirilmiştir.
+      </p>
+      <p>İletişim: <a href="mailto:destek@matbil.app">destek@matbil.app</a></p>
+    </div>
+
+    <div class="block">
+      <h2>2. Hangi Verileri Topluyoruz?</h2>
+      <ul>
+        <li><b>Öğrenci profil bilgisi:</b> Ad (veya takma ad), yaş. Oyun deneyiminin kişiselleştirilmesi için.</li>
+        <li><b>Oyun ilerlemesi:</b> Oyun skorları, tamamlanan düzeyler, doğru/yanlış cevap sayıları.</li>
+        <li><b>Tercihler:</b> Ses, büyük yazı tipi, anksiyete dostu mod, ruh hali.</li>
+        <li><b>Cihaz tanımlayıcı:</b> Rastgele üretilen (kişisel olmayan) UUID. Yalnız premium kod doğrulamasında sunucuya gönderilir.</li>
+        <li><b>Hata telemetrisi (opsiyonel):</b> Yalnız uygulama çöktüğünde hata mesajı + yığın izi. IP adresi ve kişisel veri içermez.</li>
+      </ul>
+      <p><b>Toplamadığımız:</b> Konum, kontaklar, fotoğraflar, mikrofon kaydı, reklam kimliği, kamera.</p>
+    </div>
+
+    <div class="block">
+      <h2>3. Verileriniz Nerede Saklanır?</h2>
+      <p>
+        Tüm kişisel veriler <b>yalnızca kullandığınız cihazın yerel depolama alanında</b>
+        (localStorage / IndexedDB) saklanır. Sunucuya gönderilmez.
+      </p>
+      <p>
+        <b>İstisna:</b> Premium kod doğrulaması sırasında kod ve cihaz UUID'niz (ad/yaş DEĞİL) sunucuya HTTPS
+        ile gönderilir. Sunucu yalnızca kodun geçerliliğini kontrol eder ve cihaz sayısını takip eder.
+      </p>
+      <p>
+        <b>Veri silme:</b> Tarayıcı verilerinizi veya uygulama verisini silerseniz tüm kayıtlar kalıcı
+        olarak kaldırılır. Uygulama içindeki <code>Ayarlar → Verimi Sil</code> butonu aynı işlemi yapar.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>4. Çocuk Kullanıcıların Korunması</h2>
+      <p>
+        Uygulama <b>6–12 yaş</b> çocuklar için tasarlanmıştır. COPPA ve KVKK gereklerine uygun olarak:
+      </p>
+      <ul>
+        <li>İlk açılışta <b>veli / yasal temsilci onayı</b> alınır.</li>
+        <li>Hiçbir reklam, 3. taraf izleme veya sosyal medya entegrasyonu YOKTUR.</li>
+        <li>Çocuğa ait veriler pazarlama amacıyla KULLANILMAZ, SATILMAZ.</li>
+        <li>Veli istediği an tüm verileri silebilir (Ayarlar → Verimi Sil).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h2>5. Haklarınız (KVKK md. 11)</h2>
+      <p>Kanunen aşağıdaki haklara sahipsiniz:</p>
+      <ul>
+        <li>Verilerinizin işlenip işlenmediğini öğrenme</li>
+        <li>Verilerinize erişme ve kopyasını talep etme</li>
+        <li>Eksik/yanlış verilerin düzeltilmesini isteme</li>
+        <li>Verilerin silinmesini (unutulma hakkı) talep etme</li>
+        <li>Otomatik işleme sonucunda oluşan analizlere itiraz etme</li>
+      </ul>
+      <p>
+        Bu hakları kullanmak için <a href="mailto:destek@matbil.app">destek@matbil.app</a>
+        adresine başvurabilirsiniz. En geç 30 gün içinde yanıt verilir.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>6. Veri Güvenliği</h2>
+      <ul>
+        <li>Sunucu iletişimi her zaman HTTPS/TLS üzerinden yapılır.</li>
+        <li>Premium durumu imzalanmış (tamper-proof) şekilde saklanır.</li>
+        <li>Yönetici erişimi SHA-256 + salt hash ile korunur, brute-force koruması vardır.</li>
+        <li>Uygulama güncellemelerinde veri şeması migration ile güvenli dönüştürülür.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h2>7. Değişiklikler</h2>
+      <p>
+        Bu politika zaman zaman güncellenebilir. Önemli değişikliklerde uygulama içinde bildirim gösterilir
+        ve yeniden onay istenir. Her değişiklikte sürüm numarası ve tarih güncellenir.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>8. İletişim</h2>
+      <p>
+        Gizlilik politikası veya veri işleme konusundaki her türlü soru için:<br>
+        📧 <a href="mailto:destek@matbil.app">destek@matbil.app</a><br>
+        🌐 <a href="https://github.com/ymutlu49/MatBil">GitHub — kaynak kod</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════ ENGLISH ══════ -->
+  <section id="en">
+    <h1>🛡️ MatBil Privacy Policy</h1>
+    <p class="meta">Version 1.0 • Effective: 2026-04-24 • GDPR &amp; COPPA compliant</p>
+
+    <div class="highlight">
+      <b>Summary:</b> MatBil is an educational app for mathematical cognition and dyscalculia. All data
+      we collect is <b>stored only on your device</b>. Nothing personal is sent to our server (except
+      premium code validation). We never share data with third parties.
+    </div>
+
+    <div class="block">
+      <h2>1. Data Controller</h2>
+      <p>MatBil is developed by <b>Prof. Dr. Yılmaz Mutlu</b> &amp; <b>Prof. Dr. Sinan Olkun</b> for academic/educational purposes.</p>
+      <p>Contact: <a href="mailto:destek@matbil.app">destek@matbil.app</a></p>
+    </div>
+
+    <div class="block">
+      <h2>2. Data We Collect</h2>
+      <ul>
+        <li><b>Student profile:</b> Name (or nickname), age — to personalize the game experience.</li>
+        <li><b>Progress:</b> Game scores, completed levels, correct/incorrect answers.</li>
+        <li><b>Preferences:</b> Sound, large text, anxiety-friendly mode, mood.</li>
+        <li><b>Device UUID:</b> Randomly generated (non-personal). Sent to server only for premium code validation.</li>
+        <li><b>Error telemetry (optional):</b> Only on crashes. No IP, no personal data.</li>
+      </ul>
+      <p><b>We do NOT collect:</b> location, contacts, photos, microphone, advertising ID, camera.</p>
+    </div>
+
+    <div class="block">
+      <h2>3. Where Is Data Stored?</h2>
+      <p>
+        All personal data is stored <b>only in your device's local storage</b> (localStorage / IndexedDB).
+        Nothing is sent to our server.
+      </p>
+      <p>
+        <b>Exception:</b> When validating a premium code, the code and your device UUID (NOT name/age)
+        are sent over HTTPS for verification and device-count limiting.
+      </p>
+      <p>
+        <b>Data deletion:</b> Clearing browser data or using <code>Settings → Delete My Data</code> removes everything permanently.
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>4. Children's Privacy (COPPA / GDPR-K)</h2>
+      <p>Designed for ages <b>6–12</b>. Compliance measures:</p>
+      <ul>
+        <li><b>Parental consent</b> required on first launch.</li>
+        <li>NO ads, NO third-party tracking, NO social media integrations.</li>
+        <li>Child's data is never used for marketing, never sold.</li>
+        <li>Parents can delete all data anytime (Settings → Delete My Data).</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h2>5. Your Rights</h2>
+      <ul>
+        <li>Know whether your data is being processed</li>
+        <li>Access and request a copy of your data</li>
+        <li>Request correction of inaccurate data</li>
+        <li>Request deletion (right to be forgotten)</li>
+        <li>Object to automated processing</li>
+      </ul>
+      <p>
+        To exercise these rights: <a href="mailto:destek@matbil.app">destek@matbil.app</a>
+        (reply within 30 days).
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>6. Security</h2>
+      <ul>
+        <li>All server communication is HTTPS/TLS.</li>
+        <li>Premium state is cryptographically signed (tamper-proof).</li>
+        <li>Admin access protected by SHA-256 + salt hash, with brute-force protection.</li>
+        <li>Data schema migrations preserve user data across app updates.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h2>7. Changes</h2>
+      <p>This policy may be updated. Significant changes trigger an in-app notification and re-consent.</p>
+    </div>
+
+    <div class="block">
+      <h2>8. Contact</h2>
+      <p>
+        📧 <a href="mailto:destek@matbil.app">destek@matbil.app</a><br>
+        🌐 <a href="https://github.com/ymutlu49/MatBil">GitHub</a>
+      </p>
+    </div>
+  </section>
+</body>
+</html>
