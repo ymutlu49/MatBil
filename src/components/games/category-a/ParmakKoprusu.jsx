@@ -150,15 +150,15 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
             )}
           </div>
         ) : (
-          /* Masaüstü mod — el görselli butonlar */
+          /* Masaüstü mod — sadece el görselli butonlar (sembol-sembol eşleşmesini önler) */
           <div className="w-full max-w-lg">
             <div className="text-center text-sm text-gray-500 mb-3">Doğru parmak sayısını gösteren eli seç:</div>
             <div className={`grid ${cfg[lv].max <= 5 ? 'grid-cols-5' : cfg[lv].max <= 7 ? 'grid-cols-4' : 'grid-cols-5'} gap-3 justify-items-center`}>
               {Array.from({ length: cfg[lv].max }, (_, i) => i + 1).map(n => (
                 <button key={n} onClick={() => submitAnswer(n)}
-                  className="flex flex-col items-center gap-1 p-3 rounded-2xl border-2 border-gray-200 bg-white hover:border-rose-400 hover:shadow-lg active:scale-95 transition-all">
+                  aria-label={`${n} parmak`}
+                  className="flex items-center justify-center p-3 rounded-2xl border-2 border-gray-200 bg-white hover:border-rose-400 hover:shadow-lg active:scale-95 transition-all">
                   <HandsDisplay count={n} size={n <= 5 ? 52 : 44} />
-                  <span className="text-base font-bold text-gray-700">{n}</span>
                 </button>
               ))}
             </div>
