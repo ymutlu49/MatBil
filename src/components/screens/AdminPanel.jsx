@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GAMES } from '../../constants/games';
 import { CATEGORIES } from '../../constants/categories';
 import { CHAPTER_MAP } from '../../constants/skillGraph';
-import { getUsers, getProgress } from '../../utils';
+import { getUsers, getProgress, getPremiumInfo } from '../../utils';
 
 const AdminPanel = ({ onBack }) => {
   const [authenticated, setAuthenticated] = useState(false);
@@ -11,6 +11,28 @@ const AdminPanel = ({ onBack }) => {
   const ADMIN_PW = 'matbil2025';
   const [allUsers, setAllUsers] = useState([]);
   const [allData, setAllData] = useState([]);
+  const [premiumActivated, setPremiumActivated] = useState(false);
+
+  // Yönetici / Yazar girişi başarılı olduğunda premium'u otomatik aç
+  const handleAuthSuccess = () => {
+    setAuthenticated(true);
+    try {
+      const existing = getPremiumInfo();
+      if (!existing.active) {
+        localStorage.setItem('matbil_premium', '1');
+        localStorage.setItem('matbil_premium_code', 'ADMIN-AUTHOR');
+        localStorage.setItem('matbil_premium_at', new Date().toISOString());
+        // Grandfather migration bayrağını da set et, tek seferlik kontrolü bypass et
+        localStorage.setItem('matbil_freemium_migrated', '1');
+        setPremiumActivated(true);
+      }
+    } catch {}
+  };
+
+  const tryLogin = () => {
+    if (pw === ADMIN_PW) handleAuthSuccess();
+    else setPwError(true);
+  };
 
   useEffect(() => {
     // Tüm localStorage'daki kullanıcıları topla
@@ -120,15 +142,16 @@ const AdminPanel = ({ onBack }) => {
     <div className="h-screen bg-gradient-to-b from-slate-50 to-blue-50 flex flex-col items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-xl p-5 max-w-sm w-full text-center">
         <div className="text-5xl mb-3">🔐</div>
-        <h2 className="text-xl font-bold text-gray-800 mb-2">Yönetici Girişi</h2>
-        <p className="text-sm text-gray-500 mb-6">Bu alan sadece yetkili kişiler içindir.</p>
+        <h2 className="text-xl font-bold text-gray-800 mb-2">Yönetici / Yazar Girişi</h2>
+        <p className="text-sm text-gray-500 mb-1">Kitap yazarları ve sistem yöneticileri için tek kapı.</p>
+        <p className="text-[11px] text-amber-600 mb-5">Giriş sonrası tüm premium özellikler otomatik açılır.</p>
         <input type="password" value={pw} onChange={e=>{setPw(e.target.value);setPwError(false);}} placeholder="Şifre giriniz..."
           className={`w-full p-3 border-2 rounded-xl text-center text-lg font-bold mb-3 outline-none ${pwError ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-indigo-400'}`}
-          onKeyDown={e=>{if(e.key==='Enter'){if(pw===ADMIN_PW)setAuthenticated(true);else setPwError(true);}}}/>
+          onKeyDown={e=>{if(e.key==='Enter') tryLogin();}}/>
         {pwError && <p className="text-red-500 text-sm mb-3 font-medium">Hatalı şifre. Tekrar deneyin.</p>}
         <div className="flex gap-3">
           <button onClick={onBack} className="flex-1 py-3 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200">← Geri</button>
-          <button onClick={()=>{if(pw===ADMIN_PW)setAuthenticated(true);else setPwError(true);}} className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Giriş</button>
+          <button onClick={tryLogin} className="flex-1 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700">Giriş</button>
         </div>
       </div>
     </div>
@@ -140,12 +163,21 @@ const AdminPanel = ({ onBack }) => {
       <div className="shrink-0 p-3 pb-0">
         <div className="max-w-2xl mx-auto flex items-center justify-between mb-2">
           <button onClick={onBack} className="px-3 py-1.5 bg-white text-gray-600 rounded-lg font-bold shadow text-sm">← Geri</button>
-          <h2 className="text-base font-bold text-gray-700">🔐 Yönetici Paneli</h2>
+          <h2 className="text-base font-bold text-gray-700">🔐 Yönetici / Yazar Paneli</h2>
           <div className="flex gap-2">
             <button onClick={exportCSV} className="px-3 py-1.5 bg-green-600 text-white rounded-lg font-bold text-xs">📊 CSV</button>
             <button onClick={exportJSON} className="px-3 py-1.5 bg-blue-600 text-white rounded-lg font-bold text-xs">🔧 JSON</button>
           </div>
         </div>
+        {premiumActivated && (
+          <div className="max-w-2xl mx-auto mb-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-2 flex items-center gap-2 anim-fade">
+            <span className="text-xl shrink-0">{"🎉"}</span>
+            <div className="flex-1 text-xs text-amber-800">
+              <span className="font-bold">Premium erişim açıldı.</span> Tüm 36 oyun ve akademik içerik artık kilitsiz.
+            </div>
+            <button onClick={() => setPremiumActivated(false)} className="text-amber-600 text-xs">{"✕"}</button>
+          </div>
+        )}
       </div>
 
       {/* İçerik (GİZLİ SCROLL) */}
