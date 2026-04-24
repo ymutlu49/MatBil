@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
@@ -44,7 +45,7 @@ const ZihinselDondurme = ({ onBack, colors, onGameComplete, rahatMod, prevBest }
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(i)=>{const correct=p?.opts[i]?.correct;setUa(i);if(correct)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
+  const handle=(i)=>{const correct=p?.opts[i]?.correct;setUa(i);if(correct)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Zihinsel Döndürme" emoji="" description="Hedef şekli zihninde döndür ve aynı şekli bul. Çeldiriciler HEP aynalı — aynadaki görüntü farklı bir şekildir!" levels={['Sv1: Kolay (90° adım)','Sv2: Orta (90° adım)','Sv3: Zor (45° adım)','Sv4: Uzman (45° adım)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Zihinsel Döndürme" emoji="" level={lv} instruction="Üstteki şekli zihninde döndür. Aynı şeklin döndürülmüş halini bul! Diğer 3 seçenek AYNADAKİ görüntüsüdür (farklı şekildir) — onlar yanlış." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

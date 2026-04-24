@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const SayiBaglari = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -66,7 +67,7 @@ const SayiBaglari = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     setUa(a);
     if (a === p?.answer) { setSc(s => s + 15 * lv); playSound('correct'); }
     else playSound('wrong');
-    setTimeout(() => {
+    safeSetTimeout(() => {
       if (rd < TOTAL_ROUNDS) { setRd(r => r + 1); setP(gen(lv)); setUa(null); }
       else setGs('results');
     }, 1800);

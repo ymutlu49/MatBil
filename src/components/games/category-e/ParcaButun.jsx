@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const cfg={1:{max:5},2:{max:10},3:{max:10},4:{max:15}};
 
@@ -21,7 +22,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parça-Bütün" emoji="" description="Üçgenin köşelerindeki sayılar arasındaki ilişkiyi keşfet! Parçaların toplamı bütünü verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Parça-Bütün" emoji="" level={lv} instruction="Üçgenin tepesinde bütün, alt köşelerinde parçalar var. İki parçanın toplamı bütüne eşittir. Eksik sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

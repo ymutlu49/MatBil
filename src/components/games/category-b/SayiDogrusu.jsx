@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber ,useAdaptive} from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber ,useAdaptive, useSafeTimeout} from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -10,6 +10,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
 
 
 const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [target,setTarget]=useState(0);const [opts,setOpts]=useState([]);const [ua,setUa]=useState(null);
   const cfg={1:{max:10,tol:1,step:1},2:{max:100,tol:10,step:1},3:{max:1000,tol:50,step:50}};
@@ -49,7 +50,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastTargets.current=[];genR(l);setGs('playing');};
   const getFeedback=(ans,tgt,tol)=>{if(ans===tgt)return{cls:'text-green-500',msg:'✓ Doğru!'};const diff=Math.abs(ans-tgt);if(diff<=tol)return{cls:'text-amber-500',msg:` Çok yaklaştın! Yanıt: ${tgt}`};return{cls:'text-orange-500',msg:`${encourage()} Yanıt: ${tgt}`};};
-  const handle=(a)=>{setUa(a);adaptive.record(a===target);const fb=getFeedback(a,target,cfg[lv].tol);const isClose=a===target||Math.abs(a-target)<=cfg[lv].tol;if(a===target)setSc(s=>s+20*lv);else if(isClose)setSc(s=>s+10*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genR(lv);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);adaptive.record(a===target);const fb=getFeedback(a,target,cfg[lv].tol);const isClose=a===target||Math.abs(a-target)<=cfg[lv].tol;if(a===target)setSc(s=>s+20*lv);else if(isClose)setSc(s=>s+10*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genR(lv);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Doğrusu" emoji="" description="Ok hangi sayıyı gösteriyor? Sayı doğrusundaki konumu tahmin et!" levels={['Seviye 1 (0-10)','Seviye 2 (0-100)','Seviye 3 (0-1000)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı Doğrusu" emoji="" level={lv} instruction="Sayı doğrusu üzerinde bir ok gösterilecek. Okun gösterdiği sayıyı seçenekler arasından bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;

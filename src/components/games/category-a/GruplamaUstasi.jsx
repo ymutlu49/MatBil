@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -8,6 +8,7 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const GruplamaUstasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [cards,setCards]=useState([]);const [ua,setUa]=useState(null);const [curOpts,setCurOpts]=useState([]);
   const Frame=({count,max,color='bg-blue-500'})=>(<div className="bg-white p-2 rounded-xl shadow-lg border-2 border-gray-200"><div className="text-xs text-center text-gray-600 font-medium mb-1">{max===5?'Beşlik':'Onluk'}</div><div className={`grid grid-cols-5 gap-1`}>{Array.from({length:max},(_,i)=>(<div key={i} className={`w-6 h-6 rounded-md border-2 border-gray-300 ${i<count?color:'bg-gray-100'}`}/>))}</div></div>);
   const cCols=['bg-red-400','bg-blue-400','bg-green-400','bg-purple-400','bg-amber-400'];
@@ -33,7 +34,7 @@ const GruplamaUstasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) 
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);const c=genCards(l);setCards(c);setCurOpts(mkOpts(c));setUa(null);setGs('playing');};
   const total=cards.reduce((s,c)=>s+c.count,0);
-  const handle=(a)=>{setUa(a);if(a===total)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const c=genCards(lv);setCards(c);setCurOpts(mkOpts(c));setUa(null);}else setGs('results');},1200);};
+  const handle=(a)=>{setUa(a);if(a===total)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const c=genCards(lv);setCards(c);setCurOpts(mkOpts(c));setUa(null);}else setGs('results');},1200);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Gruplama Ustası" emoji="" description="Beşlik ve onluk çerçevelerdeki nesneleri sayarak toplamı bul!" levels={['Beşlik (1 kart)','Beşlik (2 kart)','Onluk (1 kart)','Karışık']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Gruplama Ustası" emoji="" level={lv} instruction="Beşlik veya onluk çerçeveler gösterilecek. Dolu kutuları sayarak toplamın kaç olduğunu bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

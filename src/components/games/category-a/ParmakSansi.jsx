@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -8,6 +8,7 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [fc,setFc]=useState(0);const [ua,setUa]=useState(null);
   const [waveAnim,setWaveAnim]=useState(false);
   const cfg={1:{max:5},2:{max:7},3:{max:10},4:{max:10}};
@@ -84,8 +85,8 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setFc(Math.floor(Math.random()*cfg[l].max)+1);setUa(null);setWaveAnim(false);setGs('playing');};
   const handle=(a)=>{
     setUa(a);
-    if(a===fc){setSc(s=>s+10*lv);setWaveAnim(true);setTimeout(()=>setWaveAnim(false),600);}
-    setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setFc(Math.floor(Math.random()*cfg[lv].max)+1);setUa(null);}else setGs('results');},1200);
+    if(a===fc){setSc(s=>s+10*lv);setWaveAnim(true);safeSetTimeout(()=>setWaveAnim(false),600);}
+    safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setFc(Math.floor(Math.random()*cfg[lv].max)+1);setUa(null);}else setGs('results');},1200);
   };
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kaç Parmak?" emoji="" description="Parmak sayısını hızlıca say! Ellerdeki açık parmakları saymadan tanımaya çalış." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="" level={lv} instruction="Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -18,6 +18,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
  * Referanslar: Kaufman ve ark. (1949); Clements (1999); MacDonald & Wilkins (2016).
  */
 const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');
   const [lv,setLv]=useState(1);
   const [sc,setSc]=useState(0);
@@ -75,7 +76,7 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =>
     setShowObj(true);
     // Rahat modda gösterim süresi 2 katı; otherwise seviye-bazlı
     const ms = rahatMod ? cf.showMs * 2 : cf.showMs;
-    setTimeout(() => setShowObj(false), ms);
+    safeSetTimeout(() => setShowObj(false), ms);
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
@@ -91,7 +92,7 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =>
   const handle=(a)=>{
     setUa(a);
     if(a===oc){setSc(s=>s+15*lv);speakNumber(oc);}
-    setTimeout(()=>{
+    safeSetTimeout(()=>{
       if(rd<TOTAL_ROUNDS){setSi(s=>s+1);setRd(r=>r+1);startR(lv);}
       else setGs('results');
     },1200);

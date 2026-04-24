@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const cfg={1:{maxA:5,maxB:4},2:{maxA:9,maxB:9},3:{maxA:10,maxB:10},4:{maxA:15,maxB:15}};
 
@@ -34,7 +35,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastQs.current=[];setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(ans)=>{setUa(ans);if(ans===p?.correctAnswer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(ans)=>{setUa(ans);if(ans===p?.correctAnswer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Toplama Stratejileri" emoji="➕" description="Toplama işlemini görsel destekle öğren! İleri seviyelerde eksik sayıyı bul." levels={['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Toplama Stratejileri" emoji="➕" level={lv} instruction="Toplama işlemi gösterilecek. Sonucu bul! İleri seviyelerde eksik olan sayıyı tamamla." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

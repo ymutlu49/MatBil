@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage, playSound, speakNumber } from '../../../utils';
+import { TOTAL_ROUNDS, encourage, playSound, speakNumber, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [p,setP]=useState(null);const [pos,setPos]=useState(0);const [steps,setSteps]=useState(0);const [submitted,setSubmitted]=useState(false);
   const [moving, setMoving] = useState(false);
@@ -36,7 +37,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
     setPos(prev=>Math.max(0,Math.min(p.max,prev+dir)));
     setLastDir(dir);
     setMoving(true);
-    setTimeout(()=>setMoving(false), 400);
+    safeSetTimeout(()=>setMoving(false), 400);
   };
 
   const submit=()=>{
@@ -44,7 +45,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
     const correct=pos===p?.answer;
     if(correct){setSc(s=>s+20*lv);playSound('correct');speakNumber(pos);}
     else playSound('wrong');
-    setTimeout(()=>{
+    safeSetTimeout(()=>{
       if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv);setP(q);setPos(q.a);setSteps(0);setSubmitted(false);setMoving(false);setLastDir(q.op==='+'?1:-1);}
       else setGs('results');
     },1800);

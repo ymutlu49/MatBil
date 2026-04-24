@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, encourage } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -25,6 +25,7 @@ const ExplainStep = ({ onDone }) => {
 };
 
 const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -92,13 +93,13 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     const c = cfg[l]; const count = pickCount(c);
     setTc(count); setPositions(genPositions(count));
     setVisible(true); setGs('playing');
-    setTimeout(() => setVisible(false), showTime[l]);
+    safeSetTimeout(() => setVisible(false), showTime[l]);
   };
 
   const handlePeek = () => {
     setPeekCount(p => p + 1);
     setVisible(true);
-    setTimeout(() => setVisible(false), Math.max(1000, showTime[lv] - peekCount * 500));
+    safeSetTimeout(() => setVisible(false), Math.max(1000, showTime[lv] - peekCount * 500));
   };
 
   const handleSub = () => {
@@ -112,14 +113,14 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   const handleExplain = () => {
     setExplained(true);
-    setTimeout(() => {
+    safeSetTimeout(() => {
       if (rd < TOTAL_ROUNDS) {
         const c = cfg[lv]; setRd(r => r + 1);
         const count = pickCount(c);
         setTc(count); setPositions(genPositions(count));
         setUg(''); setSub(false); setPeekCount(0); setExplained(false);
         setVisible(true);
-        setTimeout(() => setVisible(false), showTime[lv]);
+        safeSetTimeout(() => setVisible(false), showTime[lv]);
       } else setGs('results');
     }, 800);
   };

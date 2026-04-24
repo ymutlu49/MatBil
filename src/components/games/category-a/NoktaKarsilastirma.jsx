@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, encourage, useAdaptive } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, encourage, useAdaptive, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -15,6 +15,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
  * - Weber fraksiyonu hesaplama ve raporlama
  */
 const NoktaKarsilastirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest, sesAcik }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -124,7 +125,7 @@ const NoktaKarsilastirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest
     if (correct) { setSc(s => s + 15 * lv); playSound('correct'); }
     else playSound('wrong');
 
-    setTimeout(() => {
+    safeSetTimeout(() => {
       if (rd < TOTAL_ROUNDS) {
         setRd(r => r + 1);
         const puzzle = gen(lv);

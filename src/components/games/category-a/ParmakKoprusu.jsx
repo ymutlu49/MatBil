@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -63,6 +63,7 @@ const HandsDisplay = ({ count, size = 100 }) => {
 };
 
 const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -83,7 +84,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
     setUa(count);
     if (correct) { setSc(s => s + 15 * lv); speakNumber(target); playSound('correct'); }
     else playSound('wrong');
-    setTimeout(() => {
+    safeSetTimeout(() => {
       if (rd < TOTAL_ROUNDS) { setRd(r => r + 1); setTarget(gen(lv)); setUa(null); setFingerCount(0); }
       else setGs('results');
     }, 1800);

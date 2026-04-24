@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const nw=['','bir','iki','üç','dört','beş','altı','yedi','sekiz','dokuz','on'];
 
@@ -76,7 +77,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Büyük-Küçük" emoji="⚖️" description="Hangisi daha çok? Boyutuna aldanma, sayısal değere odaklan!" levels={['Seviye 1 (0-10, Stroop)','Seviye 2 (0-10, çoklu temsil)','Seviye 3 (0-100, karışık)','Seviye 4 (0-100, 3 sayı)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Büyük-Küçük" emoji="⚖️" level={lv} instruction="Sayılar farklı boyutlarda veya farklı temsillerle gösterilecek. Fiziksel boyutuna aldanma, değeri büyük olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -8,12 +8,13 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ReferansNoktasi = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const cfg={1:{refs:[0,5,10]},2:{refs:[0,10,20]},3:{refs:[0,25,50]},4:{refs:[0,50,100]}};
   const gen=(l)=>{const c=cfg[l];const ri=Math.floor(Math.random()*(c.refs.length-1));const r1=c.refs[ri],r2=c.refs[ri+1];let n;do{n=Math.floor(Math.random()*(r2-r1-1))+r1+1;}while(Math.abs(n-r1)===Math.abs(n-r2));const a=Math.abs(n-r1)<Math.abs(n-r2)?r1:r2;return{number:n,ref1:r1,ref2:r2,answer:a};};
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Yakınlık Tahmini" emoji="" description="Sayı hangi referans noktasına daha yakın? Mesafe tahmini yap!" levels={['Seviye 1 (0-5-10)','Seviye 2 (0-10-20)','Seviye 3 (0-25-50)','Seviye 4 (0-50-100)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Yakınlık Tahmini" emoji="" level={lv} instruction="Bir sayı gösterilecek. Bu sayı, verilen iki referans noktasından hangisine daha yakın? Doğru olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

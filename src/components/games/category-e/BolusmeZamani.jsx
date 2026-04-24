@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const items=[
     {e:'🍎',n:'elma'},{e:'🍊',n:'portakal'},{e:'🍋',n:'limon'},{e:'🍇',n:'üzüm'},{e:'🍓',n:'çilek'},
@@ -57,7 +58,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Bölüşme Zamanı" emoji="🍎" description="Nesneleri eşit paylaştır veya gruplara ayır!" levels={['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Bölüşme Zamanı" emoji="🍎" level={lv} instruction="Nesneleri çocuklara eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
   const gen=(l)=>{
@@ -88,7 +89,7 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve ritmik say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, geniş bağlam)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Komşu Sayılar" emoji="" level={lv} instruction="Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve ritmik sayma sorularını çöz." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

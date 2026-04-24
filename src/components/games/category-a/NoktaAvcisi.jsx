@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useAdaptive } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useAdaptive, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -19,6 +19,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
  */
 const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
   const adaptive = useAdaptive();
+  const safeSetTimeout = useSafeTimeout();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -143,9 +144,9 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     if(a===dc){
       setSc(s=>s+10*lv); speakNumber(dc);
       setCorrectFlash(true);
-      setTimeout(()=>setCorrectFlash(false), 800);
+      safeSetTimeout(()=>setCorrectFlash(false), 800);
     }
-    setTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200);
+    safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS)startR(lv,rd+1);else setGs('results');},1200);
   };
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktaları saymadan, bakarak kaç tane olduğunu bul! L1-L2 algısal (1-5), L3-L4 kavramsal (kanonik gruplar)." levels={['⭐ Algısal (1-3)','⭐⭐ Algısal (2-5)','⭐⭐⭐ Kavramsal (4-7)','⭐⭐⭐⭐ Kavramsal (6-10)']} colors={colors}/>;

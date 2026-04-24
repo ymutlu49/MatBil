@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);const [used,setUsed]=useState([]);
 
   // SVG çokgen
@@ -77,7 +78,7 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
   const handle = (a) => {
     const correct = a === p?.a;
     setUa(a);if(correct)setSc(s=>s+15*lv);
-    setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setUa(null);}else setGs('results');},2000);
+    safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setUa(null);}else setGs('results');},2000);
   };
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Eleman ve Özellikler" emoji="" description="Şekillerin kenar, köşe ve açılarını incele! Her şeklin özelliklerini öğren." levels={['Düzey 2a (Temel)','Düzey 2b (Orta)','Düzey 2c (Tanımlama)','Düzey 2d (Özellik)']} colors={colors}/>;

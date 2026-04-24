@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -30,6 +30,7 @@ const ExplainStep = ({ type, onDone }) => {
 };
 
 const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);const [used,setUsed]=useState([]);
   const [explained2,setExplained2]=useState(false);
   // Benchmark (Referans Noktası) Stratejisi
@@ -84,7 +85,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setUsed([]);const f=gen(l,[]);setP(f);setUsed([f.id]);setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.target?.value)setSc(s=>s+20*lv);setExplained2(false);};
-  const handleExplain2=()=>{setExplained2(true);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const n=gen(lv,used);setP(n);setUsed(prev=>[...prev,n.id]);setUa(null);setExplained2(false);}else setGs('results');},800);};
+  const handleExplain2=()=>{setExplained2(true);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const n=gen(lv,used);setP(n);setUsed(prev=>[...prev,n.id]);setUa(null);setExplained2(false);}else setGs('results');},800);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Ölçme Tahmini" emoji="📐" description="Nesnelerin uzunluk, ağırlık veya hacimlerini referansa bakarak tahmin et!" levels={['Seviye 1 (Uzunluk Kolay)','Seviye 2 (Uzunluk İleri)','Seviye 3 (Kütle/Hacim Kolay)','Seviye 4 (Kütle/Hacim İleri)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Ölçme Tahmini" emoji="📐" level={lv} instruction="Bir referans nesne ve onun ölçüsü gösterilecek. Hedef nesnenin ölçüsünü karşılaştırarak tahmin et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, vibrate, encourage, speakNumber, useSafeTimeout } from '../../../utils';
 import { HELP_MAP } from '../../../constants/helpMap';
 import Feedback from '../../ui/Feedback';
 import GameHeader from '../../ui/GameHeader';
@@ -8,6 +8,7 @@ import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [cards,setCards]=useState([]);const [flipped,setFlipped]=useState([]);const [matched,setMatched]=useState([]);
   const [mismatchIds,setMismatchIds]=useState([]);
   const [newMatchIds,setNewMatchIds]=useState([]);
@@ -29,13 +30,13 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
         const nm=[...matched,f,s];
         setMatched(nm);
         setNewMatchIds([f,s]);
-        setTimeout(()=>setNewMatchIds([]),700);
+        safeSetTimeout(()=>setNewMatchIds([]),700);
         setSc(s2=>s2+20*lv);
         setFlipped([]);
-        if(nm.length===cards.length)setTimeout(()=>setGs('results'),800);
+        if(nm.length===cards.length)safeSetTimeout(()=>setGs('results'),800);
       } else {
         setMismatchIds([f,s]);
-        setTimeout(()=>{
+        safeSetTimeout(()=>{
           setMismatchIds([]);
           setFlipped([]);
         },1000);

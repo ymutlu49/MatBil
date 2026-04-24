@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, useSafeTimeout } from '../../../utils';
 import SVGShape from '../../ui/SVGShape';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -9,6 +9,7 @@ import ReadyScreen from '../../ui/ReadyScreen';
 const SHAPE_COLORS_STROKE = ['#EF4444','#3B82F6','#10B981','#F59E0B','#8B5CF6','#EC4899','#F97316','#06B6D4'];
 
 const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [targetType,setTargetType]=useState(null);const [shapes,setShapes]=useState([]);const [found,setFound]=useState([]);
   const [wrong,setWrong]=useState([]);const [rotatingId,setRotatingId]=useState(null);const [extraRot,setExtraRot]=useState({});
@@ -93,11 +94,11 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
     if(shape.isTarget){
       const nf=[...found,shape.id];setFound(nf);setSc(s=>s+10*lv);
       if(nf.length===shapes.filter(s=>s.isTarget).length){
-        setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genRound(lv);}else setGs('results');},800);
+        safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genRound(lv);}else setGs('results');},800);
       }
     } else {
       setWrong(w=>[...w,shape.id]);
-      setTimeout(()=>setWrong(w=>w.filter(x=>x!==shape.id)),1200);
+      safeSetTimeout(()=>setWrong(w=>w.filter(x=>x!==shape.id)),1200);
     }
   };
 

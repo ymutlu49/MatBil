@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage ,useAdaptive} from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage ,useAdaptive, useSafeTimeout} from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -14,6 +14,7 @@ const numColor = (val, max = 99) => {
 };
 
 const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
@@ -146,7 +147,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
+  const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak Değeri" emoji="" description="Onluk çubukları ve birlik küpleri kullanarak basamak değerlerini keşfet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birleştir)','Seviye 4 (Yüzlükler)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Basamak Değeri" emoji="" level={lv} instruction="Onluk çubuklar ve birlik küpler gösterilecek. Görselden sayarak veya sayıyı ayrıştırarak doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

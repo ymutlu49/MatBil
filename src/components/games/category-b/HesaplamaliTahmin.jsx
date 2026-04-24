@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, encourage, useAdaptive } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, encourage, useAdaptive, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -26,6 +26,7 @@ const STRATEGIES = {
 };
 
 const ExplainStep = ({ onDone }) => {
+  const safeSetTimeout = useSafeTimeout();
   const strats = STRATEGIES.computation;
   return (
     <div className="mt-2 anim-fade">
@@ -285,7 +286,7 @@ const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   const handleExplain = () => {
     setExplained(true);
-    setTimeout(() => {
+    safeSetTimeout(() => {
       if (rd < TOTAL_ROUNDS) {
         setRd(r => r + 1);
         const next = gen(lv, used);

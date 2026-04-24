@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage } from '../../../utils';
+import { TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [p,setP]=useState(null);const [selected,setSelected]=useState([]);const [sub,setSub]=useState(false);const [used,setUsed]=useState([]);
 
@@ -204,7 +205,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
     const isCorrect = selected.length===correctIndices.length && selected.every(i=>correctIndices.includes(i));
     if(isCorrect) setSc(s=>s+25*lv);
     else if(selected.some(i=>correctIndices.includes(i))) setSc(s=>s+10*lv);
-    setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setSelected([]);setSub(false);}else setGs('results');},3000);
+    safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const q=gen(lv,used);setP(q);setUsed(prev=>[...prev,q.id]);setSelected([]);setSub(false);}else setGs('results');},3000);
   };
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="İlişkiler ve Çıkarım" emoji="" description="Şekiller arasındaki ilişkileri keşfet! Doğru olan tüm seçenekleri işaretle." levels={['Düzey 3a (Temel)','Düzey 3b (Orta)','Düzey 3c (İleri)','Düzey 3d (Uzman)']} colors={colors}/>;

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, speakNumber, encourage } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, speakNumber, encourage, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -17,6 +17,7 @@ const TallyGroup = ({ size = 28 }) => (
 );
 
 const TallySingle = ({ count, size = 28 }) => {
+  const safeSetTimeout = useSafeTimeout();
   const w = count * 7 + 2;
   return (
     <svg width={w} height={size} viewBox={`0 0 ${w} 28`} className="inline-block">
@@ -79,7 +80,7 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastTargets.current=[];setP(gen(l));setUa(null);setGs('playing');};
-  const handle=(a)=>{setUa(a);if(a===p?.target){setSc(s=>s+15*lv);speakNumber(p.target);}setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
+  const handle=(a)=>{setUa(a);if(a===p?.target){setSc(s=>s+15*lv);speakNumber(p.target);}safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı-Sembol Eşleştirme" emoji="🔗" description="Sayıyı nokta, parmak, çetele veya sözcükle eşleştir!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı-Sembol Eşleştirme" emoji="🔗" level={lv} instruction="Bir sayı farklı biçimlerde gösterilecek: rakam, nokta, sözcük, çetele, parmak veya onluk çerçeve. Aynı sayının farklı temsilini bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
   if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;

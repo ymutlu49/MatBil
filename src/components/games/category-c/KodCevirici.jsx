@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage, speakNumber ,useAdaptive} from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, speakNumber ,useAdaptive, useSafeTimeout} from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -14,6 +14,7 @@ const numColor = (val, max = 20) => {
 };
 
 const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const adaptive = useAdaptive();
@@ -65,7 +66,7 @@ const KodCevirici = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);adaptive.reset();setGs('playing');};
-  const handle=(a)=>{setUa(a);adaptive.record(a===p?.val);if(a===p?.val){setSc(s=>s+15*lv);speakNumber(p.val);}setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
+  const handle=(a)=>{setUa(a);adaptive.record(a===p?.val);if(a===p?.val){setSc(s=>s+15*lv);speakNumber(p.val);}safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
 
   const codeLabel={dots:'Nokta',digit:'Rakam',word:'Sözcük',tally:'Çetele'};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kod Çevirici" emoji="" description="Aynı sayıyı farklı biçimlerde tanı! Nokta↔Rakam↔Sözcük arasında çeviri yap." levels={['Sv1: Nokta↔Rakam (1-5)','Sv2: Rakam↔Sözcük (1-10)','Sv3: Üçlü Kod (1-10)','Sv4: Dörtlü Kod (1-20)']} colors={colors}/>;
