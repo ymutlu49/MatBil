@@ -163,6 +163,8 @@ const App = () => {
   const handleLogin = (u) => {
     setUser(u);
     localStorage.setItem('matbil_current_user', JSON.stringify(u));
+    // Yazar / Yönetici girişinde onboarding atlanır (yetkili kullanıcı)
+    if (u?.role === 'admin') setShowOnboarding(false);
   };
 
   const handleLogout = () => {

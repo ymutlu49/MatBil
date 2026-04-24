@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { shuffle, TOTAL_ROUNDS, speakNumber, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -59,9 +59,13 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
     return <span className={`font-bold ${sz}`}>{val}</span>;
   };
 
+  const lastTargets = useRef([]);
   const gen=(l)=>{
     const mx=cfg[l].max;
-    const t=Math.floor(Math.random()*mx)+1;
+    let t, attempts = 0;
+    do { t = Math.floor(Math.random()*mx)+1; attempts++; }
+    while (lastTargets.current.includes(t) && attempts < 12);
+    lastTargets.current.push(t); if (lastTargets.current.length > 4) lastTargets.current.shift();
     // Soru ve cevap temsil türlerini seç
     const allReps = t<=10 ? ['number','dots','word','tally','tenFrame','fingers'] : ['number','dots','word','tally'];
     const qRep = allReps[Math.floor(Math.random()*allReps.length)];
@@ -74,7 +78,7 @@ const SayiSembolEslestirme = ({ onBack, colors, onGameComplete, prevBest }) => {
     return{target:t,qRep,aRep,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
+  const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastTargets.current=[];setP(gen(l));setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.target){setSc(s=>s+15*lv);speakNumber(p.target);}setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1200);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı-Sembol Eşleştirme" emoji="🔗" description="Sayıyı nokta, parmak, çetele veya sözcükle eşleştir!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı-Sembol Eşleştirme" emoji="🔗" level={lv} instruction="Bir sayı farklı biçimlerde gösterilecek: rakam, nokta, sözcük, çetele, parmak veya onluk çerçeve. Aynı sayının farklı temsilini bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;

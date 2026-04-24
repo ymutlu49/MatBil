@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TOTAL_ROUNDS, playSound, encourage, useAdaptive } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -16,13 +16,19 @@ const SayisalStroop = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
     4:{min:1,max:50,incongruent:0.7,label:'Uzman (1-50)'}
   };
 
+  const lastPairs = useRef([]);
   const gen=(l)=>{
     const c=cfg[l];
-    let a,b;
+    let a,b,pairKey,attempts=0;
     do{
-      a=Math.floor(Math.random()*(c.max-c.min+1))+c.min;
-      b=Math.floor(Math.random()*(c.max-c.min+1))+c.min;
-    }while(a===b);
+      do{
+        a=Math.floor(Math.random()*(c.max-c.min+1))+c.min;
+        b=Math.floor(Math.random()*(c.max-c.min+1))+c.min;
+      }while(a===b);
+      pairKey = `${Math.min(a,b)}-${Math.max(a,b)}`;
+      attempts++;
+    } while (lastPairs.current.includes(pairKey) && attempts < 12);
+    lastPairs.current.push(pairKey); if (lastPairs.current.length > 4) lastPairs.current.shift();
 
     const bigger=Math.max(a,b);
     const smaller=Math.min(a,b);
@@ -49,7 +55,7 @@ const SayisalStroop = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
   };
 
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);adaptive.reset();setGs('playing');};
+  const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastPairs.current=[];setP(gen(l));setUa(null);adaptive.reset();setGs('playing');};
   const handle=(chosen)=>{
     const correct=chosen===p?.answer;
     setUa(chosen);

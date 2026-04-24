@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { shuffle, TOTAL_ROUNDS, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -9,10 +9,17 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
   const cfg={1:{maxA:5,maxB:4},2:{maxA:9,maxB:9},3:{maxA:10,maxB:10},4:{maxA:15,maxB:15}};
 
+  const lastQs = useRef([]);
   const gen=(l)=>{
     const c=cfg[l];
-    const a=Math.floor(Math.random()*c.maxA)+1;
-    const b=Math.floor(Math.random()*c.maxB)+1;
+    let a, b, key, attempts = 0;
+    do {
+      a=Math.floor(Math.random()*c.maxA)+1;
+      b=Math.floor(Math.random()*c.maxB)+1;
+      key = `${a}+${b}`;
+      attempts++;
+    } while (lastQs.current.includes(key) && attempts < 12);
+    lastQs.current.push(key); if (lastQs.current.length > 4) lastQs.current.shift();
     const answer=a+b;
     const types=['normal','missing_result','missing_first','missing_second'];
     const type=l<=2?types[Math.floor(Math.random()*2)]:types[Math.floor(Math.random()*types.length)];
@@ -26,7 +33,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
     return{a,b,answer,type,question,correctAnswer,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setRd(1);setP(gen(l));setUa(null);setGs('playing');};
+  const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastQs.current=[];setP(gen(l));setUa(null);setGs('playing');};
   const handle=(ans)=>{setUa(ans);if(ans===p?.correctAnswer)setSc(s=>s+15*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Toplama Stratejileri" emoji="➕" description="Toplama işlemini görsel destekle öğren! İleri seviyelerde eksik sayıyı bul." levels={['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)']} colors={colors}/>;

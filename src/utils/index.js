@@ -10,3 +10,4 @@ export { playCountSound, playStepSound, playMagnitudeSound, playSuccessMelody, p
 export { getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, LEVELS, getLevelUpMessage } from './avatar';
 export { getChapterProgress, getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress, detectNewChapterMastery, TOTAL_CHAPTERS } from './chapterProgress';
 export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, grandfatherExistingUsers, __devSetPremium } from './entitlement';
+export { useNoRepeat, pickNoRepeat } from './noRepeat';

@@ -58,10 +58,12 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =>
   };
 
   const getC = (cf) => {
+    // Son 5 sayıyı hatırla (algısal sanbil aralığı 1-5 olduğu için max-1 kadar)
+    const maxKeep = Math.max(2, cf.max - cf.min);
     let c, a = 0;
     do { c = Math.floor(Math.random()*(cf.max-cf.min+1)) + cf.min; a++; }
-    while (last.current.includes(c) && a < 10);
-    last.current.push(c); if (last.current.length > 3) last.current.shift();
+    while (last.current.includes(c) && a < 12);
+    last.current.push(c); if (last.current.length > maxKeep) last.current.shift();
     return c;
   };
 

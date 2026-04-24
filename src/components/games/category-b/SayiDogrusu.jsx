@@ -13,14 +13,19 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [target,setTarget]=useState(0);const [opts,setOpts]=useState([]);const [ua,setUa]=useState(null);
   const cfg={1:{max:10,tol:1,step:1},2:{max:100,tol:10,step:1},3:{max:1000,tol:50,step:50}};
-  const genR=(l)=>{const c=cfg[l];let t;
-    if(l===3){const steps=[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950];t=steps[Math.floor(Math.random()*steps.length)];}
-    else{t=Math.floor(Math.random()*(c.max-2))+2;}
+  const lastTargets = useRef([]);
+  const genR=(l)=>{const c=cfg[l];let t, attempts=0;
+    do {
+      if(l===3){const steps=[50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950];t=steps[Math.floor(Math.random()*steps.length)];}
+      else{t=Math.floor(Math.random()*(c.max-2))+2;}
+      attempts++;
+    } while (lastTargets.current.includes(t) && attempts < 12);
+    lastTargets.current.push(t); if (lastTargets.current.length > 4) lastTargets.current.shift();
     setTarget(t);const o=[t];let at=0,sp=l===3?100:3;
     while(o.length<4&&at<60){const delta=l===3?(Math.floor(Math.random()*4)+1)*50*(Math.random()>0.5?1:-1):(Math.floor(Math.random()*sp)+1)*(Math.random()>0.5?1:-1);const v=Math.max(l===3?50:1,Math.min(c.max,t+delta));if(!o.includes(v))o.push(v);at++;if(at>30)sp++;}
     while(o.length<4)o.push(o.length*c.step+t);setOpts(shuffle(o));setUa(null);};
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setRd(1);genR(l);setGs('playing');};
+  const startG=(l)=>{setLv(l);setSc(0);setRd(1);lastTargets.current=[];genR(l);setGs('playing');};
   const getFeedback=(ans,tgt,tol)=>{if(ans===tgt)return{cls:'text-green-500',msg:'✓ Doğru!'};const diff=Math.abs(ans-tgt);if(diff<=tol)return{cls:'text-amber-500',msg:` Çok yaklaştın! Yanıt: ${tgt}`};return{cls:'text-orange-500',msg:`${encourage()} Yanıt: ${tgt}`};};
   const handle=(a)=>{setUa(a);adaptive.record(a===target);const fb=getFeedback(a,target,cfg[lv].tol);const isClose=a===target||Math.abs(a-target)<=cfg[lv].tol;if(a===target)setSc(s=>s+20*lv);else if(isClose)setSc(s=>s+10*lv);setTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genR(lv);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Doğrusu" emoji="" description="Ok hangi sayıyı gösteriyor? Sayı doğrusundaki konumu tahmin et!" levels={['Seviye 1 (0-10)','Seviye 2 (0-100)','Seviye 3 (0-1000)']} colors={colors}/>;

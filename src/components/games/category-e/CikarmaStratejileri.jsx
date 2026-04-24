@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { shuffle, TOTAL_ROUNDS, playSound, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -13,9 +13,14 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
   const [p, setP] = useState(null);
   const [ua, setUa] = useState(null);
 
+  const lastQs = useRef([]);
   const gen = (l) => {
     let a, b, answer, type, question, hint;
-
+    let attempts = 0;
+    let key;
+    do {
+      attempts++;
+      a = b = answer = type = question = hint = undefined;
     if (l === 1) {
       // Basit çıkarma (1-10 arası, sonuç pozitif)
       a = Math.floor(Math.random() * 8) + 3; // 3-10
@@ -56,6 +61,9 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
       }
       question = `${a} - ${b} = ?`;
     }
+      key = `${a}-${b}-${type}`;
+    } while (lastQs.current.includes(key) && attempts < 12);
+    lastQs.current.push(key); if (lastQs.current.length > 4) lastQs.current.shift();
 
     // Doğru cevap ve çeldiriciler
     const correctAnswer = type === 'missing' ? a : answer;
@@ -73,7 +81,7 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
   };
 
   const prepG = (l) => { setLv(l); setGs('ready'); };
-  const startG = (l) => { setLv(l); setSc(0); setRd(1); setP(gen(l)); setUa(null); setGs('playing'); };
+  const startG = (l) => { setLv(l); setSc(0); setRd(1); lastQs.current=[]; setP(gen(l)); setUa(null); setGs('playing'); };
   const handle = (a) => {
     setUa(a);
     if (a === p?.correctAnswer) { setSc(s => s + 15 * lv); playSound('correct'); }

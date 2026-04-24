@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { TOTAL_ROUNDS, playSound, encourage } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -39,6 +39,19 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   const cfg = { 1: { min: 5, max: 15 }, 2: { min: 10, max: 25 }, 3: { min: 15, max: 35 }, 4: { min: 20, max: 50 } };
   const bCols = ['bg-red-400', 'bg-blue-400', 'bg-green-400', 'bg-yellow-400', 'bg-purple-400', 'bg-pink-400', 'bg-orange-400', 'bg-cyan-400'];
+  const lastCounts = useRef([]);
+
+  // Tekrarsız sayı seç (son 4 sayıyı hatırla)
+  const pickCount = (c) => {
+    let count, attempts = 0;
+    do {
+      count = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+      attempts++;
+    } while (lastCounts.current.includes(count) && attempts < 12);
+    lastCounts.current.push(count);
+    if (lastCounts.current.length > 4) lastCounts.current.shift();
+    return count;
+  };
 
   const genPositions = (count) => {
     const cols = Math.min(7, Math.ceil(Math.sqrt(count * 1.5)));
@@ -65,7 +78,8 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
   const prepG = (l) => { setLv(l); setGs('ready'); };
   const startG = (l) => {
     setLv(l); setSc(0); setRd(1); setSub(false); setUg(''); setPeekCount(0);
-    const c = cfg[l]; const count = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+    lastCounts.current = []; // Yeni seviye → history sıfırla
+    const c = cfg[l]; const count = pickCount(c);
     setTc(count); setPositions(genPositions(count));
     setVisible(true); setGs('playing');
     setTimeout(() => setVisible(false), showTime[l]);
@@ -89,7 +103,7 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     setTimeout(() => {
       if (rd < TOTAL_ROUNDS) {
         const c = cfg[lv]; setRd(r => r + 1);
-        const count = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+        const count = pickCount(c);
         setTc(count); setPositions(genPositions(count));
         setUg(''); setSub(false); setPeekCount(0); setExplained(false);
         setVisible(true);

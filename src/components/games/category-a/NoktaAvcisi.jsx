@@ -119,7 +119,16 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     return { type:'grouped', groups };
   };
 
-  const getC = (cf) => { let c,a=0; do{c=Math.floor(Math.random()*(cf.max-cf.min+1))+cf.min;a++;}while(last.current.includes(c)&&a<10); last.current.push(c); if(last.current.length>3)last.current.shift(); return c; };
+  const getC = (cf) => {
+    // Son N sayıyı hatırla — N = aralık genişliği - 1 (en az 3, en çok 6)
+    const range = cf.max - cf.min + 1;
+    const keep = Math.min(6, Math.max(3, range - 1));
+    let c, a = 0;
+    do { c = Math.floor(Math.random()*range) + cf.min; a++; }
+    while (last.current.includes(c) && a < 12);
+    last.current.push(c); if (last.current.length > keep) last.current.shift();
+    return c;
+  };
 
   const startR = useCallback((l,r) => {
     const cf=cfg[l]; const c=getC(cf);
