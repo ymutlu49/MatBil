@@ -46,7 +46,7 @@ Sayı hissinden şekil algısına: diskalkuli için bilimsel matematik oyunları
 • Sanbil (Subitizing): Nokta Avcısı, Hafıza, Gruplama Ustası, Parmak Köprüsü, Parmak Şansı
 • Aritmetik: Toplama/Çıkarma Stratejileri, Sayı Bağları, Parça-Bütün, Sayı Yürüyüşü
 • Sembolik İşleme: Basamak Değeri, Çoklu Gösterim, Kod Çevirici, Büyük-Küçük
-• Geometri (Van Hiele): Şekil Tanıma, Simetri Aynası, Zihinsel Döndürme, Yön ve Mesafe
+• Geometri (Van Hiele): Şekil Tanıma, Simetri Aynası, Yön ve Mesafe
 • Tahmin: Tahmin Kavanozları, Sayı Doğrusu, Ölçme Tahmini, Hesaplamalı Tahmin
 • Bilişsel Beceriler: Sayısal Bellek, Sayısal Stroop, Görev Değiştirme
 

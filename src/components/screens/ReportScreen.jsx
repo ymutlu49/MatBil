@@ -201,15 +201,13 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
 
         {/* 📐 Van Hiele Geometrik Düşünce Düzeyi */}
         {(() => {
-          const geoGames = ['D1','D2','D3','D4','D5','D6'];
+          const geoGames = ['D1','D2','D3','D4','D6'];
           const played = geoGames.filter(id => progress[id]);
           if(played.length < 1) return null;
           // Basitleştirilmiş Van Hiele düzey tahmini
           const d1Stars = progress['D1']?.stars || 0;
           const d2Stars = progress['D2']?.stars || 0;
           const d3Stars = progress['D3']?.stars || 0;
-          const d4Stars = progress['D4']?.stars || 0;
-          const d5Stars = progress['D5']?.stars || 0;
           let vhLevel, vhName, vhDesc;
           if(d1Stars < 1) { vhLevel='Ön-Tanıma'; vhName='Ön-Tanıma Düzeyi'; vhDesc='Eğrisel ve doğrusal formları ayırt etme aşamasında. Temel şekil tanıma pratiğine devam edilmeli.'; }
           else if(d2Stars < 1) { vhLevel='Düzey 0'; vhName='Görselleştirme'; vhDesc='Şekilleri bütünsel görünümleriyle tanıyor. Özellik analizi etkinliklerine geçiş önerilir.'; }
@@ -280,14 +278,10 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           }
 
           // 4. Geometri-uzamsal analizi
-          const geo = ['D1','D2','D3','D4','D5','D6'];
+          const geo = ['D1','D2','D3','D4','D6'];
           const geoPlayed = geo.filter(id => progress[id]);
           if(geoPlayed.length >= 1) {
-            const dondurme = progress['D5'];
             const simetri = progress['D6'];
-            if(dondurme && (dondurme.stars||0) <= 1 && dondurme.attempts >= 2) {
-              insights.push({emoji:'🔄', title:'Zihinsel Döndürme Desteği', text:'Şekli zihninde döndürmede zorluk var. Gerçek nesneleri elinle döndürme pratiği yap, sonra ekranda dene.', priority:4});
-            }
             if(simetri && (simetri.stars||0) <= 1) {
               insights.push({emoji:'🪞', title:'Simetri Keşfi', text:'Kağıdı ikiye katlayarak simetrik desenleri kesmek, simetri algısını güçlendirir. Sonra Simetri Aynası oyununa dön.', priority:3});
             }
@@ -411,7 +405,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
               'Sayı Hissi': {C:['A3','A4','A8'],R:['A1','A5','A7'],A:['C1','C2']},
               'Toplama/Çıkarma': {C:['E2','E6'],R:['E5','E3'],A:['E7','E8']},
               'Çarpma/Bölme': {C:['E4'],R:['E9'],A:['B5']},
-              'Geometri': {C:['D1','D6'],R:['D2','D5'],A:['D3','D4']},
+              'Geometri': {C:['D1','D6'],R:['D2'],A:['D3','D4']},
               'Tahmin': {C:['B1'],R:['B3','B4'],A:['B2','B5']},
             };
             return Object.entries(craMap).map(([concept,levels]) => {

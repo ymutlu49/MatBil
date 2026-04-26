@@ -70,7 +70,6 @@ const TRIPLE_CODE_WEIGHTS = {
   D2: { analog: 0.2, verbal: 0.3, symbolic: 0.5 },
   D3: { analog: 0.2, verbal: 0.4, symbolic: 0.4 },
   D4: { analog: 0.5, verbal: 0.2, symbolic: 0.3 },
-  D5: { analog: 0.6, verbal: 0.0, symbolic: 0.4 },
   D6: { analog: 0.5, verbal: 0.0, symbolic: 0.5 },
 
   // Category E - Arithmetic (verbal + symbolic)

@@ -27,7 +27,6 @@ const SekilTanima = lazy(() => import('../components/games/category-d/SekilTanim
 const ElemanVeOzellikler = lazy(() => import('../components/games/category-d/ElemanVeOzellikler'));
 const IliskilerVeCikarim = lazy(() => import('../components/games/category-d/IliskilerVeCikarim'));
 const YonVeMesafe = lazy(() => import('../components/games/category-d/YonVeMesafe'));
-const ZihinselDondurme = lazy(() => import('../components/games/category-d/ZihinselDondurme'));
 const SimetriAynasi = lazy(() => import('../components/games/category-d/SimetriAynasi'));
 
 const KomsuSayilar = lazy(() => import('../components/games/category-e/KomsuSayilar'));
@@ -67,8 +66,7 @@ export const GAMES = {
   D2: { comp: ElemanVeOzellikler, name: '2) Eleman ve Özellikler', emoji: '🔎', cat: 'D', sub: 'Küçük Uzay', levels: ['Düzey 2a (Temel)','Düzey 2b (Orta)','Düzey 2c (Tanımlama)','Düzey 2d (Özellik)'], instr: 'Bir şekil gösterilecek ve kenar, köşe veya açı sayısı sorulacak. Doğru cevabı bul!' },
   D3: { comp: IliskilerVeCikarim, name: '3) İlişkiler ve Çıkarım', emoji: '🔗', cat: 'D', sub: 'Küçük Uzay', levels: ['Düzey 3a (Temel)','Düzey 3b (Orta)','Düzey 3c (İleri)','Düzey 3d (Uzman)'], instr: 'Şekiller hakkında ifadeler gösterilecek. Doğru olan tüm ifadeleri seç! Dikkat: birden fazla doğru olabilir.' },
   D4: { comp: YonVeMesafe, name: '4) Yön ve Mesafe', emoji: '🧭', cat: 'D', sub: 'Büyük Uzay', levels: ['Sol/Sağ','Üst/Alt','4 Yön Karışık','Çoklu Nesne'], instr: 'Izgarada iki nesne gösterilecek. Birinin diğerine göre konumunu (sol, sağ, üst, alt) bul!' },
-  D5: { comp: ZihinselDondurme, name: '5) Zihinsel Döndürme', emoji: '🔄', cat: 'D', sub: 'Küçük Uzay', levels: ['Kolay (90°)','Orta (aynalı)','Zor (45°)','Uzman'], instr: 'Şekli zihninde döndür! Hedef şeklin döndürülmüş halini bul.' },
-  D6: { comp: SimetriAynasi, name: '6) Simetri Aynası', emoji: '🪞', cat: 'D', sub: 'Küçük Uzay', levels: ['3x3 Kolay','3x3 Orta','4x4 Zor','4x4 Uzman'], instr: 'Deseni simetri eksenine göre tamamla!' },
+  D6: { comp: SimetriAynasi, name: '5) Simetri Aynası', emoji: '🪞', cat: 'D', sub: 'Küçük Uzay', levels: ['3x3 Kolay','3x3 Orta','4x4 Zor','4x4 Uzman'], instr: 'Deseni simetri eksenine göre tamamla!' },
   E1: { comp: KomsuSayilar, name: 'Komşu Sayılar', emoji: '🔢', cat: 'E', levels: ['Seviye 1 (1-10, temel)','Seviye 2 (1-20, iki boşluk)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)'], instr: 'Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve ritmik sayma.' },
   E2: { comp: ParcaButun, name: 'Parça-Bütün', emoji: '🧩', cat: 'E', levels: ['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)'], instr: 'Üçgenin köşelerindeki sayılar arasındaki ilişkiyi bul. İki parçanın toplamı bütüne eşittir.' },
   E3: { comp: ToplamaStratejileri, name: 'Toplama Stratejileri', emoji: '➕', cat: 'E', levels: ['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)'], instr: 'Toplama işleminin sonucunu bul! İleri seviyelerde eksik olan sayıyı tamamla.' },

@@ -131,13 +131,7 @@ export const HELP_MAP = {
     childInfo: 'Sol, sağ, yukarı, aşağı — yönleri bilmek çok önemli! "Okul evin solunda" veya "park evin yukarısında" diyebilmek için yön kavramını bilmen gerek. Bu oyunda nesnelerin birbirine göre yerlerini bulacaksın.',
     chapterRef: 'Bölüm 6: Geometri Çekirdek Bilgisi',
   },
-  '5) Zihinsel Döndürme': {
-    goal: 'Uzamsal Görselleştirme (IPS)',
-    tip: 'Şekli zihninde döndür. Köşe ve kenar ilişkilerine odaklan. Aynalı olan FARKLIDIR!',
-    childInfo: 'Bir şekli elinde çevirmeden, sadece kafanda döndürebilirsin! Bu beceri matematik ve günlük hayatta çok işe yarar. Bu oyunda şekilleri zihninde çevirmeyi öğreneceksin.',
-    chapterRef: 'Bölüm 6: Geometri Çekirdek Bilgisi',
-  },
-  '6) Simetri Aynası': {
+  '5) Simetri Aynası': {
     goal: 'Simetri Algısı (Mekânsal İlişkiler)',
     tip: 'Simetri ekseni boyunca her satırın ayna görüntüsünü düşün. Dolu hücreler yer değiştirir!',
     childInfo: 'Bir kelebeğin kanatları birbirinin aynısıdır! Buna simetri denir. Bu oyunda desenleri ayna gibi tamamlamayı öğreneceksin.',

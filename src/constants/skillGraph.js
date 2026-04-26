@@ -10,7 +10,7 @@ export const SKILL_GRAPH = {
   multiplication: { name: 'Çarpma', games: ['E9'], prereqs: ['addition','counting'] },
   division: { name: 'Bölme/Gruplama', games: ['E4'], prereqs: ['counting','addition'] },
   shapeRecog: { name: 'Şekil Tanıma', games: ['D1','D2'], prereqs: [] },
-  spatialRel: { name: 'Uzamsal İlişkiler', games: ['D3','D4','D5','D6'], prereqs: ['shapeRecog'] },
+  spatialRel: { name: 'Uzamsal İlişkiler', games: ['D3','D4','D6'], prereqs: ['shapeRecog'] },
   transcoding: { name: 'Kodlar Arası Çeviri', games: ['C3','C5'], prereqs: ['symbolRecog','magnitude'] },
   workingMemory: { name: 'Çalışma Belleği', games: ['F1'], prereqs: ['subitizing'] },
   inhibition: { name: 'İnhibisyon/Stroop', games: ['F2'], prereqs: ['magnitude'] },
@@ -53,7 +53,6 @@ export const GAME_CHAPTER_MAP = {
   D2: { primary: 7, secondary: [6, 8], skill: 'shapeRecog' },  // Eleman ve Özellikler - Van Hiele 1
   D3: { primary: 7, secondary: [6, 8], skill: 'spatialRel' },  // İlişkiler - Van Hiele 2
   D4: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Yön ve Mesafe - Büyük uzay
-  D5: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Zihinsel Döndürme
   D6: { primary: 6, secondary: [8], skill: 'spatialRel' },     // Simetri Aynası
 
   // ─── Kategori E: Aritmetik ve Sayı İşlemleri ───
