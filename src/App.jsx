@@ -12,6 +12,7 @@ import { CATEGORIES } from './constants/categories';
 import { COLORS } from './constants/colors';
 import { BADGES } from './constants/badges';
 import RoleSelectScreen from './components/screens/RoleSelectScreen';
+import BookCodeGate from './components/screens/BookCodeGate';
 import TeacherDashboard from './components/screens/TeacherDashboard';
 import ParentDashboard from './components/screens/ParentDashboard';
 import ReportScreen from './components/screens/ReportScreen';
@@ -111,6 +112,8 @@ const App = () => {
       migrateExistingUsers();
       // Freemium migration: daha önce uygulamayı kullanan herkes premium sayılır
       grandfatherExistingUsers();
+      // Grandfather localStorage'a yazdı — state'i tazele ki kapı atlansın
+      setPremiumInfo(getPremiumInfo());
       const last = localStorage.getItem('matbil_current_user');
       if (last) setUser(JSON.parse(last));
     } catch {}
@@ -346,6 +349,12 @@ const App = () => {
     onAccept={handleKvkkAccept}
     onDecline={kvkkAlreadyAccepted ? () => setShowKvkk(false) : handleKvkkDecline}
     showAgain={kvkkAlreadyAccepted}
+  />;
+  // Kitap kodu kapısı: premium aktive değilse rol seçimine erişim yok.
+  // Yönetici PIN'i ve grandfather'lanmış kullanıcılar bu kapıyı atlar.
+  if (!premiumInfo?.active) return <BookCodeGate
+    onCodeRedeemed={refreshPremiumInfo}
+    onAdminLogin={(u) => { handleLogin(u); refreshPremiumInfo(); }}
   />;
   if (!user) return <RoleSelectScreen onLogin={handleLogin} />;
   if (user.role === 'teacher' && !playingStudent) return <TeacherDashboard user={user} onLogout={handleLogout} onPlayAsStudent={handlePlayAsStudent} />;

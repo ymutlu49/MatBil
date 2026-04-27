@@ -122,7 +122,7 @@ const AdminLoginScreen = ({ onLogin, onBack }) => {
             onClick={onBack}
             className="w-full mt-3 py-2.5 text-gray-500 text-sm hover:text-gray-700 transition-colors"
           >
-            {"←"} Rol Seçimine Dön
+            {"←"} Geri
           </button>
 
           <div className="mt-4 pt-3 border-t border-gray-100 text-center">
