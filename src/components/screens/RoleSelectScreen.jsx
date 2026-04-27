@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import TeacherLoginScreen from './TeacherLoginScreen';
-import StudentSelectScreen from './StudentSelectScreen';
 import ParentLoginScreen from './ParentLoginScreen';
 import AdminLoginScreen from './AdminLoginScreen';
 
 /**
  * Rol Seçim Ekranı
- * Dört giriş kapısı: Öğretmen / Öğrenci / Veli / Yazar (Yönetici)
+ * Üç giriş kapısı: Öğretmen / Veli / Yazar (Yönetici)
  *
  * Yazar/Yönetici girişi tek şifre ile, başarılı girişte premium otomatik aktif.
  */
@@ -14,7 +13,6 @@ const RoleSelectScreen = ({ onLogin }) => {
   const [selectedRole, setSelectedRole] = useState(null);
 
   if (selectedRole === 'teacher') return <TeacherLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
-  if (selectedRole === 'student') return <StudentSelectScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
   if (selectedRole === 'parent') return <ParentLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
   if (selectedRole === 'admin') return <AdminLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
 
@@ -36,16 +34,6 @@ const RoleSelectScreen = ({ onLogin }) => {
             <div className="text-left flex-1">
               <div className="text-base font-bold">Öğretmen</div>
               <div className="text-[11px] opacity-90">Sınıf yönetimi ve raporlar</div>
-            </div>
-            <span className="text-white/60 text-xl">{"›"}</span>
-          </button>
-
-          <button onClick={() => setSelectedRole('student')}
-            className="w-full py-4 px-4 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-2xl shadow-xl flex items-center gap-3 hover:opacity-95 active:scale-[0.98] transition-all">
-            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center text-2xl shrink-0">{"🎒"}</div>
-            <div className="text-left flex-1">
-              <div className="text-base font-bold">Öğrenci</div>
-              <div className="text-[11px] opacity-90">Oyunları oyna ve öğren</div>
             </div>
             <span className="text-white/60 text-xl">{"›"}</span>
           </button>
