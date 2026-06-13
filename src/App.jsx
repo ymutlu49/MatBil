@@ -1,10 +1,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges, downloadEtkinlikPDF,
+import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges,
   useSessionTimer, getWeeklyStats, saveSessionData,
   MOOD_OPTIONS, saveMoodLog,
   getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, getLevelUpMessage,
-  getOverallBookProgress, getMasteredChapterCount, detectNewChapterMastery, getAllChaptersProgress,
-  getPremiumInfo, grandfatherExistingUsers, shouldShowPremiumBadge, isGameAccessible,
+  getPremiumInfo, enforceCodeOnlyAccess, shouldShowPremiumBadge, isGameAccessible,
   runMigrations
 } from './utils';
 import { GAMES } from './constants/games';
@@ -13,6 +12,7 @@ import { COLORS } from './constants/colors';
 import { BADGES } from './constants/badges';
 import RoleSelectScreen from './components/screens/RoleSelectScreen';
 import BookCodeGate from './components/screens/BookCodeGate';
+import LandingScreen from './components/screens/LandingScreen';
 import TeacherDashboard from './components/screens/TeacherDashboard';
 import ParentDashboard from './components/screens/ParentDashboard';
 import ReportScreen from './components/screens/ReportScreen';
@@ -20,15 +20,15 @@ import PDFReportView from './components/screens/PDFReportView';
 import AdminPanel from './components/screens/AdminPanel';
 import Onboarding from './components/screens/Onboarding';
 import KvkkConsentScreen from './components/screens/KvkkConsentScreen';
-import BookChapters from './components/screens/BookChapters';
 import QRCodePage from './components/screens/QRCodePage';
 import TheoryIntro from './components/ui/TheoryIntro';
 import TheoryReflection from './components/ui/TheoryReflection';
-import ChapterBadge from './components/ui/ChapterBadge';
 import ErrorBoundary from './components/ui/ErrorBoundary';
 import RedeemCodeModal from './components/ui/RedeemCodeModal';
 import PremiumBadge from './components/ui/PremiumBadge';
-import { migrateExistingUsers } from './utils/auth';
+import { migrateExistingUsers, getOrCreateDefaultLearner, getSimpleProfiles, createSimpleProfile, renameLearner, markLearnerNamed, SIMPLE_PROFILE_LIMIT } from './utils/auth';
+import NamePromptScreen from './components/screens/NamePromptScreen';
+import LearnerProfiles from './components/ui/LearnerProfiles';
 
 /**
  * Ana Uygulama - v16.1 UI/UX İyileştirmeleri
@@ -47,13 +47,34 @@ const App = () => {
   const [showKvkk, setShowKvkk] = useState(() => { try { return localStorage.getItem('matbil_kvkk_accepted') !== '1'; } catch { return true; } });
   const [showOnboarding, setShowOnboarding] = useState(() => { try { return !localStorage.getItem('matbil_onboarded'); } catch { return true; } });
   const completeOnboarding = () => { setShowOnboarding(false); try { localStorage.setItem('matbil_onboarded','1'); } catch {} };
+  // Tanıtım/iniş ekranı: tarayıcıda ilk gelişte gösterilir. Kurulu PWA (standalone),
+  // ?app=1 ile açılış veya daha önce "Başla" denmişse atlanır.
+  const [entered, setEntered] = useState(() => {
+    // Native uygulama (Capacitor/Play Store) → tanıtım/iniş gösterilmez, doğrudan uygulama
+    try {
+      if (import.meta.env.VITE_BUILD_TARGET === 'capacitor') return true;
+      if (window.Capacitor?.isNativePlatform?.()) return true;
+    } catch {}
+    try { if (localStorage.getItem('matbil_entered') === '1') return true; } catch {}
+    try {
+      if (new URLSearchParams(window.location.search).has('app')) return true;
+      if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return true;
+      if (window.navigator && window.navigator.standalone) return true;
+    } catch {}
+    return false;
+  });
+  const handleEnter = () => { setEntered(true); try { localStorage.setItem('matbil_entered', '1'); } catch {} };
+  // Tanıtım/ana sayfaya geri dönüş — kapı ve rol ekranlarından erişilir (yalnız web).
+  // "Başla" ile yazılan kalıcı bayrağı temizler ki sonraki ziyarette de ana sayfa açılsın.
+  const handleHome = () => { setEntered(false); try { localStorage.removeItem('matbil_entered'); } catch {} };
+  const isNativeApp = (() => {
+    try {
+      if (import.meta.env.VITE_BUILD_TARGET === 'capacitor') return true;
+      if (window.Capacitor?.isNativePlatform?.()) return true;
+    } catch {}
+    return false;
+  })();
   const handleKvkkAccept = () => setShowKvkk(false);
-  const handleKvkkDecline = () => {
-    // Kullanıcı onay vermedi — tüm veriyi temizle ve sayfayı kapat/yeniden yükle
-    try { localStorage.clear(); } catch {}
-    alert('Onay vermeden uygulama kullanılamaz. Uygulamayı kapatabilirsiniz.');
-    try { window.close(); } catch {}
-  };
   const [view, setView] = useState('home');
   const [expandedCat, setExpandedCat] = useState(null);
   const [buyukYazi, setBuyukYazi] = useState(() => { try { return localStorage.getItem('matbil_buyuk_yazi') === 'true'; } catch { return false; } });
@@ -88,6 +109,9 @@ const App = () => {
   // Ayarlar paneli
   const [showSettings, setShowSettings] = useState(false);
 
+  // Eğitmen / veli / yazar giriş kapısı — Ayarlar'dan açılır (basit modda gizli).
+  const [showRoleSelect, setShowRoleSelect] = useState(false);
+
   // Ruh hali
   const [mood, setMood] = useState(null);
 
@@ -110,9 +134,9 @@ const App = () => {
       // Şema migration'ı EN BAŞTA — diğer migration'lar eski format beklerse önce normalize et
       runMigrations();
       migrateExistingUsers();
-      // Freemium migration: daha önce uygulamayı kullanan herkes premium sayılır
-      grandfatherExistingUsers();
-      // Grandfather localStorage'a yazdı — state'i tazele ki kapı atlansın
+      // Kod-yalnız erişim: koda dayanmayan (grandfather/legacy) eski premium'lar bir kez iptal edilir
+      enforceCodeOnlyAccess();
+      // Premium durumu değişmiş olabilir — state'i tazele ki kapı doğru kararı versin
       setPremiumInfo(getPremiumInfo());
       const last = localStorage.getItem('matbil_current_user');
       if (last) setUser(JSON.parse(last));
@@ -163,27 +187,23 @@ const App = () => {
     if (user && !session.isActive) session.start();
   }, [user]);
 
-  // Oyun içinden kitap bölümüne geçiş - GameHeader tarafından dispatch edilir
-  const [focusedChapter, setFocusedChapter] = useState(null);
-  useEffect(() => {
-    const onOpenBook = (e) => {
-      const chNum = e?.detail?.chapterNum || null;
-      setCurrentGame(null);
-      setShowTheoryReflection(null);
-      setShowTheoryIntro(null);
-      setFocusedChapter(chNum);
-      setView('book');
-    };
-    window.addEventListener('matbil:openBook', onOpenBook);
-    return () => window.removeEventListener('matbil:openBook', onOpenBook);
-  }, []);
-
   const handleLogin = (u) => {
     setUser(u);
     localStorage.setItem('matbil_current_user', JSON.stringify(u));
     // Yazar / Yönetici girişinde onboarding atlanır (yetkili kullanıcı)
     if (u?.role === 'admin') setShowOnboarding(false);
   };
+
+  // Basit mod: premium aktive olduğunda ve aktif kullanıcı yoksa, rol seçtirmeden
+  // tek bir öğrenci profili oluşturup doğrudan oyuna al. Eğitmen/veli kapısı açıkken bekler.
+  // matbil_current_user storage'ı doğrudan kontrol edilir ki mount'taki geri-yükleme ile yarışmasın.
+  useEffect(() => {
+    if (!premiumInfo?.active || user || showRoleSelect) return;
+    let stored = null;
+    try { stored = localStorage.getItem('matbil_current_user'); } catch {}
+    if (stored) return; // mount geri-yükleme effect'i bu kullanıcıyı set edecek; oluşturma.
+    handleLogin(getOrCreateDefaultLearner());
+  }, [premiumInfo?.active, user, showRoleSelect]);
 
   const handleLogout = () => {
     if (user && session.elapsed > 30) {
@@ -217,18 +237,9 @@ const App = () => {
     const newProgress = { ...progress, [gameId]: updated };
     setProgress(newProgress);
     saveProgress(activeUserId, newProgress);
-    // Yeni bir bölüm ustalaştı mı?
-    const masteredChapter = detectNewChapterMastery(progress, newProgress, gameId);
-    if (masteredChapter) {
-      setChapterMasteredMsg({ chapterNum: masteredChapter });
-      setTimeout(() => setChapterMasteredMsg(null), 5000);
-    }
     // Oyun sonrası yansıtma ekranını göster
     setShowTheoryReflection({ gameId, stars });
   };
-
-  // Bölüm ustalaşma kutlama bildirimi
-  const [chapterMasteredMsg, setChapterMasteredMsg] = useState(null);
 
   // Oyun başlatma - önce kilit kontrolü, sonra teori intro
   const handleStartGame = (gameId) => {
@@ -257,6 +268,21 @@ const App = () => {
     setAvatarId(id);
     if (user) saveAvatar(user.id, id);
     setShowAvatarPicker(false);
+  };
+
+  // Basit mod: isim kişiselleştirme + kardeş profilleri
+  const handleRenameLearner = (name) => {
+    const u = renameLearner(user.id, name);
+    if (u) setUser({ ...user, name: u.name, named: true });
+  };
+  const handleSwitchProfile = (profile) => {
+    if (!profile || profile.id === user?.id) { setShowAvatarPicker(false); return; }
+    handleLogin(profile);
+    setShowAvatarPicker(false);
+  };
+  const handleAddProfile = (name) => {
+    const p = createSimpleProfile(name);
+    if (p) { handleLogin(p); setShowAvatarPicker(false); }
   };
 
   const handleMoodSelect = (m) => {
@@ -342,12 +368,15 @@ const App = () => {
     setExpandedCat(null);
   };
 
-  // KVKK onayı ilk açılışta zorunlu — rol seçiminden önce gösterilir.
-  // Ayarlar'dan re-read için de kullanılır (showAgain modu = kapat butonu).
+  // Tanıtım ekranı — her şeyden önce. "Başla" denene kadar uygulama akışı başlamaz.
+  if (!entered) return <LandingScreen onEnter={handleEnter} />;
+
+  // Kısa gizlilik bilgilendirmesi — ilk açılışta bir kez gösterilir, rol seçiminden önce.
+  // Ayarlar'dan tekrar açılabilir (showAgain modu = kapat butonu).
   const kvkkAlreadyAccepted = (() => { try { return localStorage.getItem('matbil_kvkk_accepted') === '1'; } catch { return false; } })();
   if (showKvkk) return <KvkkConsentScreen
     onAccept={handleKvkkAccept}
-    onDecline={kvkkAlreadyAccepted ? () => setShowKvkk(false) : handleKvkkDecline}
+    onDecline={() => setShowKvkk(false)}
     showAgain={kvkkAlreadyAccepted}
   />;
   // Kitap kodu kapısı: premium aktive değilse rol seçimine erişim yok.
@@ -355,15 +384,31 @@ const App = () => {
   if (!premiumInfo?.active) return <BookCodeGate
     onCodeRedeemed={refreshPremiumInfo}
     onAdminLogin={(u) => { handleLogin(u); refreshPremiumInfo(); }}
+    onHome={isNativeApp ? undefined : handleHome}
   />;
-  if (!user) return <RoleSelectScreen onLogin={handleLogin} />;
+  // Eğitmen / veli / yazar kapısı — Ayarlar'dan açılır, "Geri" ile oyuna döner.
+  if (showRoleSelect) return <RoleSelectScreen
+    onLogin={(u) => { setShowRoleSelect(false); handleLogin(u); }}
+    onBack={() => setShowRoleSelect(false)}
+  />;
+  // Basit modda öğrenci profili effect tarafından oluşturulurken kısa bekleme.
+  if (!user) return (
+    <div className="h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col items-center justify-center gap-3">
+      <div className="text-5xl animate-bounce">{"🧠"}</div>
+      <div className="text-sm font-bold text-indigo-500 animate-pulse">Hazırlanıyor…</div>
+    </div>
+  );
   if (user.role === 'teacher' && !playingStudent) return <TeacherDashboard user={user} onLogout={handleLogout} onPlayAsStudent={handlePlayAsStudent} />;
   if (user.role === 'parent') return <ParentDashboard user={user} onLogout={handleLogout} />;
   if (showOnboarding) return <Onboarding onComplete={completeOnboarding} />;
+  // Basit mod: ilk açılışta bir kez isim sor (atlanabilir).
+  if (user.isDefault && !user.named) return <NamePromptScreen
+    onSubmit={handleRenameLearner}
+    onSkip={() => { markLearnerNamed(user.id); setUser({ ...user, named: true }); }}
+  />;
   if (view === 'report') return <ReportScreen user={user} progress={progress} onBack={() => setView('home')} onPDF={() => setView('pdf')} />;
   if (view === 'pdf') return <PDFReportView user={user} progress={progress} onBack={() => setView('home')} />;
   if (view === 'admin') return <AdminPanel onBack={() => setView('home')} />;
-  if (view === 'book') return <BookChapters onBack={() => { setView('home'); setFocusedChapter(null); }} onPlayGame={handleStartGame} progress={progress} focusedChapter={focusedChapter} />;
   if (view === 'qrcodes') return <QRCodePage onBack={() => setView('home')} />;
 
   // Oyun öncesi teori intro ekranı
@@ -378,7 +423,6 @@ const App = () => {
           gameEmoji={game.emoji}
           onStart={handleTheoryIntroComplete}
           onSkip={handleTheoryIntroSkip}
-          onOpenBook={(chNum) => { setShowTheoryIntro(null); setFocusedChapter(chNum); setView('book'); }}
         />
       );
     }
@@ -398,7 +442,6 @@ const App = () => {
             stars={stars}
             onContinue={() => setShowTheoryReflection(null)}
             onPlayAgain={() => { setShowTheoryReflection(null); handleStartGame(gameId); }}
-            onOpenBook={(chNum) => { setShowTheoryReflection(null); setFocusedChapter(chNum); setView('book'); }}
           />
         </div>
       );
@@ -429,7 +472,6 @@ const App = () => {
   }
 
   const toggleCat = (catId) => { setExpandedCat(expandedCat === catId ? null : catId); };
-  const handleDownloadPDF = () => downloadEtkinlikPDF(import.meta.env.BASE_URL);
 
   // Hesaplamalar
   const xp = getXPFromProgress(progress);
@@ -439,10 +481,6 @@ const App = () => {
   const played = Object.keys(progress).length;
   const total = Object.keys(GAMES).length;
   const playedPct = Math.round((played / Math.max(total, 1)) * 100);
-  // Kitap ilerlemesi
-  const bookPct = getOverallBookProgress(progress);
-  const masteredChapters = getMasteredChapterCount(progress);
-  const allChapters = getAllChaptersProgress(progress);
   const today = new Date().toISOString().split('T')[0];
   const todayPlays = Object.values(progress).filter(g => g.lastPlayed && g.lastPlayed.startsWith(today)).length;
   const dailyGoal = 3;
@@ -450,6 +488,7 @@ const App = () => {
   const earned = checkBadges(progress, GAMES);
 
   const displayUser = playingStudent || user;
+  const simpleProfiles = user?.isDefault ? getSimpleProfiles() : [];
 
   return (
     <div className={`h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col overflow-hidden ${buyukYazi ? "text-lg" : ""}`} role="main" aria-label="MatBil Ana Menü">
@@ -477,21 +516,6 @@ const App = () => {
           <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-yellow-400 to-amber-500 text-white px-6 py-3 rounded-2xl shadow-2xl anim-pop text-center">
             <div className="text-2xl mb-1">{"🎉"} Seviye Atladın!</div>
             <div className="text-sm font-bold">{levelUpMsg}</div>
-          </div>
-        )}
-
-        {/* Kitap bölümü ustalaşma bildirimi */}
-        {chapterMasteredMsg && (
-          <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gradient-to-r from-amber-400 via-orange-500 to-amber-600 text-white px-6 py-4 rounded-2xl shadow-2xl anim-pop text-center max-w-sm">
-            <div className="text-3xl mb-1">{"🏆📚"}</div>
-            <div className="text-base font-bold mb-1">Bölüm Ustalığı!</div>
-            <div className="text-xs opacity-95 mb-2">Bölüm {chapterMasteredMsg.chapterNum}'de ustalaştın!</div>
-            <button
-              onClick={() => { setChapterMasteredMsg(null); setFocusedChapter(chapterMasteredMsg.chapterNum); setView('book'); }}
-              className="px-3 py-1.5 bg-white text-amber-700 rounded-xl text-xs font-bold hover:bg-amber-50 active:scale-95 transition-all"
-            >
-              {"📖"} Bölümü Gör
-            </button>
           </div>
         )}
 
@@ -542,10 +566,12 @@ const App = () => {
               className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg active:scale-95 transition-all ${showSettings ? 'bg-indigo-500 text-white' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`} title="Ayarlar">
               {"⚙️"}
             </button>
-            <button onClick={handleLogout}
-              className="w-10 h-10 bg-gray-100 text-gray-500 rounded-xl flex items-center justify-center text-lg hover:bg-gray-200 active:scale-95 transition-all" title="Çıkış">
-              {"🚪"}
-            </button>
+            {!user?.isDefault && (
+              <button onClick={handleLogout}
+                className="w-10 h-10 bg-gray-100 text-gray-500 rounded-xl flex items-center justify-center text-lg hover:bg-gray-200 active:scale-95 transition-all" title="Çıkış">
+                {"🚪"}
+              </button>
+            )}
           </div>
         </div>
 
@@ -559,12 +585,18 @@ const App = () => {
                 <div className="w-9 h-9 bg-gradient-to-br from-amber-400 to-orange-500 rounded-lg flex items-center justify-center text-white text-lg shadow-sm shrink-0">{"🔓"}</div>
                 <div className="flex-1 text-left">
                   <div className="text-xs font-bold text-amber-800">Tüm Oyunları Aç</div>
-                  <div className="text-[10px] text-amber-600">Kitabınızdaki kodla tüm 36 oyun açılır</div>
+                  <div className="text-[10px] text-amber-600">Kitabınızdaki kodla tüm 35 oyun açılır</div>
                 </div>
                 <span className="text-amber-500 text-lg shrink-0">{"›"}</span>
               </button>
             )}
             <div className="grid grid-cols-2 gap-2">
+              {/* Eğitmen / Veli / Yazar girişi — basit moddan geçiş kapısı */}
+              <button onClick={() => { setShowSettings(false); setShowRoleSelect(true); }}
+                className="flex items-center gap-2 p-3 rounded-xl font-medium text-sm bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 active:scale-[0.98] transition-all col-span-2">
+                <span className="text-xl">{"👩‍🏫"}</span>
+                <span>Eğitmen / Veli Modu</span>
+              </button>
               <button onClick={toggleSes}
                 className={`flex items-center gap-2 p-3 rounded-xl font-medium text-sm transition-all ${sesAcik ? 'bg-blue-50 text-blue-700 border border-blue-200' : 'bg-gray-50 text-gray-500 border border-gray-200'}`}>
                 <span className="text-xl">{sesAcik ? '🔊' : '🔇'}</span>
@@ -634,6 +666,16 @@ const App = () => {
         {/* Avatar seçici */}
         {showAvatarPicker && (
           <div className="shrink-0 mb-2 bg-white rounded-2xl shadow-lg border border-indigo-200 p-3 anim-fade">
+            {user?.isDefault && (
+              <LearnerProfiles
+                current={user}
+                profiles={simpleProfiles}
+                limit={SIMPLE_PROFILE_LIMIT}
+                onRename={handleRenameLearner}
+                onSwitch={handleSwitchProfile}
+                onAdd={handleAddProfile}
+              />
+            )}
             <div className="text-xs font-bold text-gray-700 mb-2">{"🎭"} Avatar Seç</div>
             <div className="flex gap-2 flex-wrap justify-center">
               {AVATARS.map(a => (
@@ -721,10 +763,7 @@ const App = () => {
 
                   {isOpen && (
                     <div className={`${cat.color.bg} border-x-2 border-b-2 ${cat.color.border} rounded-b-2xl`}>
-                      {/* Bölüm rozeti */}
-                      <div className="px-3 pt-2">
-                        <ChapterBadge categoryId={cat.id} />
-                      </div>
+                      <div className="h-1.5"/>
                       {catGames.map(([id, g]) => {
                         const gp = progress[id];
                         const showPremiumLock = shouldShowPremiumBadge(id);
@@ -752,60 +791,10 @@ const App = () => {
               );
             })}
 
-            {/* Kitap Bölümleri - Zenginleştirilmiş */}
-            <button onClick={() => { setFocusedChapter(null); setView('book'); }}
-              className="w-full bg-white border-2 border-amber-200 rounded-2xl p-3.5 hover:shadow-lg hover:border-amber-300 transition-all active:scale-[0.98]">
-              <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl shadow-md">
-                  {"📚"}
-                  {masteredChapters > 0 && (
-                    <div className="absolute -top-1 -right-1 bg-yellow-300 text-yellow-900 text-[9px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md border border-white">
-                      {masteredChapters}
-                    </div>
-                  )}
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="flex items-center gap-1.5">
-                    <div className="font-bold text-gray-800">Kitap Bölümleri</div>
-                    {bookPct > 0 && (
-                      <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded-full font-bold border border-amber-200">{bookPct}%</span>
-                    )}
-                  </div>
-                  <div className="text-xs text-gray-500">Teoriyi oku, pratikte uygula</div>
-                </div>
-                <span className="text-gray-300 text-lg">{'›'}</span>
-              </div>
-              {/* 8 bölüm mini ilerleme göstergesi */}
-              <div className="mt-2.5 flex gap-1">
-                {[1,2,3,4,5,6,7,8].map(n => {
-                  const cp = allChapters[n];
-                  const pct = cp?.pct || 0;
-                  const bg = cp?.isMastered ? 'bg-amber-400' : pct >= 50 ? 'bg-amber-300' : pct > 0 ? 'bg-amber-200' : 'bg-gray-100';
-                  return (
-                    <div key={n} className="flex-1 relative group" title={`Bölüm ${n}: ${pct}%`}>
-                      <div className={`h-1.5 rounded-full ${bg} transition-all`} />
-                      <div className="text-[8px] text-center text-gray-400 mt-0.5">{n}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </button>
-
-            {/* Etkinlik Kitapçığı */}
-            <button onClick={handleDownloadPDF}
-              className="w-full bg-white border-2 border-amber-200 rounded-2xl p-3.5 flex items-center gap-3 hover:shadow-lg hover:border-amber-300 transition-all active:scale-[0.98]">
-              <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center text-white text-2xl shadow-md">{"📝"}</div>
-              <div className="flex-1 text-left">
-                <div className="font-bold text-gray-800">Etkinlik Kitapçığı</div>
-                <div className="text-xs text-gray-500">Kâğıt-kalem etkinlikleri</div>
-              </div>
-              <span className="px-3 py-1.5 bg-amber-500 text-white rounded-lg text-xs font-bold">{"📥"}</span>
-            </button>
-
             <div className="text-center pt-3 pb-2">
               <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu {' \u2022 '} Prof. Dr. Sinan Olkun</p>
               <p className="text-[10px] text-gray-300">v16.1 {' \u2022 '} {total} Oyun {' \u2022 '} {CATEGORIES.length} Kategori</p>
-              <p className="text-[10px] text-gray-300 mt-0.5">www.diskalkuli.com</p>
+              <p className="text-[10px] text-gray-300 mt-0.5">sayihissi.com</p>
             </div>
           </div>
         </div>

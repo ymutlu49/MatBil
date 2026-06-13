@@ -2,16 +2,16 @@ export { TOTAL_ROUNDS, shuffle, playSound, vibrate, encourage, speakNumber } fro
 export { getProgress, saveProgress, getUsers, saveUser } from './progress';
 export { calcMastery, prereqsMet, recommendNext } from './mastery';
 export { checkBadges } from './badges';
-export { downloadEtkinlikPDF } from './pdf';
 export { useAdaptive } from './adaptive';
 export { useSessionTimer, getWeeklyStats, saveSessionData } from './sessionTimer';
 export { getGrowthMessage, gentleEncourage, MOOD_OPTIONS, getAnxietyAdjustments, saveMoodLog, getMoodHistory } from './anxiety';
 export { playCountSound, playStepSound, playMagnitudeSound, playSuccessMelody, playEncourageSound, speakTurkish } from './multisensory';
 export { getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, LEVELS, getLevelUpMessage } from './avatar';
 export { getChapterProgress, getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress, detectNewChapterMastery, TOTAL_CHAPTERS } from './chapterProgress';
-export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, grandfatherExistingUsers, writePremiumState, __devSetPremium } from './entitlement';
+export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, enforceCodeOnlyAccess, writePremiumState, __devSetPremium } from './entitlement';
 export { useNoRepeat, pickNoRepeat } from './noRepeat';
 export { hashPin, verifyPin, generateId } from './auth';
 export { useSafeTimeout } from './useSafeTimeout';
+export { usePWAInstall } from './usePWAInstall';
 export { runMigrations, getCurrentSchemaVersion, CURRENT_SCHEMA_VERSION } from './schemaMigration';
 export { initTelemetry, reportError, isSentryActive } from './telemetry';

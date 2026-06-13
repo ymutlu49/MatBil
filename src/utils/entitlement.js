@@ -245,32 +245,37 @@ export const revokePremium = () => {
 };
 
 /**
- * Mevcut kullanıcıları "grandfather" yapar — freemium aktifleştiğinde
- * daha önce uygulamayı kullanmış herkes premium sayılır.
+ * Kod-yalnız erişim zorlaması — "herkes kod girsin, istisna olmasın".
  *
- * TEK SEFERLİK çalışır: İlk aktivasyon sonrasında `matbil_freemium_migrated`
- * bayrağı set edilir, sonraki boot'larda atlanır. Bu sayede:
- *  - Eski kullanıcılar güncelleme sonrası grandfather'lanır
- *  - Yeni kullanıcılar (migration sonrası kaydolanlar) grandfather'lanMAZ
- *  - revokePremium() ile test edenler tekrar grandfather olmaz
+ * Eski "grandfather" yaklaşımının yerini alır. Koda dayanmayan (grandfather /
+ * legacy / kodsuz) eski premium'ları BİR KEZ iptal eder; böylece daha önce
+ * otomatik premium verilmiş kullanıcılar da gerçek kitap kodu girmek zorunda kalır.
+ *
+ * Korunanlar (kilitlenmez):
+ *  - Gerçek kitap kodu ile açılmış premium (MTB-XXXX-XXXX-XXXX)
+ *  - Yazar / Yönetici girişi (ADMIN-AUTHOR)
+ *
+ * İptal edilenler:
+ *  - GRANDFATHERED, LEGACY, DEV, kodsuz/boş — koda dayanmayan her premium
+ *
+ * TEK SEFERLİK çalışır (`matbil_code_only_enforced`): sonraki boot'larda atlanır,
+ * böylece iptal sonrası tekrar girilen kitap kodu / admin premium'u kalıcı olur.
  */
-const MIGRATED_KEY = 'matbil_freemium_migrated';
+const ENFORCED_KEY = 'matbil_code_only_enforced';
 
-export const grandfatherExistingUsers = () => {
+export const enforceCodeOnlyAccess = () => {
   try {
-    // Migration bir kere çalıştıysa atla
-    if (localStorage.getItem(MIGRATED_KEY) === '1') return;
-    // Migration'ı tamamlandı olarak işaretle (grandfather uygulansa da uygulanmasa da)
-    localStorage.setItem(MIGRATED_KEY, '1');
+    // Zorlama bir kez çalıştıysa atla (admin/kod tekrar girilmişse dokunma)
+    if (localStorage.getItem(ENFORCED_KEY) === '1') return;
+    localStorage.setItem(ENFORCED_KEY, '1');
 
-    if (localStorage.getItem(PREMIUM_KEY) === '1') return; // zaten premium
-    // İlerleme kaydı / kullanıcı / onboarded var mı?
-    const keys = Object.keys(localStorage);
-    const hasProgress = keys.some(k => k.startsWith('matbil_progress_'));
-    const hasUsers = keys.includes('matbil_users') && JSON.parse(localStorage.getItem('matbil_users') || '[]').length > 0;
-    const hasOnboarded = localStorage.getItem('matbil_onboarded') === '1';
-    if (hasProgress || hasUsers || hasOnboarded) {
-      writePremiumState('GRANDFATHERED');
+    if (localStorage.getItem(PREMIUM_KEY) !== '1') return; // premium yok — yapılacak bir şey yok
+    const code = (localStorage.getItem(CODE_KEY) || '').toUpperCase();
+    const isRealBookCode = CODE_PATTERN.test(code);
+    const isAdmin = code === 'ADMIN-AUTHOR';
+    // Koda dayanmayan (grandfather/legacy/kodsuz) premium iptal edilir.
+    if (!isRealBookCode && !isAdmin) {
+      revokePremium();
     }
   } catch {}
 };
