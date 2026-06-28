@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { shuffle, TOTAL_ROUNDS, encourage ,useAdaptive, useSafeTimeout} from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
@@ -18,8 +18,19 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const adaptive = useAdaptive();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [p,setP]=useState(null);const [ua,setUa]=useState(null);
 
-  // Birim boyutu: tüm görseller bu ölçüye göre orantılı
-  const UNIT = 14; // px - birlik küpünün kenar uzunluğu
+  // Birim boyutu: tüm görseller bu ölçüye göre orantılı.
+  // Telefonda (özellikle Sv.4 yüzlükler) ekrana sığması için ekran
+  // genişliğine göre küçültülür.
+  const [UNIT, setUNIT] = useState(14); // px - birlik küpünün kenar uzunluğu
+  useEffect(() => {
+    const calc = () => {
+      const w = window.innerWidth;
+      setUNIT(w < 380 ? 7 : w < 500 ? 9 : w < 700 ? 11 : 14);
+    };
+    calc();
+    window.addEventListener('resize', calc);
+    return () => window.removeEventListener('resize', calc);
+  }, []);
 
   // Onluk çubuk: 1 birim genişlik × 10 birim yükseklik
   const TenBar = ({count, highlight}) => (
@@ -159,7 +170,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
       {/* Görsel temsil */}
       <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 w-full max-w-sm">
         {p?.showNumber && <div className="text-center text-4xl font-bold mb-3" style={{color:numColor(p?.number,p?.number>99?999:99)}}>{p?.number}</div>}
-        <div className="flex items-end justify-center gap-5 min-h-[80px]">
+        <div className="flex items-end justify-center gap-2 sm:gap-5 min-h-[80px] max-h-[42vh] overflow-y-auto overflow-x-hidden">
           {p?.hundreds > 0 && <div className="text-center">
             <HundredSquare count={p?.hundreds} highlight={hl==='yüzlük'}/>
             {ua!==null && <div className="text-sm text-red-500 font-bold mt-1">{p?.hundreds} yüzlük</div>}
