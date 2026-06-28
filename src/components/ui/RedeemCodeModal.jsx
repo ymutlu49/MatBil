@@ -132,7 +132,7 @@ const RedeemCodeModal = ({ open, onClose, onSuccess, lockedGameName }) => {
         {!isAlreadyPremium && !lockedGameName && (
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-3">
             <p className="text-[11px] text-gray-700 leading-relaxed">
-              <span className="font-bold text-amber-700">{"📖"}</span> "Matematiksel Bilişin Temelleri" kitabınızın iç kapağındaki kodu girin. Tüm 36 oyun, kitap bölümleri ve akademik içerik açılır.
+              <span className="font-bold text-amber-700">{"📖"}</span> "Matematiksel Bilişin Temelleri" kitabınızın iç kapağındaki kodu girin. Tüm 35 oyun açılır.
             </p>
           </div>
         )}
@@ -200,7 +200,7 @@ const RedeemCodeModal = ({ open, onClose, onSuccess, lockedGameName }) => {
             <p className="text-[10px] text-gray-400 leading-relaxed">
               Kodunuz yok mu? Web sitemizden satın alabilir veya kitabı temin edebilirsiniz.
               <br />
-              <a href="https://www.diskalkuli.com" target="_blank" rel="noreferrer" className="text-amber-600 font-medium hover:underline">www.diskalkuli.com</a>
+              <a href="https://sayihissi.com" target="_blank" rel="noreferrer" className="text-amber-600 font-medium hover:underline">sayihissi.com</a>
             </p>
           </div>
         )}

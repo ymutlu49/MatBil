@@ -3,7 +3,7 @@ import { getClasses, saveClass, removeClass, getClassStudents, addStudentToClass
 import { getProgress } from '../../utils/progress';
 import { GAMES } from '../../constants/games';
 import { CHAPTER_MAP } from '../../constants/skillGraph';
-import { BOOK_CHAPTERS } from './BookChapters';
+import { BOOK_CHAPTERS } from '../../constants/bookChapters';
 import ReportScreen from './ReportScreen';
 
 /**

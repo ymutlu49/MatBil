@@ -181,7 +181,7 @@ const AdminPanel = ({ onBack }) => {
           <div className="max-w-2xl mx-auto mb-2 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 rounded-xl p-2 flex items-center gap-2 anim-fade">
             <span className="text-xl shrink-0">{"🎉"}</span>
             <div className="flex-1 text-xs text-amber-800">
-              <span className="font-bold">Premium erişim açıldı.</span> Tüm 36 oyun ve akademik içerik artık kilitsiz.
+              <span className="font-bold">Premium erişim açıldı.</span> Tüm 35 oyun artık kilitsiz.
             </div>
             <button onClick={() => setPremiumActivated(false)} className="text-amber-600 text-xs">{"✕"}</button>
           </div>

@@ -186,3 +186,86 @@ export const migrateExistingUsers = () => {
     localStorage.setItem('matbil_auth_migrated', '1');
   } catch {}
 };
+
+// ─── Basit Mod: Öğrenci Profilleri ───
+// Kod girişinden sonra rol seçtirmeden doğrudan oyuna almak için kullanılır.
+// Profiller matbil_users içinde isDefault:true ile işaretlenir (en fazla 3 — kardeşler için).
+// İlerleme her profilin kendi id'sine bağlanır. `named:false` → henüz isim sorulmadı.
+export const DEFAULT_LEARNER_NAME = 'Kâşif';
+export const SIMPLE_PROFILE_LIMIT = 3;
+
+export const getSimpleProfiles = () => {
+  try {
+    const users = JSON.parse(localStorage.getItem('matbil_users') || '[]');
+    return users.filter(u => u.isDefault && (u.role === 'student' || !u.role));
+  } catch { return []; }
+};
+
+export const getOrCreateDefaultLearner = () => {
+  try {
+    const existing = getSimpleProfiles();
+    if (existing.length) return existing[0];
+    const users = JSON.parse(localStorage.getItem('matbil_users') || '[]');
+    const learner = {
+      id: generateId('student'),
+      name: DEFAULT_LEARNER_NAME,
+      role: 'student',
+      isDefault: true,
+      named: false,
+      loginAt: new Date().toISOString(),
+    };
+    users.push(learner);
+    localStorage.setItem('matbil_users', JSON.stringify(users));
+    return learner;
+  } catch {
+    return { id: 'student_default', name: DEFAULT_LEARNER_NAME, role: 'student', isDefault: true, named: false };
+  }
+};
+
+export const createSimpleProfile = (name) => {
+  try {
+    const users = JSON.parse(localStorage.getItem('matbil_users') || '[]');
+    if (users.filter(u => u.isDefault).length >= SIMPLE_PROFILE_LIMIT) return null;
+    const learner = {
+      id: generateId('student'),
+      name: (name || '').trim().slice(0, 20) || DEFAULT_LEARNER_NAME,
+      role: 'student',
+      isDefault: true,
+      named: true,
+      loginAt: new Date().toISOString(),
+    };
+    users.push(learner);
+    localStorage.setItem('matbil_users', JSON.stringify(users));
+    return learner;
+  } catch { return null; }
+};
+
+export const renameLearner = (id, name) => {
+  const clean = (name || '').trim().slice(0, 20);
+  if (!clean) return null;
+  try {
+    const users = JSON.parse(localStorage.getItem('matbil_users') || '[]');
+    const u = users.find(x => x.id === id);
+    if (!u) return null;
+    u.name = clean;
+    u.named = true;
+    localStorage.setItem('matbil_users', JSON.stringify(users));
+    const cur = JSON.parse(localStorage.getItem('matbil_current_user') || 'null');
+    if (cur && cur.id === id) {
+      cur.name = clean; cur.named = true;
+      localStorage.setItem('matbil_current_user', JSON.stringify(cur));
+    }
+    return u;
+  } catch { return null; }
+};
+
+// İsim sorusunu atlamak için: profili "isimlendi" işaretle (adı değiştirmeden).
+export const markLearnerNamed = (id) => {
+  try {
+    const users = JSON.parse(localStorage.getItem('matbil_users') || '[]');
+    const u = users.find(x => x.id === id);
+    if (u && !u.named) { u.named = true; localStorage.setItem('matbil_users', JSON.stringify(users)); }
+    const cur = JSON.parse(localStorage.getItem('matbil_current_user') || 'null');
+    if (cur && cur.id === id && !cur.named) { cur.named = true; localStorage.setItem('matbil_current_user', JSON.stringify(cur)); }
+  } catch {}
+};

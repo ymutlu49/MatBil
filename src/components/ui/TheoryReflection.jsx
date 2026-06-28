@@ -1,23 +1,17 @@
 import React from 'react';
-import { CHAPTER_MAP, GAME_CHAPTER_MAP } from '../../constants/skillGraph';
+import { CHAPTER_MAP } from '../../constants/skillGraph';
 
 /**
  * TheoryReflection - Oyun sonrasi teori yansitma ekrani
  * Performansa gore childWeakMsg veya childStrongMsg gosterir.
  * "Teori -> Pratik -> Yansıtma" dongusunu kapatir.
- * "Kitabı Oku" butonu ile bolgesel derin okumaya yonlendirir.
  */
-const TheoryReflection = ({ categoryId, gameId, gameName, stars, onContinue, onPlayAgain, onOpenBook }) => {
+const TheoryReflection = ({ categoryId, gameName, stars, onContinue, onPlayAgain }) => {
   const chapter = CHAPTER_MAP[categoryId];
   if (!chapter) return null;
 
   const isStrong = stars >= 2;
   const message = isStrong ? chapter.childStrongMsg : chapter.childWeakMsg;
-  const gameChapter = gameId ? GAME_CHAPTER_MAP[gameId] : null;
-  const chapterNum = gameChapter?.primary;
-  const shortLabel = chapterNum
-    ? `Bölüm ${chapterNum}`
-    : (chapter.chapters[0]?.match(/Bölüm \d+/)?.[0] || 'Kitap');
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-5 max-w-sm mx-auto">
@@ -48,28 +42,6 @@ const TheoryReflection = ({ categoryId, gameId, gameName, stars, onContinue, onP
           </div>
         </div>
       </div>
-
-      {/* Bolum referansi - Tıklanabilir */}
-      {onOpenBook && chapterNum ? (
-        <button
-          onClick={() => onOpenBook(chapterNum)}
-          className="w-full bg-gradient-to-r from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 rounded-lg px-3 py-2.5 mb-3 flex items-center gap-2 border border-amber-200 active:scale-[0.98] transition-all"
-        >
-          <span className="text-lg">{"📖"}</span>
-          <div className="flex-1 text-left">
-            <div className="text-[10px] text-amber-700 font-medium">Daha fazla bilgi için:</div>
-            <div className="text-xs font-bold text-amber-800">{shortLabel}{"'ü oku"}</div>
-          </div>
-          <span className="text-amber-500 text-lg">{"›"}</span>
-        </button>
-      ) : (
-        <div className="bg-gray-50 rounded-lg px-3 py-2 mb-3 flex items-center gap-2">
-          <span className="text-sm">{"📖"}</span>
-          <div className="text-[10px] text-gray-500">
-            Bu beceriyi daha iyi anlamak için: <span className="font-bold text-amber-700">{shortLabel}</span>
-          </div>
-        </div>
-      )}
 
       {/* Butonlar */}
       <div className="space-y-2">

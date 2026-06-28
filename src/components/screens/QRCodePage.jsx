@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { GAMES } from '../../constants/games';
 import { CATEGORIES } from '../../constants/categories';
-import { BOOK_CHAPTERS } from './BookChapters';
+import { BOOK_CHAPTERS } from '../../constants/bookChapters';
 
 /**
  * QRCodePage - Kitap için QR kod oluşturma sayfası

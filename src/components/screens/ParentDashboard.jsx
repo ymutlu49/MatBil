@@ -5,7 +5,7 @@ import { GAMES } from '../../constants/games';
 import { CATEGORIES } from '../../constants/categories';
 import { getXPFromProgress, getLevelFromXP } from '../../utils/avatar';
 import { getAllChaptersProgress, getMasteredChapterCount, getOverallBookProgress } from '../../utils/chapterProgress';
-import { BOOK_CHAPTERS } from './BookChapters';
+import { BOOK_CHAPTERS } from '../../constants/bookChapters';
 
 /**
  * Veli Paneli — Salt Okunur

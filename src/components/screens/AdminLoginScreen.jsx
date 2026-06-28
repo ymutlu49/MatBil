@@ -127,7 +127,7 @@ const AdminLoginScreen = ({ onLogin, onBack }) => {
 
           <div className="mt-4 pt-3 border-t border-gray-100 text-center">
             <p className="text-[10px] text-gray-400 leading-relaxed">
-              Giriş sonrası tüm 36 oyun ve akademik içerik otomatik açılır. Şifrenizi unuttuysanız sistem yöneticisiyle iletişime geçin.
+              Giriş sonrası tüm 35 oyun otomatik açılır. Şifrenizi unuttuysanız sistem yöneticisiyle iletişime geçin.
             </p>
           </div>
         </div>

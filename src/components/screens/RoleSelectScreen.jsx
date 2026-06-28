@@ -9,7 +9,7 @@ import AdminLoginScreen from './AdminLoginScreen';
  *
  * Yazar/Yönetici girişi tek şifre ile, başarılı girişte premium otomatik aktif.
  */
-const RoleSelectScreen = ({ onLogin }) => {
+const RoleSelectScreen = ({ onLogin, onHome, onBack }) => {
   const [selectedRole, setSelectedRole] = useState(null);
 
   if (selectedRole === 'teacher') return <TeacherLoginScreen onLogin={onLogin} onBack={() => setSelectedRole(null)} />;
@@ -19,6 +19,24 @@ const RoleSelectScreen = ({ onLogin }) => {
   return (
     <div className="h-screen bg-gradient-to-b from-indigo-100 via-purple-50 to-pink-50 flex flex-col items-center justify-center p-4 overflow-y-auto">
       <div className="w-full max-w-sm py-4">
+        {/* Oyuna dönüş — Ayarlar'dan açılan eğitmen/veli kapısı için */}
+        {onBack && (
+          <button onClick={onBack}
+            className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 active:scale-95 transition-all">
+            <span className="text-lg leading-none">{"←"}</span>
+            <span>Geri</span>
+          </button>
+        )}
+
+        {/* Ana sayfaya (tanıtım) dönüş — yalnız web sürümünde */}
+        {onHome && (
+          <button onClick={onHome}
+            className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-indigo-600 hover:text-indigo-700 active:scale-95 transition-all">
+            <span className="text-lg leading-none">{"←"}</span>
+            <span>Ana Sayfa</span>
+          </button>
+        )}
+
         {/* Logo */}
         <div className="text-center mb-5">
           <div className="text-5xl mb-2">{"🧠"}</div>

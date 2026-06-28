@@ -1,6 +1,8 @@
-import { lazy } from 'react';
+import { lazyWithReload as lazy } from '../utils/lazyWithReload';
 
 // Lazy-loaded game components
+// lazyWithReload: yeniden dağıtım sonrası bayat chunk hatasında sayfayı bir kez
+// otomatik yeniler (bkz. utils/lazyWithReload.js).
 const NoktaAvcisi = lazy(() => import('../components/games/category-a/NoktaAvcisi'));
 const ParmakSansi = lazy(() => import('../components/games/category-a/ParmakSansi'));
 const HafizaOyunu = lazy(() => import('../components/games/category-a/HafizaOyunu'));

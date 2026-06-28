@@ -12,7 +12,7 @@ import AdminLoginScreen from './AdminLoginScreen';
  *  2. Yönetici/Yazar girişi — PIN doğru ise auto-premium + admin oturumu
  *  3. Grandfather'lanmış kullanıcılar bu ekranı hiç görmez (App.jsx'te atlanır)
  */
-const BookCodeGate = ({ onCodeRedeemed, onAdminLogin }) => {
+const BookCodeGate = ({ onCodeRedeemed, onAdminLogin, onHome }) => {
   const [showAdmin, setShowAdmin] = useState(false);
   const [showCodeModal, setShowCodeModal] = useState(false);
 
@@ -26,6 +26,15 @@ const BookCodeGate = ({ onCodeRedeemed, onAdminLogin }) => {
   return (
     <div className="h-screen bg-gradient-to-b from-amber-50 via-orange-50 to-pink-50 flex flex-col items-center justify-center p-4 overflow-y-auto">
       <div className="w-full max-w-sm py-4">
+        {/* Ana sayfaya (tanıtım) dönüş — yalnız web sürümünde */}
+        {onHome && (
+          <button onClick={onHome}
+            className="mb-4 inline-flex items-center gap-1.5 text-sm font-medium text-amber-700 hover:text-amber-800 active:scale-95 transition-all">
+            <span className="text-lg leading-none">{"←"}</span>
+            <span>Ana Sayfa</span>
+          </button>
+        )}
+
         {/* Logo & başlık */}
         <div className="text-center mb-6">
           <div className="text-5xl mb-2">{"📚"}</div>
@@ -68,8 +77,8 @@ const BookCodeGate = ({ onCodeRedeemed, onAdminLogin }) => {
         <div className="text-center mt-6">
           <p className="text-[10px] text-gray-400">
             Kodunuz yok mu?{' '}
-            <a href="https://www.diskalkuli.com" target="_blank" rel="noreferrer" className="text-amber-600 font-medium hover:underline">
-              www.diskalkuli.com
+            <a href="https://sayihissi.com" target="_blank" rel="noreferrer" className="text-amber-600 font-medium hover:underline">
+              sayihissi.com
             </a>
           </p>
           <p className="text-[10px] text-gray-300 mt-2">Prof. Dr. Yılmaz Mutlu {"•"} Prof. Dr. Sinan Olkun</p>

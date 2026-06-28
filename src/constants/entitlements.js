@@ -1,7 +1,7 @@
 /**
  * MatBil Entitlement Konfigürasyonu
  *
- * Freemium yaklaşım: Ücretsiz tarama + her kategoriden 1 örnek oyun, premium ile 36 oyun tümü.
+ * Freemium yaklaşım: Ücretsiz tarama + her kategoriden 1 örnek oyun, premium ile 35 oyun tümü.
  *
  * ÖNEMLİ: `PREMIUM_REQUIRED` false iken HİÇBİR kilitleme yapılmaz.
  * Bu, altyapının mevcut davranışı bozmadan eklenmesi için master switch'tir.
