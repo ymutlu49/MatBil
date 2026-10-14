@@ -1,5 +1,6 @@
 import React from 'react';
 import { CHAPTER_MAP } from '../../constants/skillGraph';
+import { speak } from '../../utils/speech';
 
 /**
  * TheoryReflection - Oyun sonrasi teori yansitma ekrani
@@ -35,7 +36,7 @@ const TheoryReflection = ({ categoryId, gameName, stars, onContinue, onPlayAgain
               <div className={`text-xs font-bold ${isStrong ? 'text-green-700' : 'text-amber-700'}`}>
                 {isStrong ? 'Harika gidiyorsun!' : 'Gelişmeye devam!'}
               </div>
-              <button onClick={() => { try { const u = new SpeechSynthesisUtterance(message); u.lang='tr-TR'; u.rate=0.85; u.pitch=1.1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch{} }}
+              <button onClick={() => speak(message, { explicit: true })}
                 className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs ${isStrong ? 'bg-green-100 text-green-600 hover:bg-green-200' : 'bg-amber-100 text-amber-600 hover:bg-amber-200'}`} title="Sesli oku">{"🔊"}</button>
             </div>
             <p className="text-sm text-gray-700 leading-relaxed">{message}</p>

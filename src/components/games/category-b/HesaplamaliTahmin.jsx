@@ -26,7 +26,6 @@ const STRATEGIES = {
 };
 
 const ExplainStep = ({ onDone }) => {
-  const safeSetTimeout = useSafeTimeout();
   const strats = STRATEGIES.computation;
   return (
     <div className="mt-2 anim-fade">
@@ -243,6 +242,7 @@ const QUESTIONS = [
 ];
 
 const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
+  const safeSetTimeout = useSafeTimeout();
   const adaptive = useAdaptive();
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
@@ -323,7 +323,7 @@ const HesaplamaliTahmin = ({ onBack, colors, onGameComplete, prevBest }) => {
   );
 
   if (gs === 'results') return (
-    <ResultScreen
+    <ResultScreen maxScore={TOTAL_ROUNDS*20*lv}
       score={sc} onReplay={() => startG(lv)} onBack={onBack}
       onLevelMenu={() => setGs('menu')} colors={colors}
       onComplete={onGameComplete} level={lv} maxLevel={4}

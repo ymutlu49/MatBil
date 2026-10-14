@@ -107,7 +107,7 @@ const SimetriAynasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
 
   if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Simetri Aynası" emoji="🪞" description="Deseni simetri eksenine göre tamamla! Ayna görüntüsünü bul." levels={['Sv1: 3 satır Kolay', 'Sv2: 3 satır Orta', 'Sv3: 4 satır Zor', 'Sv4: 4 satır Uzman']} colors={colors} />;
   if (gs === 'ready') return <ReadyScreen title="Simetri Aynası" emoji="🪞" level={lv} instruction="Sol tarafta bir desen gösterilecek. Kırmızı kesikli çizgi simetri eksenidir. Sağ taraftaki ayna görüntüsünü seçeneklerden bul!" colors={colors} onStart={() => startG(lv)} onBack={() => setGs('menu')} />;
-  if (gs === 'results') return <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
+  if (gs === 'results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

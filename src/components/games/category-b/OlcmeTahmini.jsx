@@ -63,7 +63,7 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
     // Seviye 3: KÜTLE ve HACİM — Standart ambalajlarla
     // Referanslar: 1kg şeker (kesin), 1L su=1kg (fizik yasası), yumurta L=63g (TSE)
     {id:20,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Büyük boy yumurta (L)',emoji:'🥚',value:63,unit:'g'},q:'Büyük boy (L) bir yumurta kaç gram?',lv:3,opts:[20,63,150,300],hint:'TSE standardı: 63-73 gram arası'},
-    {id:21,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Orta boy elma',emoji:'🍎',value:180,unit:'g'},q:'Orta boy bir elma yaklaşık kaç gram?',lv:3,opts:[50,180,400,800],hint:'Yaklaşık 5-6 yumurta ağırlığında'},
+    {id:21,ref:{name:'1 kg şeker paketi',emoji:'⚖️',value:1000,unit:'g'},target:{name:'Orta boy elma',emoji:'🍎',value:180,unit:'g'},q:'Orta boy bir elma yaklaşık kaç gram?',lv:3,opts:[50,180,400,800],hint:'Yaklaşık 3 büyük yumurta ağırlığında'},
     {id:22,ref:{name:'1 litre su (= 1 kg)',emoji:'💧',value:1000,unit:'g'},target:{name:'Somun ekmek',emoji:'🍞',value:750,unit:'g'},q:'Standart bir somun ekmek kaç gram?',lv:3,opts:[250,500,750,1200],hint:'Fırın standardı: 750 gram'},
     {id:23,ref:{name:'1 litre su şişesi',emoji:'💧',value:1000,unit:'ml'},target:{name:'Standart su bardağı',emoji:'🥛',value:200,unit:'ml'},q:'Standart bir su bardağı kaç ml alır?',lv:3,opts:[50,200,500,800],hint:'1 litrelik şişeyi 5 bardağa doldurabilirsin'},
     {id:24,ref:{name:'1 litre süt kutusu',emoji:'🥛',value:1000,unit:'ml'},target:{name:'İnce belli çay bardağı',emoji:'🍵',value:100,unit:'ml'},q:'İnce belli çay bardağı kaç ml alır?',lv:3,opts:[30,100,250,500],hint:'1 litrede 10 çay bardağı var'},
@@ -81,14 +81,16 @@ const OlcmeTahmini = ({ onBack, colors, onGameComplete, prevBest }) => {
     {id:36,ref:{name:'1 litre su şişesi',emoji:'💧',value:1000,unit:'ml'},target:{name:'Damacana',emoji:'💧',value:19,unit:'litre'},q:'Bir damacana kaç litre su alır?',lv:4,opts:[5,10,19,30],hint:'Damacananın üzerinde yazar: 19 litre'},
     {id:37,ref:{name:'1 litre su (=1000 g)',emoji:'💧',value:1000,unit:'g'},target:{name:'1 litre süt',emoji:'🥛',value:1030,unit:'g'},q:'1 litre süt yaklaşık kaç gram? (Su 1000 g)',lv:4,opts:[1030,1200,1500,2000],hint:'Süt sudan BİRAZ daha ağır — kalsiyum ve yağ içerdiği için: ~1030 g'},
   ];
-  const gen=(l,u)=>{const av=comps.filter(c=>c.lv<=l&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>c.lv<=l);const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:shuffle(c.opts)};};
+  // Seviye 1-2: uzunluk sorularıdır; 3-4: kütle/hacim (etiketlerle uyumlu — önceden 3-4'te çoğu soru uzunluktu)
+  const inLevel=(c,l)=>c.lv<=l&&(l<3||c.lv>=3);
+  const gen=(l,u)=>{const av=comps.filter(c=>inLevel(c,l)&&!u.includes(c.id));const pool=av.length>0?av:comps.filter(c=>inLevel(c,l));const c=pool[Math.floor(Math.random()*pool.length)];return{...c,opts:shuffle(c.opts)};};
   const prepG=(l)=>{setLv(l);setGs('ready');};
   const startG=(l)=>{setLv(l);setSc(0);setRd(1);setUsed([]);const f=gen(l,[]);setP(f);setUsed([f.id]);setUa(null);setGs('playing');};
   const handle=(a)=>{setUa(a);if(a===p?.target?.value)setSc(s=>s+20*lv);setExplained2(false);};
   const handleExplain2=()=>{setExplained2(true);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const n=gen(lv,used);setP(n);setUsed(prev=>[...prev,n.id]);setUa(null);setExplained2(false);}else setGs('results');},800);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Ölçme Tahmini" emoji="📐" description="Nesnelerin uzunluk, ağırlık veya hacimlerini referansa bakarak tahmin et!" levels={['Seviye 1 (Uzunluk Kolay)','Seviye 2 (Uzunluk İleri)','Seviye 3 (Kütle/Hacim Kolay)','Seviye 4 (Kütle/Hacim İleri)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Ölçme Tahmini" emoji="📐" level={lv} instruction="Bir referans nesne ve onun ölçüsü gösterilecek. Hedef nesnenin ölçüsünü karşılaştırarak tahmin et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Ölçme Tahmini" colors={colors}/>

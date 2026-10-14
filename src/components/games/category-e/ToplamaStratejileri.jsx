@@ -39,7 +39,7 @@ const ToplamaStratejileri = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Toplama Stratejileri" emoji="➕" description="Toplama işlemini görsel destekle öğren! İleri seviyelerde eksik sayıyı bul." levels={['Seviye 1 (1-5)','Seviye 2 (1-9)','Seviye 3 (1-10 Eksik)','Seviye 4 (1-15 Eksik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Toplama Stratejileri" emoji="➕" level={lv} instruction="Toplama işlemi gösterilecek. Sonucu bul! İleri seviyelerde eksik olan sayıyı tamamla." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

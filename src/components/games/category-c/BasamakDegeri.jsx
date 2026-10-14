@@ -84,7 +84,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
         o=[...new Set(o)];let at=0;while(o.length<4&&at<30){const c=(Math.floor(Math.random()*9)+1)*10;if(!o.includes(c))o.push(c);at++;}
       }
     } else if(l===2){
-      n=Math.floor(Math.random()*90)+11;
+      n=Math.floor(Math.random()*89)+11; // 11-99 (100 seçilirse 101-108'e kayıyordu)
       tens=Math.floor(n/10); ones=n%10;
       if(ones===0){ones=Math.floor(Math.random()*8)+1; n=tens*10+ones;}
       const types=['countOnes','valueOnes','countTens'];
@@ -161,7 +161,7 @@ const BasamakDegeri = ({ onBack, colors, onGameComplete, prevBest }) => {
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+20*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Basamak Değeri" emoji="" description="Onluk çubukları ve birlik küpleri kullanarak basamak değerlerini keşfet!" levels={['Seviye 1 (Onluklar)','Seviye 2 (Birlikler)','Seviye 3 (Birleştir)','Seviye 4 (Yüzlükler)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Basamak Değeri" emoji="" level={lv} instruction="Onluk çubuklar ve birlik küpler gösterilecek. Görselden sayarak veya sayıyı ayrıştırarak doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   const hl = p?.askHL;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

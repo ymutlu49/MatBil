@@ -84,7 +84,7 @@ const AdminPanel = ({ onBack }) => {
   const exportJSON = () => {
     const data = {
       exportDate: new Date().toISOString(),
-      appVersion: 'v14.0',
+      appVersion: `v${__APP_VERSION__}`,
       totalStudents: allUsers.length,
       students: allData.map(({user, progress}) => ({
         name: user.name, age: user.age, city: user.city, id: user.id,
@@ -344,7 +344,7 @@ const AdminPanel = ({ onBack }) => {
         </div>
 
         <div className="text-center py-2">
-          <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun • v14.0</p>
+          <p className="text-[10px] text-gray-400">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun • v{__APP_VERSION__}</p>
         </div>
         </div>
       </div>

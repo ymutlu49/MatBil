@@ -99,15 +99,15 @@ const GunlukSanbil = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =>
   };
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Günlük Sanbil" emoji="🏠" description="Nesneleri saymadan, bir bakışta tanı! Algısal sanbil için 1-5 nesne. Zorluk gösterim süresiyle artar." levels={['Seviye 1 (1-3 nesne, yavaş)','Seviye 2 (2-4 nesne, orta)','Seviye 3 (2-5 nesne, hızlı)','Seviye 4 (1-5 nesne, çok hızlı)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Günlük Sanbil" emoji="🏠" level={lv} instruction={`Nesneler ${Math.round(cfg[lv].showMs/100)/10} saniye gösterilecek. Saymadan, bir bakışta kaç tane olduğunu tanı!`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='ready') return <ReadyScreen title="Günlük Sanbil" emoji="🏠" level={lv} instruction={`Nesneler ${((rahatMod ? 2 : 1) * cfg[lv].showMs / 1000).toLocaleString('tr-TR')} saniye gösterilecek. Saymadan, bir bakışta kaç tane olduğunu tanı!`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const sceneIdx = sceneOrder.length > 0 ? sceneOrder[si % sceneOrder.length] : 0;
   const scene=scenes[sceneIdx];
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
-      <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title={`Günlük • ${scene.name}`} colors={colors} hideRound={rahatMod}/>
+      <GameHeader helpKey="Günlük Sanbil" onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title={`Günlük • ${scene.name}`} colors={colors} hideRound={rahatMod}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0 gap-3">
 
         {/* Nesne alanı — gösterim süresi sonra kapanır, böylece saymak mümkün olmaz */}

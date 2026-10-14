@@ -105,7 +105,7 @@ const SayiAyristirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) 
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Ayrıştırma" emoji="🔴🔵" description="Noktaları gruplara ayırarak sayıları parçalara böl! Kavramsal subitizing becerini geliştir." levels={['Seviye 1 (Toplam bul 5-6)','Seviye 2 (Renkli gruplar 6-8)','Seviye 3 (Doğru grubu seç)','Seviye 4 (En iyi strateji)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı Ayrıştırma" emoji="🔴🔵" level={lv} instruction={lv<=2?'Renkli nokta gruplarını sayarak toplamı bul!':lv===3?'Verilen sayının doğru gruplandırmasını seç!':'Noktaları en dengeli şekilde grupla!'} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isCorrect=ua!==null&&ua===p?.answer;
 

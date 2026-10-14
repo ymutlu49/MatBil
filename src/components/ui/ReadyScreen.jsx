@@ -1,25 +1,12 @@
 import React, { useState, useCallback } from 'react';
-
-const speakText = (text) => {
-  try {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'tr-TR';
-      u.rate = 0.85;
-      u.pitch = 1.1;
-      window.speechSynthesis.speak(u);
-    }
-  } catch {}
-};
+import { speak } from '../../utils/speech';
 
 const ReadyScreen = ({ title, emoji, level, levelLabel, instruction, colors, onStart, onBack }) => {
   const [speaking, setSpeaking] = useState(false);
 
   const handleSpeak = useCallback(() => {
     setSpeaking(true);
-    speakText(`${title}. ${instruction}`);
-    setTimeout(() => setSpeaking(false), 3000);
+    speak(`${title}. ${instruction}`, { explicit: true, onEnd: () => setSpeaking(false) });
   }, [title, instruction]);
 
   return (

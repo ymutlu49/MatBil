@@ -293,7 +293,7 @@ const ReportScreen = ({ user, progress, onBack, onPDF }) => {
           if(aritPlayed.length >= 1) {
             const toplama = progress['E3'];
             if(toplama && (toplama.stars||0) <= 1 && toplama.attempts >= 3) {
-              insights.push({emoji:'➕', title:'Toplama Stratejileri', text:'Toplama zorlanıyor. Parmaklardan başla (Parmak Köprüsü), sonra sayı doğrusuna geç (Sayı Yürüyüşü), en son zihinsel stratejilere geç.', priority:5});
+              insights.push({emoji:'➕', title:'Toplama Stratejileri', text:'Toplamada zorlanıyorsun. Parmaklardan başla (Parmak Köprüsü), sonra sayı doğrusuna geç (Sayı Yürüyüşü), en son zihinsel stratejilere geç.', priority:5});
             }
           }
 

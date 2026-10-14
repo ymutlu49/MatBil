@@ -1,4 +1,6 @@
-export { TOTAL_ROUNDS, shuffle, playSound, vibrate, encourage, speakNumber } from './helpers';
+export { TOTAL_ROUNDS, shuffle, playSound, vibrate, encourage, speakNumber, isSoundOn, calcStars } from './helpers';
+export { sayiEki, kelimeEki } from './turkish';
+export { speak, stopSpeaking, openNativeVoiceInstall, TTS_UNAVAILABLE_EVENT } from './speech';
 export { getProgress, saveProgress, getUsers, saveUser } from './progress';
 export { calcMastery, prereqsMet, recommendNext } from './mastery';
 export { checkBadges } from './badges';
@@ -11,7 +13,7 @@ export { getChapterProgress, getAllChaptersProgress, getMasteredChapterCount, ge
 export { isPremiumUser, isGameAccessible, isFeatureAccessible, isPremiumGame, shouldShowPremiumBadge, redeemCode, getPremiumInfo, revokePremium, enforceCodeOnlyAccess, writePremiumState, __devSetPremium } from './entitlement';
 export { useNoRepeat, pickNoRepeat } from './noRepeat';
 export { hashPin, verifyPin, generateId } from './auth';
-export { useSafeTimeout } from './useSafeTimeout';
+export { useSafeTimeout, cancelGameTimers } from './useSafeTimeout';
 export { usePWAInstall } from './usePWAInstall';
 export { runMigrations, getCurrentSchemaVersion, CURRENT_SCHEMA_VERSION } from './schemaMigration';
 export { initTelemetry, reportError, isSentryActive } from './telemetry';

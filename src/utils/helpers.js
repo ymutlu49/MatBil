@@ -1,4 +1,11 @@
+import { speak } from './speech';
+
 export const TOTAL_ROUNDS = 10;
+
+export const calcStars = (score, maxScore) => {
+  const pct = Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100));
+  return pct >= 90 ? 3 : pct >= 60 ? 2 : pct >= 30 ? 1 : 0;
+};
 
 export const shuffle = (arr) => {
   const result = [...arr];
@@ -9,7 +16,13 @@ export const shuffle = (arr) => {
   return result;
 };
 
+// Ayarlar > "Ses Açık/Kapalı" (App.jsx toggleSes ile aynı anahtar)
+export const isSoundOn = () => {
+  try { return localStorage.getItem('matbil_ses') !== 'false'; } catch { return true; }
+};
+
 export const playSound = (type) => {
+  if (!isSoundOn()) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -67,12 +80,6 @@ export const encourage = () => {
 };
 
 export const speakNumber = (num) => {
-  try {
-    if ('speechSynthesis' in window) {
-      const u = new SpeechSynthesisUtterance(String(num));
-      u.lang = 'tr-TR';
-      u.rate = 0.9;
-      window.speechSynthesis.speak(u);
-    }
-  } catch {}
+  if (!isSoundOn()) return;
+  speak(num, { rate: 0.9, pitch: 1 });
 };

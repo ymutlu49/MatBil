@@ -70,7 +70,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
       {text:'5 kenarı vardır',correct:true},
       {text:'5 köşesi vardır',correct:true},
       {text:'4 açısı vardır',correct:false},
-      {text:'İç açıları toplamı 540° dir',correct:true}
+      {text:'İç açıları toplamı 540°dir',correct:true}
     ],explain:'Beşgenin 5 kenarı, 5 köşesi ve iç açıları toplamı (5-2)×180=540 derecedir.',lv:1},
     // Düzey 2
     {id:3,q:'Eğer bir dörtgenin karşılıklı kenarları eşse...',opts:[
@@ -112,16 +112,16 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
     // Düzey 3
     {id:5,q:'Bir üçgenin 2 kenarı eşse...',opts:[
       {text:'Bütün açıları da eş olur',correct:false},
-      {text:'Sadece 2 açısı eş olur',correct:true},
+      {text:'En az 2 açısı eş olur',correct:true},
       {text:'Eş kenarların karşı açıları eştir',correct:true},
       {text:'Bütün açıları farklı olabilir',correct:false}
-    ],explain:'İkizkenar üçgende eş kenarların karşısındaki 2 açı birbirine eştir.',lv:3},
+    ],explain:'İkizkenar üçgende eş kenarların karşısındaki 2 açı birbirine eştir. Üç kenar da eşse (eşkenar) üç açı da eş olur.',lv:3},
     {id:7,q:'Eğer bir şeklin kenar sayısı artarsa...',opts:[
       {text:'İç açıları toplamı da artar',correct:true},
       {text:'Köşe sayısı da artar',correct:true},
-      {text:'Çembere daha çok benzer',correct:true},
+      {text:'Düzgün çokgense çembere daha çok benzer',correct:true},
       {text:'Kenar uzunlukları artar',correct:false}
-    ],explain:'Kenar sayısı arttıkça köşe sayısı ve iç açı toplamı artar, şekil çembere yaklaşır.',lv:3},
+    ],explain:'Kenar sayısı arttıkça köşe sayısı ve iç açı toplamı artar; düzgün çokgenler giderek çembere benzer.',lv:3},
     {id:8,q:'Tüm eşkenar üçgenler aynı zamanda...',opts:[
       {text:'İkizkenardır',correct:true},
       {text:'Dik açılıdır',correct:false},
@@ -152,7 +152,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
       {text:'Kesinlikle karedir',correct:false},
       {text:'Karşılıklı kenarları paraleldir',correct:true},
       {text:'Tüm açıları diktir',correct:false}
-    ],explain:'Köşegenleri birbirini ortlayan dörtgen paralelkenardır ve karşılıklı kenarları paraleldir.',lv:4},
+    ],explain:'Köşegenleri birbirini ortalayan dörtgen paralelkenardır ve karşılıklı kenarları paraleldir.',lv:4},
     {id:11,q:'Düzgün altıgenin...',opts:[
       {text:'Tüm kenarları eştir',correct:true},
       {text:'Tüm açıları eştir',correct:true},
@@ -161,16 +161,16 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
     ],explain:'Düzgün altıgenin kenarları ve açıları eştir, 6 simetri ekseni vardır. Açıları 120 derecedir.',lv:4},
     {id:12,q:'Her ikizkenar üçgen...',opts:[
       {text:'Eşkenardır',correct:false},
-      {text:'Bir simetri ekseni vardır',correct:true},
+      {text:'En az bir simetri ekseni vardır',correct:true},
       {text:'En az 2 eşit açısı vardır',correct:true},
       {text:'Dik açılı olabilir',correct:true}
-    ],explain:'İkizkenar üçgenin 2 eşit açısı ve 1 simetri ekseni vardır. Eşkenar olmak zorunda değildir.',lv:4},
-    {id:22,q:'Köşegenleri hem eş hem dik olan dörtgen...',opts:[
+    ],explain:'İkizkenar üçgenin en az 2 eşit açısı ve en az 1 simetri ekseni vardır (eşkenarsa 3). Eşkenar olmak zorunda değildir.',lv:4},
+    {id:22,q:'Köşegenleri eş, dik ve birbirini ortalayan dörtgen...',opts:[
       {text:'Kesinlikle karedir',correct:true},
-      {text:'Dikdörtgen olabilir',correct:false},
-      {text:'Eşkenar dörtgen olabilir',correct:false},
+      {text:'Açıları dik olmak zorunda değildir',correct:false},
+      {text:'Kenarları farklı uzunlukta olabilir',correct:false},
       {text:'Tüm kenarları eştir',correct:true}
-    ],explain:'Köşegenleri hem eş hem dik olan dörtgen karedir çünkü hem dikdörtgen hem eşkenar dörtgen özelliklerini taşır.',lv:4},
+    ],explain:'Köşegenleri birbirini ortalayan dörtgen paralelkenardır; köşegenleri eşse dikdörtgen, dikse eşkenar dörtgendir. Üçü birden: karedir. (Köşegenler birbirini ortalamıyorsa kare olmayabilir.)',lv:4},
     {id:23,q:'Bir çokgenin iç açıları toplamı 720° ise...',opts:[
       {text:'6 kenarı vardır',correct:true},
       {text:'Altıgendir',correct:true},
@@ -210,7 +210,7 @@ const IliskilerVeCikarim = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="İlişkiler ve Çıkarım" emoji="" description="Şekiller arasındaki ilişkileri keşfet! Doğru olan tüm seçenekleri işaretle." levels={['Düzey 3a (Temel)','Düzey 3b (Orta)','Düzey 3c (İleri)','Düzey 3d (Uzman)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="İlişkiler ve Çıkarım" emoji="" level={lv} instruction="Şekiller hakkında ifadeler gösterilecek. Doğru olan tüm ifadeleri seç! Dikkat: birden fazla doğru olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*25*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const correctIndices = p?.opts?.map((o,i)=>o.correct?i:-1).filter(i=>i>=0) || [];
 

@@ -184,7 +184,7 @@ const PDFReportView = ({ user, progress, onBack }) => {
         <div className="text-center border-t-2 border-gray-200 pt-6 mt-8">
           <p className="text-sm font-semibold text-gray-600">Matematiksel Bilişin Temelleri — Bireysel Performans Raporu</p>
           <p className="text-xs text-gray-400 mt-1">Prof. Dr. Yılmaz Mutlu • Prof. Dr. Sinan Olkun</p>
-          <p className="text-xs text-gray-400">Rapor tarihi: {reportDate} • v14.0</p>
+          <p className="text-xs text-gray-400">Rapor tarihi: {reportDate} • v{__APP_VERSION__}</p>
           <p className="text-[10px] text-gray-300 mt-2">Bu rapor, öğrencinin uygulama içi performansına dayalı otomatik olarak oluşturulmuştur ve klinik tanı aracı değildir.</p>
         </div>
       </div>

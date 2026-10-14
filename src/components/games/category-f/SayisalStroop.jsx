@@ -71,7 +71,7 @@ const SayisalStroop = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayısal Stroop" emoji="⚡" description="Boyuta aldanma! Fiziksel büyüklüğü görmezden gel, sayısal olarak büyük olanı seç." levels={['Seviye 1 (Kolay, uyumlu)','Seviye 2 (Karışık 1-9)','Seviye 3 (Zor 1-20)','Seviye 4 (Uzman 1-50)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayısal Stroop" emoji="⚡" level={lv} instruction={`Sayıların boyutuna aldanma! Sayısal olarak BÜYÜK olanı seç. (${cfg[lv].label})`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isCorrect=ua!==null&&ua===p?.answer;
 

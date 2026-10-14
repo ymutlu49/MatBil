@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, encourage, useAdaptive, useSafeTimeout } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, encourage, useAdaptive, useSafeTimeout, sayiEki } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -28,9 +28,10 @@ const GorevDegistirme = ({ onBack, colors, onGameComplete, rahatMod, prevBest, s
       let newRule;
       do{ newRule=available[Math.floor(Math.random()*available.length)]; }
       while(newRule===lastRule.current && available.length>1);
+      const prevRule=lastRule.current;
       lastRule.current=newRule;
       trialsSinceSwitch.current=0;
-      return{rule:newRule,switched:lastRule.current!==null};
+      return{rule:newRule,switched:prevRule!==null};
     }
     return{rule:lastRule.current,switched:false};
   };
@@ -56,7 +57,7 @@ const GorevDegistirme = ({ onBack, colors, onGameComplete, rahatMod, prevBest, s
     } else {
       a=Math.floor(Math.random()*30)+1;
       answer=a+1;
-      question=`${a}'${a%10>=8||a===11||a===12?'i':'ı'}n sonraki sayı = ?`;
+      question=`${sayiEki(a,'den')} sonraki sayı = ?`;
       hint=`${a} + 1 = ${answer}`;
     }
 
@@ -115,7 +116,7 @@ const GorevDegistirme = ({ onBack, colors, onGameComplete, rahatMod, prevBest, s
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Görev Değiştirme" emoji="🔀" description="Kurallar değişiyor! Toplama mı çıkarma mı? Hızlı düşün ve doğru işlemi uygula." levels={['Seviye 1 (+1 / -1)','Seviye 2 (+2 / -2)','Seviye 3 (Karışık işlemler)','Seviye 4 (Hızlı geçiş, 3 işlem)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Görev Değiştirme" emoji="🔀" level={lv} instruction={lv===1?'Kural değişecek: +1 veya -1 yap!':lv===2?'+2 veya -2 yap! Kurala dikkat et!':lv===3?'Karışık işlemler! Kural her an değişebilir!':'3 farklı işlem! Çok hızlı değişiyor!'} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isCorrect=ua!==null&&ua===p?.answer;
 

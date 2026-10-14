@@ -4,6 +4,7 @@ import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
+import FingerHand from '../../ui/FingerHand';
 
 const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
   const safeSetTimeout = useSafeTimeout();
@@ -27,23 +28,7 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
         {second>0&&<div className="inline-grid grid-cols-5 gap-1 border-2 border-indigo-400 p-1 rounded">{Array.from({length:10},(_,i)=><div key={i} className={`${lg?'w-5 h-5':'w-4 h-4'} rounded-sm ${i<second?'bg-indigo-500':'bg-gray-200'}`}/>)}</div>}
       </div>;
     }
-    if(type==='fingers'){
-      // 1, 2, 5 için tanınır parmak emojileri; 3 ve 4 için el + küçük sayı rozeti
-      const renderHand=(n)=>{
-        if(n===1) return <span className={lg?'text-4xl':'text-3xl'}>☝️</span>;
-        if(n===2) return <span className={lg?'text-4xl':'text-3xl'}>✌️</span>;
-        if(n===5) return <span className={lg?'text-4xl':'text-3xl'}>🖐️</span>;
-        if(n===3||n===4) return (
-          <div className="relative inline-block">
-            <span className={lg?'text-4xl':'text-3xl'}>🖐️</span>
-            <span className="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{n}</span>
-          </div>
-        );
-        return null;
-      };
-      const h1=Math.min(val,5),h2=val>5?Math.min(val-5,5):0;
-      return <div className="flex gap-2 items-end">{h1>0&&renderHand(h1)}{h2>0&&renderHand(h2)}</div>;
-    }
+    if(type==='fingers') return <FingerHand value={val} size={lg?40:32}/>;
     if(type==='objects'){
       const emojis=['⭐','🌸','🍎','🐟','🦋'];
       const e=emojis[val%emojis.length];
@@ -63,11 +48,14 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
 
     if(type==='oddOneOut'){
       const qt = allReps[Math.floor(Math.random()*allReps.length)];
-      let wrongVal;do{wrongVal=Math.floor(Math.random()*mx)+1;}while(wrongVal===t);
       const wrongPos = Math.floor(Math.random()*4);
       const repsPool = allReps.filter(r=>r!==qt);
+      const wrongRep = repsPool[Math.floor(Math.random()*repsPool.length)];
+      // Parmaklar 10'dan büyüğü gösteremez (13 de 10 gibi görünürdü)
+      const wrongMax = wrongRep==='fingers' ? Math.min(mx,10) : mx;
+      let wrongVal;do{wrongVal=Math.floor(Math.random()*wrongMax)+1;}while(wrongVal===t);
       const opts = Array.from({length:4},(_,i)=>{
-        if(i===wrongPos) return {val:wrongVal,rep:repsPool[Math.floor(Math.random()*repsPool.length)]};
+        if(i===wrongPos) return {val:wrongVal,rep:wrongRep};
         return {val:t,rep:repsPool[i%repsPool.length]};
       });
       return{target:t,type:'oddOneOut',qRep:qt,question:'Diğerlerinden farklı olanı bul!',answer:wrongPos,opts};
@@ -76,11 +64,13 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
     const qt = allReps[Math.floor(Math.random()*allReps.length)];
     const ansReps = allReps.filter(r=>r!==qt);
     const at2 = ansReps[Math.floor(Math.random()*ansReps.length)];
-    const o=[t];let at=0;
-    while(o.length<4&&at<50){const c=Math.floor(Math.random()*mx)+1;if(!o.includes(c))o.push(c);at++;}
-    while(o.length<4)o.push(o.length+mx);
     const question = type==='identify' ? 'Bu kaçtır?' : 'Aynı değeri bul:';
     const aRep2 = type==='identify' ? 'number' : at2;
+    // Parmaklar 10'dan büyüğü gösteremez: bu gösterimde çeldiriciler de ≤10 olmalı
+    const cap = aRep2==='fingers' ? Math.min(mx,10) : mx;
+    const o=[t];let at=0;
+    while(o.length<4&&at<50){const c=Math.floor(Math.random()*cap)+1;if(!o.includes(c))o.push(c);at++;}
+    while(o.length<4)o.push(o.length+mx);
     return{target:t,type,qRep:qt,aRep:aRep2,question,options:shuffle(o)};
   };
   const prepG=(l)=>{setLv(l);setGs('ready');};
@@ -95,7 +85,7 @@ const CokluGosterim = ({ onBack, colors, onGameComplete, prevBest }) => {
   };
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çoklu Gösterim" emoji="🔮" description="Aynı sayının farklı yüzlerini keşfet: rakam, sözcük, parmak, çetele, onluk çerçeve!" levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-15)','Seviye 4 (1-20)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Çoklu Gösterim" emoji="🔮" level={lv} instruction="Bir sayı çeşitli biçimlerde gösterilecek. Aynı değerin farklı temsilini bul veya farklı olanı ayırt et!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   if(p?.type==='oddOneOut'){
     return (

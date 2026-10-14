@@ -4,6 +4,7 @@ import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
+import FingerHand from '../../ui/FingerHand';
 
 const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   const safeSetTimeout = useSafeTimeout();
@@ -19,22 +20,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
       const groups=Math.floor(val/5), rem=val%5;
       return <div className="flex gap-2 items-end">{Array.from({length:groups},(_,i)=><span key={i} className="text-3xl font-bold text-indigo-700">卌</span>)}{rem>0&&<span className="text-2xl text-indigo-700 font-bold">{'|'.repeat(rem)}</span>}</div>;
     }
-    if(type==='fingers'){
-      const h1=Math.min(val,5), h2=Math.max(0,val-5);
-      const renderHand=(n)=>{
-        if(n===1) return <span className="text-4xl">☝️</span>;
-        if(n===2) return <span className="text-4xl">✌️</span>;
-        if(n===5) return <span className="text-4xl">🖐️</span>;
-        if(n===3||n===4) return (
-          <div className="relative inline-block">
-            <span className="text-4xl">🖐️</span>
-            <span className="absolute -bottom-1 -right-1 bg-indigo-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow">{n}</span>
-          </div>
-        );
-        return null;
-      };
-      return <div className="flex gap-2 items-end">{h1>0&&renderHand(h1)}{h2>0&&renderHand(h2)}</div>;
-    }
+    if(type==='fingers') return <FingerHand value={val} size={40}/>;
     return <span className={`font-bold ${size}`}>{val}</span>;
   };
 
@@ -61,9 +47,13 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
         sizes = nums.map(n => n===sorted[sorted.length-1] ? 'text-8xl' : (n===sorted[0] ? 'text-2xl' : 'text-5xl'));
       }
       repType = type==='mixed' ? ['number','dots','word'][Math.floor(Math.random()*3)] : 'number';
+      // 20'den büyük sayılar nokta olarak ekrana sığmaz (99 nokta)
+      if(repType==='dots' && Math.max(...nums)>20) repType='number';
     } else if(type==='rep'){
       const repTypes = c.max<=10 ? ['dots','word','tally','fingers'] : ['dots','tally'];
       repType = repTypes[Math.floor(Math.random()*repTypes.length)];
+      // 20'den büyük sayılar nokta/çetele olarak ekrana sığmaz
+      if(Math.max(...nums)>20) repType='number';
       sizes = nums.map(()=>'text-5xl');
     } else {
       sizes = nums.map(()=>'text-5xl');
@@ -80,7 +70,7 @@ const SayiKarsilastirma = ({ onBack, colors, onGameComplete, prevBest }) => {
   const handle=(a)=>{setUa(a);if(a===p?.answer)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setP(gen(lv));setUa(null);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Büyük-Küçük" emoji="⚖️" description="Hangisi daha çok? Boyutuna aldanma, sayısal değere odaklan!" levels={['Seviye 1 (0-10, Stroop)','Seviye 2 (0-10, çoklu temsil)','Seviye 3 (0-100, karışık)','Seviye 4 (0-100, 3 sayı)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Büyük-Küçük" emoji="⚖️" level={lv} instruction="Sayılar farklı boyutlarda veya farklı temsillerle gösterilecek. Fiziksel boyutuna aldanma, değeri büyük olanı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Büyük-Küçük" colors={colors}/>

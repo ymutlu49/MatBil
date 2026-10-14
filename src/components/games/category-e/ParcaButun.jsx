@@ -15,7 +15,8 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
     const whole=Math.floor(Math.random()*(mx-2))+3;
     const part1=Math.floor(Math.random()*(whole-1))+1;
     const part2=whole-part1;
-    const mt=Math.random()<0.33?'whole':(Math.random()<0.5?'part1':'part2');
+    // Seviye 3 "İleri": eksik parçayı bulmak (bütünden çıkarmak) bütünü bulmaktan zordur
+    const mt=(l!==3&&Math.random()<0.33)?'whole':(Math.random()<0.5?'part1':'part2');
     const answer=mt==='whole'?whole:mt==='part1'?part1:part2;
     const o=[answer];let at=0;while(o.length<4&&at<40){const c=Math.max(0,answer+Math.floor(Math.random()*6)-3);if(!o.includes(c)&&c>=0)o.push(c);at++;}while(o.length<4)o.push(o.length+answer);
     return{whole,part1,part2,missingType:mt,answer,options:shuffle(o)};
@@ -26,7 +27,7 @@ const ParcaButun = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parça-Bütün" emoji="" description="Üçgenin köşelerindeki sayılar arasındaki ilişkiyi keşfet! Parçaların toplamı bütünü verir." levels={['Seviye 1 (1-5)','Seviye 2 (1-10)','Seviye 3 (1-10 İleri)','Seviye 4 (1-15)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Parça-Bütün" emoji="" level={lv} instruction="Üçgenin tepesinde bütün, alt köşelerinde parçalar var. İki parçanın toplamı bütüne eşittir. Eksik sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isMissing=(t)=>p?.missingType===t;
   const isCorrect = ua!==null && ua===p?.answer;

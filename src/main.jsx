@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import ErrorBoundary from './components/ui/ErrorBoundary';
+import SpeechNotice from './components/ui/SpeechNotice';
 import { initTelemetry } from './utils/telemetry';
 import './styles/animations.css';
 import './styles/game-animations.css';
@@ -12,5 +13,6 @@ initTelemetry().catch(() => {});
 ReactDOM.createRoot(document.getElementById('root')).render(
   <ErrorBoundary>
     <App />
+    <SpeechNotice />
   </ErrorBoundary>
 );

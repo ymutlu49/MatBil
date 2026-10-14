@@ -151,7 +151,7 @@ const NoktaAvcisi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Nokta Avcısı" emoji="" description="Noktaları saymadan, bakarak kaç tane olduğunu bul! L1-L2 algısal (1-5), L3-L4 kavramsal (kanonik gruplar)." levels={['⭐ Algısal (1-3)','⭐⭐ Algısal (2-5)','⭐⭐⭐ Kavramsal (4-7)','⭐⭐⭐⭐ Kavramsal (6-10)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Nokta Avcısı" emoji="" level={lv} instruction={isPerceptualLevel(lv) ? 'Noktalar kanonik (zar) deseninde gösterilecek. Saymadan, bir bakışta tanı!' : 'Noktalar kanonik alt gruplara bölünmüş olarak gösterilecek. Grupları hızlıca say ve topla (örn. 5+3=8).'} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*10*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   // Compute a flat index for staggered animation delays
   let dotIndex = 0;

@@ -16,17 +16,17 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
     return <svg width={size} height={size} style={{overflow:'visible'}}><polygon points={pts} fill="none" stroke={color} strokeWidth={3}/></svg>;
   };
 
-  // Eşkenar dörtgen SVG
+  // Eşkenar dörtgen SVG — köşegenler farklı uzunlukta, yoksa 45° döndürülmüş kareyle aynı görünüyordu
   const Rhombus = ({size=80,color='#6366f1'}) => {
     const s=size,m=5;
-    const pts=`${s/2},${m} ${s-m},${s/2} ${s/2},${s-m} ${m},${s/2}`;
+    const pts=`${s/2},${s*0.2} ${s-m},${s/2} ${s/2},${s*0.8} ${m},${s/2}`;
     return <svg width={s} height={s} style={{overflow:'visible'}}><polygon points={pts} fill="none" stroke={color} strokeWidth={3}/></svg>;
   };
 
   const shapeData = {
     cember: {name:'Çember',sides:0,corners:0,render:(s,c)=><Poly sides={0} size={s} color={c}/>},
     ucgen: {name:'Üçgen',sides:3,corners:3,render:(s,c)=><Poly sides={3} size={s} color={c}/>},
-    kare: {name:'Kare',sides:4,corners:4,render:(s,c)=><Poly sides={4} size={s} color={c}/>},
+    kare: {name:'Kare',sides:4,corners:4,render:(s,c)=>{const m=8;return <svg width={s} height={s} style={{overflow:'visible'}}><rect x={m} y={m} width={s-m*2} height={s-m*2} fill="none" stroke={c} strokeWidth={3}/></svg>;}},
     dikdortgen: {name:'Dikdörtgen',sides:4,corners:4,render:(s,c)=>{const w=s*1.4,sw=3,m=sw+2;return <svg width={w} height={s} style={{overflow:'visible'}}><rect x={m} y={m} width={w-m*2} height={s-m*2} fill="none" stroke={c} strokeWidth={sw}/></svg>;}},
     eskenar_dortgen: {name:'Eşkenar Dörtgen',sides:4,corners:4,render:(s,c)=><Rhombus size={s} color={c}/>},
     besgen: {name:'Beşgen',sides:5,corners:5,render:(s,c)=><Poly sides={5} size={s} color={c}/>},
@@ -83,7 +83,7 @@ const ElemanVeOzellikler = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Eleman ve Özellikler" emoji="" description="Şekillerin kenar, köşe ve açılarını incele! Her şeklin özelliklerini öğren." levels={['Düzey 2a (Temel)','Düzey 2b (Orta)','Düzey 2c (Tanımlama)','Düzey 2d (Özellik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Eleman ve Özellikler" emoji="" level={lv} instruction="Bir şekil gösterilecek ve kenar, köşe veya açı sayısı sorulacak. Doğru cevabı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const sd = p?.shape ? shapeData[p?.shape] : null;
 

@@ -37,7 +37,7 @@ const GruplamaUstasi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) 
   const handle=(a)=>{setUa(a);if(a===total)setSc(s=>s+15*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);const c=genCards(lv);setCards(c);setCurOpts(mkOpts(c));setUa(null);}else setGs('results');},1200);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Gruplama Ustası" emoji="" description="Beşlik ve onluk çerçevelerdeki nesneleri sayarak toplamı bul!" levels={['Beşlik (1 kart)','Beşlik (2 kart)','Onluk (1 kart)','Karışık']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Gruplama Ustası" emoji="" level={lv} instruction="Beşlik veya onluk çerçeveler gösterilecek. Dolu kutuları sayarak toplamın kaç olduğunu bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Gruplama Ustası" colors={colors} hideRound={rahatMod}/>

@@ -4,7 +4,7 @@ import { TOTAL_ROUNDS, getProgress, saveProgress, checkBadges,
   MOOD_OPTIONS, saveMoodLog,
   getXPFromProgress, getLevelFromXP, getAvatar, saveAvatar, AVATARS, getLevelUpMessage,
   getPremiumInfo, enforceCodeOnlyAccess, shouldShowPremiumBadge, isGameAccessible,
-  runMigrations
+  runMigrations, stopSpeaking, calcStars
 } from './utils';
 import { GAMES } from './constants/games';
 import { CATEGORIES } from './constants/categories';
@@ -80,24 +80,24 @@ const App = () => {
   const [buyukYazi, setBuyukYazi] = useState(() => { try { return localStorage.getItem('matbil_buyuk_yazi') === 'true'; } catch { return false; } });
   const toggleYazi = () => { const v = !buyukYazi; setBuyukYazi(v); try { localStorage.setItem('matbil_buyuk_yazi', v ? 'true' : 'false'); } catch {} };
   const [sesAcik, setSesAcik] = useState(() => { try { return localStorage.getItem('matbil_ses') !== 'false'; } catch { return true; } });
-  const toggleSes = () => { const v = !sesAcik; setSesAcik(v); try { localStorage.setItem('matbil_ses', v ? 'true' : 'false'); } catch {} };
+  const toggleSes = () => { const v = !sesAcik; setSesAcik(v); try { localStorage.setItem('matbil_ses', v ? 'true' : 'false'); } catch {} if (!v) stopSpeaking(); };
+  // Seri: art arda oyun tamamlanan gün sayısı (yerel tarih; UTC'de gün 03:00'te dönüyordu)
+  const dayKey = (offsetDays = 0) => { const d = new Date(Date.now() - offsetDays * 86400000); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const [streak, setStreak] = useState(() => {
     try {
       const data = JSON.parse(localStorage.getItem('matbil_streak') || '{}');
-      const today = new Date().toISOString().split('T')[0];
-      const yesterday = new Date(Date.now()-86400000).toISOString().split('T')[0];
-      if(data.lastDate === today) return data;
-      if(data.lastDate === yesterday) return {...data, count: (data.count||0)+1, lastDate: today};
-      return {count: 1, lastDate: today, best: data.best || 0};
-    } catch { return {count:1, lastDate:new Date().toISOString().split('T')[0], best:0}; }
+      // Dün oynadıysa seri sürüyor (bugün oynayınca artar); daha eskiyse kopmuş
+      const alive = data.lastDate === dayKey(0) || data.lastDate === dayKey(1);
+      return { count: alive ? (data.count || 0) : 0, lastDate: data.lastDate || null, best: data.best || 0 };
+    } catch { return { count: 0, lastDate: null, best: 0 }; }
   });
   const updateStreak = () => {
-    const today = new Date().toISOString().split('T')[0];
-    if(streak.lastDate !== today) {
-      const newStreak = {...streak, count: streak.count+1, lastDate: today, best: Math.max(streak.best||0, streak.count+1)};
-      setStreak(newStreak);
-      try { localStorage.setItem('matbil_streak', JSON.stringify(newStreak)); } catch {}
-    }
+    const today = dayKey(0);
+    if (streak.lastDate === today) return;
+    const count = streak.lastDate === dayKey(1) ? streak.count + 1 : 1;
+    const newStreak = { count, lastDate: today, best: Math.max(streak.best || 0, count) };
+    setStreak(newStreak);
+    try { localStorage.setItem('matbil_streak', JSON.stringify(newStreak)); } catch {}
   };
   const [rahatMod, setRahatMod] = useState(() => { try { return localStorage.getItem('matbil_rahat_mod') === 'true'; } catch { return false; } });
   const toggleRahat = () => { const v = !rahatMod; setRahatMod(v); try { localStorage.setItem('matbil_rahat_mod', v ? 'true' : 'false'); } catch {} };
@@ -217,14 +217,13 @@ const App = () => {
     localStorage.removeItem('matbil_current_user');
   };
 
-  const handleGameComplete = (gameId, score, level) => {
+  const handleGameComplete = (gameId, score, level, resultStars) => {
     updateStreak();
     const activeUserId = playingStudent ? playingStudent.id : user?.id;
     if (!activeUserId) return;
     const prev = progress[gameId] || { attempts: 0, bestScore: 0, maxLevel: 0, stars: 0 };
-    const maxPossible = TOTAL_ROUNDS * 30 * level;
-    const pct = Math.min(100, Math.round((score / Math.max(maxPossible, 1)) * 100));
-    const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : pct >= 30 ? 1 : 0;
+    // Yıldızlar ResultScreen'de oyunun gerçek azami puanıyla hesaplanıyor
+    const stars = typeof resultStars === 'number' ? resultStars : calcStars(score, TOTAL_ROUNDS * 30 * level);
     const updated = {
       ...prev,
       attempts: prev.attempts + 1,
@@ -465,7 +464,7 @@ const App = () => {
         }>
           <GameComp onBack={playingStudent ? handleBackToTeacher : () => { setCurrentGame(null); }} colors={COLORS[game.cat]}
             rahatMod={rahatMod} sesAcik={sesAcik} prevBest={prevBest}
-            onGameComplete={(score, level) => handleGameComplete(currentGame, score, level)} />
+            onGameComplete={(score, level, stars) => handleGameComplete(currentGame, score, level, stars)} />
         </Suspense>
       </ErrorBoundary>
     );

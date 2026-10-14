@@ -5,8 +5,11 @@
  * Tam fazlalık ilkesi: ses + metin + görüntü + hareket birlikte
  */
 
+import { speak } from './speech';
+import { isSoundOn } from './helpers';
+
 // Sayı sayma sesi (tık-tık)
-export const playCountSound = (count, sesAcik = true) => {
+export const playCountSound = (count, sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -26,7 +29,7 @@ export const playCountSound = (count, sesAcik = true) => {
 };
 
 // Sayı doğrusu yürüme sesi (adım sesi)
-export const playStepSound = (direction = 'forward', sesAcik = true) => {
+export const playStepSound = (direction = 'forward', sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -45,7 +48,7 @@ export const playStepSound = (direction = 'forward', sesAcik = true) => {
 };
 
 // Büyüklük karşılaştırma sesi (düşük = küçük, yüksek = büyük)
-export const playMagnitudeSound = (value, maxValue, sesAcik = true) => {
+export const playMagnitudeSound = (value, maxValue, sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -65,7 +68,7 @@ export const playMagnitudeSound = (value, maxValue, sesAcik = true) => {
 };
 
 // Başarı melodisi (3 yıldız)
-export const playSuccessMelody = (sesAcik = true) => {
+export const playSuccessMelody = (sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -86,7 +89,7 @@ export const playSuccessMelody = (sesAcik = true) => {
 };
 
 // Teşvik sesi (hafif pozitif ton)
-export const playEncourageSound = (sesAcik = true) => {
+export const playEncourageSound = (sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
   try {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -105,16 +108,7 @@ export const playEncourageSound = (sesAcik = true) => {
 };
 
 // Türkçe sayı okuma (TTS)
-export const speakTurkish = (text, rate = 0.85, sesAcik = true) => {
+export const speakTurkish = (text, rate = 0.85, sesAcik = isSoundOn()) => {
   if (!sesAcik) return;
-  try {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'tr-TR';
-      u.rate = rate;
-      u.pitch = 1.1;
-      window.speechSynthesis.speak(u);
-    }
-  } catch {}
+  speak(text, { rate });
 };

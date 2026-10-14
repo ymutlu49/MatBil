@@ -95,7 +95,7 @@ const ParmakKoprusu = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
 
   if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Parmak Köprüsü" emoji="🖐️" description="Doğru sayıda parmak göster! Parmakların sayılarla bağlantısını güçlendir." levels={['Seviye 1 (1-5)', 'Seviye 2 (2-7)', 'Seviye 3 (3-9)', 'Seviye 4 (1-10)']} colors={colors} />;
   if (gs === 'ready') return <ReadyScreen title="Parmak Köprüsü" emoji="🖐️" level={lv} instruction={isTouchDevice ? "Bir sayı gösterilecek. Ekrana o kadar parmağınla aynı anda dokun! Parmaklarını kaldırdığında cevabın kontrol edilir." : "Bir sayı gösterilecek. Aşağıdan doğru parmak sayısını gösteren eli seç!"} colors={colors} onStart={() => startG(lv)} onBack={() => setGs('menu')} />;
-  if (gs === 'results') return <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
+  if (gs === 'results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col p-3 overflow-hidden`}>

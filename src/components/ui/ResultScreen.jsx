@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { TOTAL_ROUNDS, playSound } from '../../utils';
+import { TOTAL_ROUNDS, playSound, calcStars } from '../../utils';
 
 const Confetti = () => (
   <div className="confetti-container absolute inset-0 pointer-events-none overflow-hidden">
@@ -13,11 +13,11 @@ const Confetti = () => (
   </div>
 );
 
-const ResultScreen = ({ score, onReplay, onBack, onLevelMenu, colors, onComplete, level, maxLevel, onNextLevel, prevBest, extraContent }) => {
-  useEffect(() => { if (onComplete) onComplete(score, level || 1); }, []);
-  const maxScore = (TOTAL_ROUNDS * 30 * (level || 1));
-  const pct = Math.min(100, Math.round((score / Math.max(maxScore, 1)) * 100));
-  const stars = pct >= 90 ? 3 : pct >= 60 ? 2 : pct >= 30 ? 1 : 0;
+// maxScore: oyunun bu seviyedeki gerçek azami puanı (tur × doğru başına puan × seviye).
+// Verilmezse eski varsayım (doğru başına 30 puan) kullanılır.
+const ResultScreen = ({ score, maxScore, onReplay, onBack, onLevelMenu, colors, onComplete, level, maxLevel, onNextLevel, prevBest, extraContent }) => {
+  const stars = calcStars(score, maxScore || TOTAL_ROUNDS * 30 * (level || 1));
+  useEffect(() => { if (onComplete) onComplete(score, level || 1, stars); }, []);
   const isNewRecord = prevBest > 0 && score > prevBest;
   const msg = isNewRecord ? 'Yeni Rekor!' : stars === 3 ? 'Mükemmel!' : stars === 2 ? 'Çok iyi!' : stars === 1 ? 'İyi başlangıç!' : 'Her deneme seni güçlendiriyor!';
   const canNext = stars >= 2 && level && maxLevel && level < maxLevel;

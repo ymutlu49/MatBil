@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS, encourage, playSound, speakNumber, useSafeTimeout } from '../../../utils';
+import { TOTAL_ROUNDS, encourage, playSound, speakNumber, useSafeTimeout, sayiEki } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -53,7 +53,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Yürüyüşü" emoji="🚶" description="Sayı doğrusu üzerinde yürüyerek toplama ve çıkarma yap!" levels={['Sv1: Toplama (0-10)','Sv2: Toplama (0-10)','Sv3: Karışık (0-15)','Sv4: Karışık (0-20)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı Yürüyüşü" emoji="🚶" level={lv} instruction="Sayı doğrusu üzerinde başlangıç noktasındasın. Ok butonlarıyla doğru sayıda adım atarak sonuca ulaş!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const pct = p ? (pos / p.max) * 100 : 0;
   const ticks = p ? Array.from({length: p.max + 1}, (_, i) => i) : [];
@@ -67,7 +67,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
         {/* Soru */}
         <div className="bg-white rounded-2xl shadow-xl p-4 mb-4 text-center w-full max-w-sm">
           <div className="text-3xl font-bold text-purple-700 mb-1">{p?.a} {p?.op} {p?.b} = ?</div>
-          <div className="text-base text-gray-500">{p?.op==='+'?`${p?.a}'den ${p?.b} adım ileri yürü`:`${p?.a}'den ${p?.b} adım geri gel`}</div>
+          <div className="text-base text-gray-500">{p?.op==='+'?`${sayiEki(p?.a,'den')} ${p?.b} adım ileri yürü`:`${sayiEki(p?.a,'den')} ${p?.b} adım geri gel`}</div>
         </div>
 
         {/* Sayı Doğrusu */}
@@ -140,7 +140,7 @@ const SayiDogrusuYurume = ({ onBack, colors, onGameComplete, rahatMod, prevBest 
               {pos===p?.answer?'🎉 Doğru yere yürüdün!':encourage()}
             </div>
             <div className="bg-amber-50 p-3 rounded-xl text-base text-amber-700">
-              {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${pos}'a yürüdün)`:''}
+              {p?.a} {p?.op} {p?.b} = {p?.answer} {pos!==p?.answer?`(Sen ${sayiEki(pos,'e')} yürüdün)`:''}
             </div>
           </div>
         )}

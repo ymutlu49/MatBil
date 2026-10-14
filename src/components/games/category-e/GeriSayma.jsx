@@ -60,7 +60,7 @@ const GeriSayma = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Geri Sayma" emoji="🔢" description="Geriye doğru say! Eksik sayıyı bul ve sırayı tamamla." levels={['Seviye 1 (10\'dan geriye)','Seviye 2 (20\'den geriye)','Seviye 3 (İkişer geriye)','Seviye 4 (Beşer geriye)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Geri Sayma" emoji="🔢" level={lv} instruction={`Sayılar geriye doğru sıralanmış. Eksik olan sayıyı bul! (${cfg[lv].label})`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isCorrect=ua!==null&&ua===p?.answer;
 

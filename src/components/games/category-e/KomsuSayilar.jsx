@@ -63,14 +63,16 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
       question=`Geriye doğru sayıyoruz, boşluk ne?`;
       hint=slots.map(s=>s.v).join(', ');
     } else if(type==='skip2'){
-      const start=Math.floor(Math.random()*Math.floor(mx/2))*2+2;
+      // Dizinin son elemanı (start+8) seviye üst sınırını aşmasın
+      const start=Math.floor(Math.random()*Math.floor((mx-8)/2))*2+2;
       const pos=Math.floor(Math.random()*3)+1;
       answer=start+pos*2;
       slots=Array.from({length:5},(_,i)=>({v:start+i*2,show:i!==pos}));
       question=`İkişer ritmik sayıyoruz, boşluk ne?`;
       hint=slots.map(s=>s.v).join(', ');
     } else { // skip5
-      const start=Math.floor(Math.random()*Math.floor(mx/5))*5+5;
+      // Dizinin son elemanı (start+20) seviye üst sınırını aşmasın
+      const start=Math.floor(Math.random()*Math.floor((mx-20)/5))*5+5;
       const pos=Math.floor(Math.random()*3)+1;
       answer=start+pos*5;
       slots=Array.from({length:5},(_,i)=>({v:start+i*5,show:i!==pos}));
@@ -93,7 +95,7 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Komşu Sayılar" emoji="" description="Sayı dizilerindeki eksik sayıları bul! İleriye, geriye ve ritmik say." levels={['Seviye 1 (1-10, temel)','Seviye 2 (1-20, geniş bağlam)','Seviye 3 (1-50, geri sayma)','Seviye 4 (1-100, ritmik)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Komşu Sayılar" emoji="" level={lv} instruction="Sayı dizisindeki boşlukları doldur! Önceki, sonraki, aradaki ve ritmik sayma sorularını çöz." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
@@ -120,7 +122,7 @@ const KomsuSayilar = ({ onBack, colors, onGameComplete, prevBest }) => {
         {(p?.type==='backward'||p?.type==='skip2'||p?.type==='skip5')&&(
           <div className="text-center mt-2">
             <span className="text-xs px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 font-medium">
-              {p?.type==='backward'?'⬅ Geriye sayma':p?.type==='skip2'?'2şer atlama':'5er atlama'}
+              {p?.type==='backward'?'⬅ Geriye sayma':p?.type==='skip2'?"2'şer atlama":"5'er atlama"}
             </span>
           </div>
         )}

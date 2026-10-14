@@ -1,6 +1,7 @@
 import React from 'react';
 import { CHAPTER_MAP } from '../../constants/skillGraph';
 import { HELP_MAP } from '../../constants/helpMap';
+import { speak } from '../../utils/speech';
 
 /**
  * TheoryIntro - Oyun öncesi çocuk dostu "Biliyor muydun?" açıklaması
@@ -34,7 +35,7 @@ const TheoryIntro = ({ categoryId, gameName, gameEmoji, onStart, onSkip }) => {
               <div className="flex-1">
                 <div className="flex items-center justify-between mb-1">
                   <div className="text-xs font-bold text-indigo-700">Biliyor muydun?</div>
-                  <button onClick={() => { try { const u = new SpeechSynthesisUtterance(childText); u.lang='tr-TR'; u.rate=0.85; u.pitch=1.1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch{} }}
+                  <button onClick={() => speak(childText, { explicit: true })}
                     className="shrink-0 w-6 h-6 rounded-full bg-indigo-100 text-indigo-500 hover:bg-indigo-200 flex items-center justify-center text-xs" title="Sesli oku">{"🔊"}</button>
                 </div>
                 <p className="text-sm text-gray-700 leading-relaxed">

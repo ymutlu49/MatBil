@@ -19,7 +19,7 @@ export const HELP_MAP = {
   },
   'Gruplama Ustası': {
     goal: 'Kavramsal Sanbil',
-    tip: 'Çerçevelerdeki dolu kutuları grupla. 5lik ve 10luk yapıları kullan.',
+    tip: "Çerçevelerdeki dolu kutuları grupla. 5'lik ve 10'luk yapıları kullan.",
     childInfo: 'Sayıları gruplar halinde düşünmek işini çok kolaylaştırır! Mesela 8 tane nesneyi 5+3 olarak düşünebilirsin. Bu oyunda beşlik ve onluk çerçevelerle gruplamayı öğreneceksin.',
     chapterRef: 'Bölüm 4: Sanbil Becerisi',
   },

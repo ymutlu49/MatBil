@@ -66,7 +66,7 @@ const CarpmaKavrami = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çarpma Kavramı" emoji="✖️" description="Eşit grupları sayarak çarpmayı öğren! Tekrarlı toplama ile çarpma arasındaki bağı keşfet." levels={['Seviye 1 (Grupları say)','Seviye 2 (Kaç grup?)','Seviye 3 (Tekrarlı toplama)','Seviye 4 (Eksik çarpan)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Çarpma Kavramı" emoji="✖️" level={lv} instruction={lv===1?'Eşit grupların toplamını bul!':lv===2?'Toplam ve grup büyüklüğünden grup sayısını bul!':lv===3?'Tekrarlı toplamayı hesapla!':'Eksik çarpanı bul!'} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isCorrect=ua!==null&&ua===p?.answer;
 
@@ -77,17 +77,26 @@ const CarpmaKavrami = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) =
 
         {(lv===1||lv===2) && (
           <div className="bg-white rounded-2xl shadow-xl p-4 mb-3 w-full max-w-sm">
-            <div className="flex items-center justify-center gap-3 flex-wrap">
-              {Array.from({length:p?.groups||0}).map((_,gi)=>(
-                <div key={gi} className="flex items-center gap-1 bg-indigo-50 rounded-xl px-3 py-2 border-2 border-indigo-200">
-                  {Array.from({length:p?.perGroup||0}).map((__,pi)=>(
-                    <span key={pi} className="text-2xl">{p?.item.e}</span>
-                  ))}
-                </div>
-              ))}
-            </div>
+            {/* Seviye 2'de soru "kaç grup?" — gruplar cevaptan önce çizilirse cevap ekranda görünür */}
+            {lv===2 && ua===null ? (
+              <div className="flex items-center justify-center gap-1 flex-wrap">
+                {Array.from({length:(p?.groups||0)*(p?.perGroup||0)}).map((_,i)=>(
+                  <span key={i} className="text-2xl">{p?.item.e}</span>
+                ))}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-3 flex-wrap">
+                {Array.from({length:p?.groups||0}).map((_,gi)=>(
+                  <div key={gi} className="flex items-center gap-1 bg-indigo-50 rounded-xl px-3 py-2 border-2 border-indigo-200">
+                    {Array.from({length:p?.perGroup||0}).map((__,pi)=>(
+                      <span key={pi} className="text-2xl">{p?.item.e}</span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="text-center mt-2 text-sm text-gray-500">
-              {p?.groups} grup × {p?.perGroup} {p?.item.n}
+              {lv===2 && ua===null ? `Her grupta ${p?.perGroup} ${p?.item.n}` : `${p?.groups} grup × ${p?.perGroup} ${p?.item.n}`}
             </div>
           </div>
         )}

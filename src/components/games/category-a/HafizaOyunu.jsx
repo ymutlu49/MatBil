@@ -15,7 +15,7 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
   // Seviye 1: Kolay (1-4) cokluk-cokluk, Seviye 2: Orta (5-9) sembol-sembol, Seviye 3: Zor (1-9) cokluk-sembol
   const cfg={1:{range:[1,2,3,4],type:'dots-dots',pairs:4},2:{range:[5,6,7,8,9],type:'num-num',pairs:5},3:{range:[1,2,3,4,5,6,7,8,9],type:'dots-num',pairs:6}};
   const prepG=(l)=>{setLv(l);setGs('ready');};
-  const startG=(l)=>{setLv(l);setSc(0);setFlipped([]);setMatched([]);setMismatchIds([]);setNewMatchIds([]);const c=cfg[l];const vals=c.range.slice(0,c.pairs);let cp;
+  const startG=(l)=>{setLv(l);setSc(0);setFlipped([]);setMatched([]);setMismatchIds([]);setNewMatchIds([]);const c=cfg[l];const vals=shuffle(c.range).slice(0,c.pairs);let cp;
     if(c.type==='dots-dots'){cp=[...vals.map(v=>({value:v,type:'dots',col:'bg-rose-400'})),...vals.map(v=>({value:v,type:'dots',col:'bg-blue-400'}))];}
     else if(c.type==='num-num'){cp=[...vals.map(v=>({value:v,type:'number',col:'text-rose-600'})),...vals.map(v=>({value:v,type:'number',col:'text-blue-600'}))];}
     else{cp=[...vals.map(v=>({value:v,type:'dots',col:'bg-purple-500'})),...vals.map(v=>({value:v,type:'number',col:'text-purple-700'}))];}
@@ -46,7 +46,7 @@ const HafizaOyunu = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Hafıza Oyunu" emoji="" description="Kartları çevir ve aynı sayıdaki eşlerini bul! Eşleşen çiftler puan kazandırır." levels={['Kolay (1-4, Çokluk-Çokluk)','Orta (5-9, Sembol-Sembol)','Zor (1-9, Çokluk-Sembol)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Hafıza Oyunu" emoji="" level={lv} instruction="Kartları ikişer ikişer çevir. Aynı sayıyı gösteren kartları bulursan eşleşir ve açık kalır. Tüm çiftleri bulmaya çalış!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={cfg[lv].pairs*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;
   const instrText=lv===1?'Aynı sayıdaki noktaları eşleştir':lv===2?'Aynı sayıları eşleştir':'Çoklukları sayıları ile eşleştir';
 
   const isRevealed=(i)=>flipped.includes(i)||matched.includes(i);

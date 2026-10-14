@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TOTAL_ROUNDS, playSound, encourage, useAdaptive } from '../../../utils';
+import { TOTAL_ROUNDS, playSound, encourage, useAdaptive, useSafeTimeout } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
 import ReadyScreen from '../../ui/ReadyScreen';
 
 const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, sesAcik }) => {
+  const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);
   const [phase,setPhase]=useState('show'); // show | ask
   const [currentNum,setCurrentNum]=useState(null);
@@ -94,7 +95,7 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
     adaptive.record(correct);
     if(correct){ playSound('correct'); setSc(s=>s+15*lv); }
     else playSound('wrong');
-    setTimeout(()=>{
+    safeSetTimeout(()=>{
       if(rd<TOTAL_ROUNDS){
         const newRd=rd+1;
         setRd(newRd);
@@ -114,7 +115,7 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayısal Bellek" emoji="🧠" description="Sayıları hatırla! Şu anki sayı, N adım öncekiyle aynı mı? Çalışma belleğini geliştir." levels={['Seviye 1 (1-geri, 1-5)','Seviye 2 (1-geri, 1-9)','Seviye 3 (2-geri, 1-5)','Seviye 4 (2-geri, 1-9)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayısal Bellek" emoji="🧠" level={lv} instruction={`Ekrandaki sayıyı izle. ${cfg[lv].nBack} adım önceki sayıyla aynı mı? (${cfg[lv].label})`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const nBack=cfg[lv].nBack;
   const prevNum=history.length>=nBack+1?history[history.length-1-nBack]:null;
@@ -154,7 +155,8 @@ const SayisalBellek = ({ onBack, colors, onGameComplete, rahatMod, prevBest, ses
               <div className="text-sm text-gray-700 font-medium">
                 Bu sayı {nBack} öncekiyle aynı mı?
               </div>
-              {prevNum!==null && (
+              {/* Önceki sayıyı soru sırasında göstermek bellek görevini ortadan kaldırır: yalnızca Rahat Mod'da destek olarak */}
+              {rahatMod && prevNum!==null && (
                 <div className="text-xs text-gray-400 mt-1">({nBack} adım önce: {prevNum})</div>
               )}
             </div>

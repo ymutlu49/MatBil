@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, encourage, useSafeTimeout, sayiEki } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -34,12 +34,12 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
       hint=`${total} ${item.n} ÷ ${numKids} çocuk = her biri ${perKid} tane`;
     } else if(type==='total'){
       answer=total;
-      question=`${numKids} çocuğa ${perKid}'şer ${item.n} verilirse toplam kaç ${item.n} gerekir?`;
+      question=`${numKids} çocuğa ${sayiEki(perKid,'er')} ${item.n} verilirse toplam kaç ${item.n} gerekir?`;
       hint=`${numKids} çocuk × ${perKid} tane = toplam ${total} ${item.n}`;
     } else if(type==='groupCount'){
       answer=numKids;
       const groupNames={1:'birli',2:'ikili',3:'üçlü',4:'dörtlü',5:'beşli'};
-      const groupName=groupNames[perKid]||`${perKid}'li`;
+      const groupName=groupNames[perKid]||sayiEki(perKid,'li');
       question=`${total} ${item.n} ${groupName} gruplara ayrılırsa kaç grup olur?`;
       hint=`${total} ${item.n} ÷ ${perKid} = ${numKids} grup`;
     } else {
@@ -62,7 +62,7 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Bölüşme Zamanı" emoji="🍎" description="Nesneleri eşit paylaştır veya gruplara ayır!" levels={['Seviye 1 (2 çocuk)','Seviye 2 (2-3 çocuk)','Seviye 3 (2-4, gruplama)','Seviye 4 (2-5, gruplama)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Bölüşme Zamanı" emoji="🍎" level={lv} instruction="Nesneleri çocuklara eşit paylaştır veya gruplara ayır. Doğru sayıyı bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
 
   const isGroupQ = p?.type==='groupCount'||p?.type==='groupSize';
   return (
@@ -80,6 +80,14 @@ const BolusmeZamani = ({ onBack, colors, onGameComplete, prevBest }) => {
             {p?.kidEmojis?.map((k,i)=>(<div key={i} className="flex flex-col items-center"><span className="text-2xl">{k}</span><div className="w-10 h-1 bg-gray-300 rounded mt-1"/></div>))}
           </div>
         ) : (
+          // "Kaç grup olur?" sorusunda grup kutuları çizilirse cevap ekranda görünür: cevaplanana kadar gizle
+          p?.type==='groupCount' && ua===null ? (
+            <div className="flex justify-center">
+              <div className="border-2 border-dashed border-purple-300 rounded-lg px-3 py-1 bg-purple-50">
+                <span className="text-xs text-purple-500">her grupta {p?.perKid} {p?.item?.n} · kaç grup?</span>
+              </div>
+            </div>
+          ) :
           <div className="flex justify-center gap-2">
             {Array.from({length:Math.min(p?.numKids||0,6)},(_,i)=>(
               <div key={i} className="border-2 border-dashed border-purple-300 rounded-lg px-2 py-1 bg-purple-50">

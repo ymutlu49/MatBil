@@ -104,7 +104,7 @@ const SekilTanima = ({ onBack, colors, onGameComplete, prevBest }) => {
 
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Şekli Tanıma" emoji="" description="İstenen şekli bul ve dokun! Renk, boyut veya döndürme değişse de şekli tanı." levels={['Düzey 1a (Temel şekiller)','Düzey 1b (Farklı boyutlar)','Düzey 1c (Eğik/döndürülmüş)','Düzey 1d (Orantısız şekiller)','Düzey 1e (Tam zorluk)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Şekli Tanıma" emoji="" level={lv} instruction="Çeşitli şekiller gösterilecek. İstenen geometrik şekli bul ve üzerine dokun! Renk veya boyut farklı olabilir." colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={5} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*10*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={5} onNextLevel={startG} prevBest={prevBest}/>;
 
   const tc = shapes.filter(s=>s.isTarget).length;
 

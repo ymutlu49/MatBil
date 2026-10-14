@@ -1,5 +1,16 @@
 import { useRef, useEffect, useCallback } from 'react';
 
+const CANCEL_EVENT = 'matbil:cancel-game-timers';
+
+/**
+ * Oyundaki bekleyen tüm safeSetTimeout zamanlayıcılarını iptal eder.
+ * "← Düzey" ile menüye dönülünce son turun zamanlayıcısı sonuç ekranını
+ * açıp puanı kaydetmesin diye GameHeader çağırır.
+ */
+export const cancelGameTimers = () => {
+  try { window.dispatchEvent(new Event(CANCEL_EVENT)); } catch {}
+};
+
 /**
  * useSafeTimeout — unmount'ta otomatik cleanup yapan setTimeout wrapper'ı.
  *
@@ -16,9 +27,14 @@ export const useSafeTimeout = () => {
 
   useEffect(() => {
     const timers = timersRef.current;
-    return () => {
+    const clearAll = () => {
       timers.forEach(id => clearTimeout(id));
       timers.clear();
+    };
+    window.addEventListener(CANCEL_EVENT, clearAll);
+    return () => {
+      window.removeEventListener(CANCEL_EVENT, clearAll);
+      clearAll();
     };
   }, []);
 

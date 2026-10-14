@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { shuffle, TOTAL_ROUNDS, playSound, encourage, useSafeTimeout } from '../../../utils';
+import { shuffle, TOTAL_ROUNDS, playSound, encourage, useSafeTimeout, sayiEki } from '../../../utils';
 import GameHeader from '../../ui/GameHeader';
 import ResultScreen from '../../ui/ResultScreen';
 import MenuScreen from '../../ui/MenuScreen';
@@ -29,7 +29,7 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
       answer = a - b;
       type = 'basic';
       question = `${a} - ${b} = ?`;
-      hint = `${a}'den ${b} çıkar: geriye ${answer} kalır`;
+      hint = `${sayiEki(a,'den')} ${b} çıkar: geriye ${answer} kalır`;
     } else if (l === 2) {
       // Onluktan çıkarma (10, 20'den çıkarma)
       const base = Math.random() > 0.5 ? 10 : 20;
@@ -38,9 +38,9 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
       answer = a - b;
       type = 'fromTen';
       question = `${a} - ${b} = ?`;
-      hint = `${a}'dan ${b} çıkarmak için: ${a} - ${b} = ${answer}`;
+      hint = `${sayiEki(a,'den')} ${b} çıkarmak için: ${a} - ${b} = ${answer}`;
     } else if (l === 3) {
-      // Tamamlama stratejisi (eksik çıkan) — ? - b = c
+      // Tamamlama stratejisi (eksik eksilen) — ? - b = c
       answer = Math.floor(Math.random() * 10) + 5; // 5-14
       b = Math.floor(Math.random() * (answer - 1)) + 1;
       a = answer;
@@ -55,8 +55,13 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
       answer = a - b;
       type = 'advanced';
       // Strateji ipucu
-      if (b <= 10) {
-        hint = `${a} - ${b}: Önce onluğa in (${a} - ${a % 10} = ${a - a % 10}), sonra kalanı çıkar`;
+      const birler = a % 10;
+      if (b <= birler) {
+        hint = `${a} - ${b}: Birler basamağı yetiyor! ${birler} - ${b} = ${birler - b}, yani ${answer}`;
+      } else if (b <= 10 && birler > 0) {
+        hint = `${a} - ${b}: Önce onluğa in (${a} - ${birler} = ${a - birler}), sonra kalan ${sayiEki(b - birler,'i')} çıkar: ${a - birler} - ${b - birler} = ${answer}`;
+      } else if (b <= 10) {
+        hint = `${a} - ${b}: Bir onluk boz: ${a} - 10 = ${a - 10}, sonra ${10 - b} ekle: ${answer}`;
       } else {
         hint = `${a} - ${b}: Parçala! ${a} - ${Math.floor(b / 10) * 10} = ${a - Math.floor(b / 10) * 10}, sonra - ${b % 10} = ${answer}`;
       }
@@ -93,9 +98,9 @@ const CikarmaStratejileri = ({ onBack, colors, onGameComplete, rahatMod, prevBes
     }, 1800);
   };
 
-  if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çıkarma Stratejileri" emoji="➖" description="Çıkarma işlemlerini farklı stratejilerle çöz! Geriye sayma, onluktan çıkarma ve tamamlama." levels={['Seviye 1 (Basit 1-10)', 'Seviye 2 (Onluktan çıkarma)', 'Seviye 3 (Eksik çıkan)', 'Seviye 4 (İki basamaklı)']} colors={colors} />;
+  if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Çıkarma Stratejileri" emoji="➖" description="Çıkarma işlemlerini farklı stratejilerle çöz! Geriye sayma, onluktan çıkarma ve tamamlama." levels={['Seviye 1 (Basit 1-10)', 'Seviye 2 (Onluktan çıkarma)', 'Seviye 3 (Eksik sayı)', 'Seviye 4 (İki basamaklı)']} colors={colors} />;
   if (gs === 'ready') return <ReadyScreen title="Çıkarma Stratejileri" emoji="➖" level={lv} instruction={lv <= 2 ? "Çıkarma işleminin sonucunu bul! İpucu: geriye doğru sayabilirsin." : "Eksik sayıyı veya sonucu bul! İpucu: toplama ile kontrol edebilirsin."} colors={colors} onStart={() => startG(lv)} onBack={() => setGs('menu')} />;
-  if (gs === 'results') return <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
+  if (gs === 'results') return <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
 
   // Görsel: çıkarma için nokta gösterimi
   const DotVisual = ({ total, removed }) => {

@@ -53,7 +53,7 @@ const SayiDogrusu = ({ onBack, colors, onGameComplete, prevBest }) => {
   const handle=(a)=>{setUa(a);adaptive.record(a===target);const fb=getFeedback(a,target,cfg[lv].tol);const isClose=a===target||Math.abs(a-target)<=cfg[lv].tol;if(a===target)setSc(s=>s+20*lv);else if(isClose)setSc(s=>s+10*lv);safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);genR(lv);}else setGs('results');},1500);};
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Sayı Doğrusu" emoji="" description="Ok hangi sayıyı gösteriyor? Sayı doğrusundaki konumu tahmin et!" levels={['Seviye 1 (0-10)','Seviye 2 (0-100)','Seviye 3 (0-1000)']} colors={colors}/>;
   if(gs==='ready') return <ReadyScreen title="Sayı Doğrusu" emoji="" level={lv} instruction="Sayı doğrusu üzerinde bir ok gösterilecek. Okun gösterdiği sayıyı seçenekler arasından bul!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*20*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={3} onNextLevel={startG} prevBest={prevBest}/>;
   const mx=cfg[lv].max;const pct=(target/mx)*100;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>

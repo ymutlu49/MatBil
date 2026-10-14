@@ -11,6 +11,14 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
   const safeSetTimeout = useSafeTimeout();
   const [gs,setGs]=useState('menu');const [lv,setLv]=useState(1);const [sc,setSc]=useState(0);const [rd,setRd]=useState(0);const [fc,setFc]=useState(0);const [ua,setUa]=useState(null);
   const [waveAnim,setWaveAnim]=useState(false);
+  // Seviye 4 "Hızlı": eller kısa süre görünür, sonra gizlenir — saymadan tanıma
+  const [handsHidden,setHandsHidden]=useState(false);
+  useEffect(()=>{
+    setHandsHidden(false);
+    if(gs!=='playing'||lv!==4) return;
+    const t=setTimeout(()=>setHandsHidden(true), rahatMod?3000:1500);
+    return ()=>clearTimeout(t);
+  },[gs,lv,rd,rahatMod]);
   const cfg={1:{max:5},2:{max:7},3:{max:10},4:{max:10}};
 
   const Hand=({fingers,mirror=false})=>{
@@ -89,15 +97,17 @@ const ParmakSansi = ({ onBack, colors, onGameComplete, rahatMod, prevBest }) => 
     safeSetTimeout(()=>{if(rd<TOTAL_ROUNDS){setRd(r=>r+1);setFc(Math.floor(Math.random()*cfg[lv].max)+1);setUa(null);}else setGs('results');},1200);
   };
   if(gs==='menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Kaç Parmak?" emoji="" description="Parmak sayısını hızlıca say! Ellerdeki açık parmakları saymadan tanımaya çalış." levels={['Seviye 1 (1-5)','Seviye 2 (1-7)','Seviye 3 (1-10)','Seviye 4 (1-10 Hızlı)']} colors={colors}/>;
-  if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="" level={lv} instruction="Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!" colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
-  if(gs==='results') return <ResultScreen score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
+  if(gs==='ready') return <ReadyScreen title="Kaç Parmak?" emoji="" level={lv} instruction={`Ekranda bir veya iki el gösterilecek. Açık parmakların sayısını tek bakışta tanı ve doğru sayıyı seç!${lv===4?' Bu seviyede eller kısa süre görünür.':''}`} colors={colors} onStart={()=>startG(lv)} onBack={()=>setGs('menu')}/>;
+  if(gs==='results') return <ResultScreen maxScore={TOTAL_ROUNDS*10*lv} score={sc} onReplay={()=>startG(lv)} onBack={onBack} onLevelMenu={()=>setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest}/>;
   return (
     <div className={`h-screen ${colors?.bg} flex flex-col items-center p-3 overflow-hidden`}>
       <GameHeader onBack={onBack} onLevelMenu={()=>setGs('menu')} round={rd} score={sc} title="Kaç Parmak?" colors={colors} hideRound={rahatMod}/>
       <div className="flex-1 flex flex-col items-center justify-center min-h-0">
       <div className="bg-white p-4 rounded-2xl shadow-xl mb-3 flex gap-2 items-end justify-center min-h-[220px]">
+        {handsHidden&&ua===null ? <div className="self-center text-6xl font-bold text-gray-300">?</div> : <>
         <Hand fingers={Math.min(fc,5)}/>
         {fc>5&&<Hand fingers={fc-5} mirror/>}
+        </>}
       </div>
       {ua!==null?(<Feedback isCorrect={ua===fc} answer={fc} hint={ua===fc ? `Süper! ${fc} parmak vardı.` : `${fc} parmak açıktı. Elde 5, iki elde 10 parmak olduğunu hatırla!`}/>):(<div className="grid grid-cols-5 gap-2.5 w-full max-w-xs mx-auto">{Array.from({length:cfg[lv].max},(_,i)=>i+1).map(n=>(<button key={n} onClick={()=>handle(n)} className={`h-14 ${colors?.button} text-white rounded-2xl font-bold text-xl shadow-lg hover:shadow-xl active:scale-95 transition-all`}>{n}</button>))}</div>)}
 

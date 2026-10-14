@@ -26,6 +26,9 @@ const ExplainStep = ({ onDone }) => {
 
 const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
   const safeSetTimeout = useSafeTimeout();
+  // Tek bir gizleme zamanlayıcısı: "Tekrar Göster"in eski zamanlayıcısı sonraki kavanozu erken gizliyordu
+  const hideTimer = useRef(null);
+  const scheduleHide = (ms) => { clearTimeout(hideTimer.current); hideTimer.current = safeSetTimeout(() => setVisible(false), ms); };
   const [gs, setGs] = useState('menu');
   const [lv, setLv] = useState(1);
   const [sc, setSc] = useState(0);
@@ -93,13 +96,13 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     const c = cfg[l]; const count = pickCount(c);
     setTc(count); setPositions(genPositions(count));
     setVisible(true); setGs('playing');
-    safeSetTimeout(() => setVisible(false), showTime[l]);
+    scheduleHide(showTime[l]);
   };
 
   const handlePeek = () => {
     setPeekCount(p => p + 1);
     setVisible(true);
-    safeSetTimeout(() => setVisible(false), Math.max(1000, showTime[lv] - peekCount * 500));
+    scheduleHide(Math.max(1000, showTime[lv] - peekCount * 500));
   };
 
   const handleSub = () => {
@@ -108,6 +111,7 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
     // Yumuşak puan eğrisi: tam isabet 30, ±2 25, ±5 20, ±10 12, ±15 7, ötesi 3
     const pts = d === 0 ? 30 : d <= 2 ? 25 : d <= 5 ? 20 : d <= 10 ? 12 : d <= 15 ? 7 : 3;
     setSc(s => s + pts * lv);
+    clearTimeout(hideTimer.current);
     setSub(true); setVisible(true); setExplained(false);
   };
 
@@ -120,14 +124,14 @@ const TahminKavanozlari = ({ onBack, colors, onGameComplete, prevBest }) => {
         setTc(count); setPositions(genPositions(count));
         setUg(''); setSub(false); setPeekCount(0); setExplained(false);
         setVisible(true);
-        safeSetTimeout(() => setVisible(false), showTime[lv]);
+        scheduleHide(showTime[lv]);
       } else setGs('results');
     }, 800);
   };
 
   if (gs === 'menu') return <MenuScreen onBack={onBack} onStart={prepG} title="Tahmin Kavanozları" emoji="🫙" description="Kavanozda kaç bilye var? Tam isabet en yüksek puanı kazandırır!" levels={['Seviye 1 (5-15)', 'Seviye 2 (10-25)', 'Seviye 3 (15-35)', 'Seviye 4 (20-50)']} colors={colors} />;
   if (gs === 'ready') return <ReadyScreen title="Tahmin Kavanozları" emoji="🫙" level={lv} instruction="Kavanozdaki bilyelere bak ve kaç tane olduğunu tahmin et. Artı/eksi butonlarıyla sayını ayarla ve gönder!" colors={colors} onStart={() => startG(lv)} onBack={() => setGs('menu')} />;
-  if (gs === 'results') return <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
+  if (gs === 'results') return <ResultScreen maxScore={TOTAL_ROUNDS*25*lv} score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} />;
 
   const guess = parseInt(ug) || 0;
   const diff = Math.abs(guess - tc);

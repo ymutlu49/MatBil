@@ -174,19 +174,19 @@ const NoktaKarsilastirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest
             <div className="font-bold text-indigo-700">{weber.avgRT}ms</div>
           </div>
           <div className="bg-green-50 rounded-lg p-1.5">
-            <div className="text-gray-500">Uyumlu Trial</div>
+            <div className="text-gray-500">Uyumlu Deneme</div>
             <div className="font-bold text-green-700">{Math.round(weber.congAcc * 100)}%</div>
           </div>
           <div className="bg-orange-50 rounded-lg p-1.5">
-            <div className="text-gray-500">Uyumsuz Trial</div>
+            <div className="text-gray-500">Uyumsuz Deneme</div>
             <div className="font-bold text-orange-700">{Math.round(weber.incongAcc * 100)}%</div>
           </div>
         </div>
-        <div className="mt-1.5 text-[10px] text-gray-400">Weber hassasiyeti: oran {weber.hardestCorrect.toFixed(2)} | Uyumsuz triallarda düşük doğruluk görsel ipucu etkisine işaret eder.</div>
+        <div className="mt-1.5 text-[10px] text-gray-400">Weber hassasiyeti: oran {weber.hardestCorrect.toFixed(2)} | Uyumsuz denemelerde düşük doğruluk görsel ipucu etkisine işaret eder.</div>
       </div>
     ) : null;
     return (
-      <ResultScreen score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} extraContent={weberPanel} />
+      <ResultScreen maxScore={TOTAL_ROUNDS*15*lv} score={sc} onReplay={() => startG(lv)} onBack={onBack} onLevelMenu={() => setGs('menu')} colors={colors} onComplete={onGameComplete} level={lv} maxLevel={4} onNextLevel={startG} prevBest={prevBest} extraContent={weberPanel} />
     );
   }
 
@@ -250,7 +250,7 @@ const NoktaKarsilastirma = ({ onBack, colors, onGameComplete, rahatMod, prevBest
               Sol: {p?.n1} | Sağ: {p?.n2} {' → '} {p?.n1 > p?.n2 ? 'Sol' : 'Sağ'} daha çok
             </div>
             <div className="text-xs text-gray-400 mt-0.5">
-              Oran: {p?.ratio.toFixed(2)} | {p?.isCongruent ? 'Uyumlu' : 'Uyumsuz'} trial
+              Oran: {p?.ratio.toFixed(2)} | {p?.isCongruent ? 'Uyumlu' : 'Uyumsuz'} deneme
             </div>
           </div>
         )}

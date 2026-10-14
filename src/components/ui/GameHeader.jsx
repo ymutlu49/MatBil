@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { TOTAL_ROUNDS } from '../../utils';
+import { TOTAL_ROUNDS, speak, cancelGameTimers } from '../../utils';
 import { HELP_MAP } from '../../constants/helpMap';
 
-const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, hideRound }) => {
+const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, hideRound, helpKey: helpKeyProp }) => {
   const [showHelp, setShowHelp] = useState(false);
   const t = total || TOTAL_ROUNDS;
   const pct = round > 0 ? (round / t) * 100 : 0;
 
-  const helpKey = Object.keys(HELP_MAP).find(k => title?.includes(k));
+  // Geometri anahtarları "1) Şekli Tanıma" biçiminde: başlıkla eşleşmesi için sıra numarasını yok say
+  const helpKey = helpKeyProp || Object.keys(HELP_MAP).find(k => title?.includes(k.replace(/^\d+\)\s*/, '')));
   const help = helpKey ? HELP_MAP[helpKey] : null;
 
   return (
@@ -20,7 +21,7 @@ const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, h
           </div>
           <div className="flex items-start gap-2">
             <p className="text-sm text-gray-600 leading-relaxed flex-1">{"💡"} {help.tip}</p>
-            <button onClick={() => { try { const u = new SpeechSynthesisUtterance(help.tip); u.lang='tr-TR'; u.rate=0.85; u.pitch=1.1; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); } catch{} }}
+            <button onClick={() => speak(help.tip, { explicit: true })}
               className="shrink-0 w-8 h-8 rounded-full bg-indigo-50 text-indigo-500 hover:bg-indigo-100 flex items-center justify-center" title="Sesli oku">{"🔊"}</button>
           </div>
         </div>
@@ -28,7 +29,7 @@ const GameHeader = ({ onBack, onLevelMenu, round, score, title, colors, total, h
 
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5">
-          {onLevelMenu && <button onClick={onLevelMenu} className="px-3 py-2 bg-white text-gray-600 rounded-xl font-bold text-sm border border-gray-200 hover:bg-gray-50 active:scale-95 transition-all shadow-sm">{"←"} Düzey</button>}
+          {onLevelMenu && <button onClick={() => { cancelGameTimers(); onLevelMenu(); }} className="px-3 py-2 bg-white text-gray-600 rounded-xl font-bold text-sm border border-gray-200 hover:bg-gray-50 active:scale-95 transition-all shadow-sm">{"←"} Düzey</button>}
           <button onClick={onBack} className="px-3 py-2 bg-white text-gray-600 rounded-xl font-bold text-sm border border-gray-200 hover:bg-gray-50 active:scale-95 transition-all shadow-sm">{"🏠"}</button>
         </div>
         <div className={`${colors?.text || 'text-gray-700'} font-bold text-sm truncate max-w-[140px]`}>{title}</div>
